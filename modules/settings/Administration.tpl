@@ -211,7 +211,7 @@
                                         Scheduler
                                     </td>
                                     <td>
-                                        <i>Change how CATS interacts with the server to schedule tasks.</i>
+                                        <i>Change how VHS Consulting interacts with the server to schedule tasks.</i>
                                     </td>
                                 </tr>-->
                                 <tr>
@@ -222,7 +222,7 @@
                                         </a>
                                     </td>
                                     <td>
-                                        Change how CATS stores user passwords, and how users can retrieve them.
+                                        Change how VHS Consulting stores user passwords, and how users can retrieve them.
                                     </td>
                                 </tr>
                                 <tr>
@@ -233,7 +233,7 @@
                                         </a>
                                     </td>
                                     <td>
-                                        Change how CATS checks periodically for new versions.
+                                        Change how VHS Consulting checks periodically for new versions.
                                     </td>
                                 </tr>
                                 <tr>

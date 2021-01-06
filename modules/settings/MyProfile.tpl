@@ -53,7 +53,7 @@
                                     </a>
                                 </td>
                                 <td>
-                                    Change how CATS notifies you of new events.
+                                    Change how VHS Consulting notifies you of new events.
                                 </td>
                             </tr>-->
                         </table>
