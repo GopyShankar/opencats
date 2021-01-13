@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 /*
  * CATS
  * Index (Delegation Module)
@@ -167,7 +168,7 @@ if ($_SESSION['CATS']->isLoggedIn())
         }
     }
 }
-
+// echo '<pre>'; print_r($_SESSION); echo '</pre>'; exit();
 /* Check to see if we are supposed to display the career page. */
 if (((isset($careerPage) && $careerPage) ||
     (isset($_GET['showCareerPortal']) && $_GET['showCareerPortal'] == '1')))
@@ -203,8 +204,11 @@ else if (!isset($_GET['m']) || empty($_GET['m']))
         $_SESSION['CATS']->logPageView();
 
         if (!eval(Hooks::get('INDEX_LOAD_HOME'))) return;
-
-        ModuleUtility::loadModule('home');
+        if($_SESSION['CATS']->getUserrole()=='internal_employee'){
+            ModuleUtility::loadModule('joborders');
+        }else{
+            ModuleUtility::loadModule('home');
+        }
     }
     else
     {

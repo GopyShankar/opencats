@@ -51,12 +51,14 @@ class ACL
     */
     public static function getAccessLevel($securedObjectName, $userCategories, $defaultAccessLevel)
     {
+        // echo '<pre>'; print_r($securedObjectName); echo ' | '; print_r($userCategories);  echo ' | '; print_r($defaultAccessLevel); echo '</pre>'; exit;
         if( !class_exists('ACL_SETUP') || empty(ACL_SETUP::$ACCESS_LEVEL_MAP))
         {
             return $defaultAccessLevel;
         }
 
-        $aclmap = ACL_SETUP::$ACCESS_LEVEL_MAP;
+        $aclmap = ACL_SETUP::$ACCESS_LEVEL_MAP; 
+
         $userCategory = ACL::CATEGORY_EMPTY;
         if( isset($userCategories) && count($userCategories) > 0 && isset($userCategories[0]) )
         {

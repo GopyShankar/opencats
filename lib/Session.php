@@ -55,6 +55,7 @@ class CATSSession
     private $_siteName = '';
     private $_unixName = '';
     private $_username = '';
+    private $_userrole = ''; //addedbygopy
     private $_password = '';
     private $_firstName = '';
     private $_lastName = '';
@@ -353,6 +354,10 @@ class CATSSession
         return $this->_username;
     }
 
+    public function getUserrole() //addedbygopy
+    {
+        return $this->_userrole;
+    }
     /**
      * Returns the current user's password. Although this is a bad idea,
      * it is used to generate a password for the firefox toolbar download.
@@ -652,11 +657,12 @@ class CATSSession
 
             return;
         }
-
+        //user.role_slug AS userrole, --addedbygopy
         $sql = sprintf(
             "SELECT
                 user.user_id AS userID,
                 user.user_name AS username,
+                user.role_slug AS userrole,
                 user.password AS password,
                 user.first_name AS firstName,
                 user.last_name AS lastName,
@@ -783,6 +789,7 @@ class CATSSession
                 
             case LOGIN_SUCCESS:
                 $this->_username               = $rs['username'];
+                $this->_userrole               = $rs['userrole']; //addedbygopy
                 $this->_password               = $rs['password'];
                 $this->_userID                 = $rs['userID'];
                 $this->_siteID                 = $rs['userSiteID'];

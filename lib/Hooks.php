@@ -56,7 +56,8 @@ class Hooks
             return 'return true;';
         }        
         
-        $hooks = @$_SESSION['hooks'];
+        $hooks = @$_SESSION['hooks'];  
+        // echo '<pre>'; print_r($_SESSION); echo '</pre>'; exit;
 
         $hookCommands = '';
 

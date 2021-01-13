@@ -594,6 +594,10 @@ class TemplateUtility
         $indexName = CATSUtility::getIndexName();
 
         $modules = ModuleUtility::getModules();
+        if($_SESSION['CATS']->getUserrole()=='internal_employee'){
+            $modules = array_diff_key($modules, array('home' => '', 'activity' => '', 'reports' => ''));
+        }
+        // echo '<pre>'; echo $_SESSION['CATS']->getUserrole(); exit; print_r($modules); exit();
         foreach ($modules as $moduleName => $parameters)
         {
             $tabText = $parameters[1];
@@ -758,7 +762,7 @@ class TemplateUtility
                     {
                         /* Administration subtab. */
                         if ($_SESSION['CATS']->getAccessLevel('settings.administration') >= ACCESS_LEVEL_DEMO)
-                        {
+                        { //echo $_SESSION['CATS']->getAccessLevel('settings.administration'); echo ACCESS_LEVEL_DEMO; exit();
                             echo '<li><a href="', $link, '" style="'.$style.'">', $subTabText, '</a></li>', "\n";
                         }
                     }
