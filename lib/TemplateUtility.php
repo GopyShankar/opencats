@@ -105,7 +105,7 @@ class TemplateUtility
         /* CATS Logo */
         echo '<table cellspacing="0" cellpadding="0" style="margin: 0px; padding: 0px; float: left;">', "\n";
         echo '<tr>', "\n";
-        echo '<td rowspan="2"><img src="/images/temp/logo.png" border="0" alt="VHS Consulting Applicant Tracking System" /></td>', "\n";
+        echo '<td rowspan="2"><img src="/images/temp/logo.png" border="0" alt="VHS Consulting Applicant Tracking System" height="50" /></td>', "\n";
         echo '</tr>', "\n";
         echo '</table>', "\n";
 
@@ -828,7 +828,7 @@ class TemplateUtility
 
         echo '<div class="footerBlock">', "\n";
         // echo '<p id="footerText">CATS Version ', CATS_VERSION, $buildString, '. <span id="toolbarVersion"></span>Powered by <a href="http://www.vhsconsulting.net/"><strong>VHS Consulting</strong></a>.</p>', "\n";
-        echo '<p id="footerText"><span id="toolbarVersion"></span>Powered by <a href="http://www.vhsconsulting.net/"><strong>VHS Consulting</strong></a>.</p>', "\n";
+        // echo '<p id="footerText"><span id="toolbarVersion"></span>Powered by <a href="http://www.vhsconsulting.net/"><strong>VHS Consulting</strong></a>.</p>', "\n";
         echo '<span id="footerResponse">Server Response Time: ', $loadTime, ' seconds.</span><br />';
         echo '<span id="footerCopyright">', COPYRIGHT_HTML, '</span>', "\n";
         if (!eval(Hooks::get('TEMPLATEUTILITY_SHOWPRIVACYPOLICY'))) return;
@@ -871,8 +871,7 @@ class TemplateUtility
 
         echo '<div class="footerBlock">', "\n";
         echo '<p id="footerText">Report generated on ', $date, '.<br />', "\n";
-        echo 'CATS Version ', CATS_VERSION, $buildString,
-             '. Powered by <a href="http://www.catsone.com/"><strong>CATS</strong></a>.</p>', "\n";
+        // echo 'Powered by <a href="http://www.vhsconsulting.net/"><strong>VHS Consulting</strong></a>.</p>', "\n";
         echo '<span id="footerCopyright">', COPYRIGHT_HTML, '</span>', "\n";
         echo '</div>', "\n";
 

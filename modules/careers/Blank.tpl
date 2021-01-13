@@ -35,10 +35,6 @@
     </div>
     <div style="text-align:center;">
 
-        <?php /* WARNING: It is against the terms of the CPL to remove or alter the following line.  The 'Powered by CATS' line must stay visible on every page. */ ?>
-        <div id="poweredCATS">
-		<a href="http://www.catsone.com" target="_blank"><img src="../images/CATS-powered.gif" alt="Powered by: CATS - Applicant Tracking System" title="Powered by: CATS - Applicant Tracking System" /></a>
-		</div>
     </div>
     <script type="text/javascript">st_init();</script>
     </body>

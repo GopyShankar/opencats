@@ -244,7 +244,7 @@
                                         </a>
                                     </td>
                                     <td>
-                                        View information about this CATS installation.
+                                        View information.
                                     </td>
                                 </tr>
                             </table>

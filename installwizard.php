@@ -305,7 +305,7 @@
                                         <div id="installingComponentsMaint" style="display: none;">
                                             <span style="font-weight:bold;">Performing Maintenance</span><br />
                                             <br />
-                                            Please wait whilst the OpenCATS database is brought up to date...<br />
+                                            Please wait whilst the VHS Consulting database is brought up to date...<br />
 											<br />
 											<span id="upToDateModuleName">
 											</span><br /><br />

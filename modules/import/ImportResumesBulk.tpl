@@ -48,7 +48,7 @@
            <?php endif; ?>
             <table class="searchTable" id="importTable1" width="100%">
                 <tr>
-                    <td>CATS may discard or fail to read some of the submitted data which it does not
+                    <td>VHS Consulting may discard or fail to read some of the submitted data which it does not
                     understand how to use. Do not discard the original data!
                     </td>
                 </tr>

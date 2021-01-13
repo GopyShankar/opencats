@@ -34,7 +34,7 @@
                             Operating System Type:
                         </td>
                         <td class="tdData">
-                            CATS thinks your operating system is <span class="bold"><?php $this->_($this->OSType); ?>.</span>
+                            Your operating system is <span class="bold"><?php $this->_($this->OSType); ?>.</span>
                         </td>
                     </tr>
                     <tr>

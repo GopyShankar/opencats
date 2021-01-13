@@ -101,7 +101,7 @@ class CommonErrors
             case COMMONERROR_RECORDERROR:
                 $errorTitle = 'Internal Record Error';
                 $internalErrorTitle = 'Insert, Delete or Update Error';
-                $errorMessage = 'The internal mechanics CATS uses to add and edit records like candidates, companies, job '
+                $errorMessage = 'The internal mechanics VHS Consulting uses to add and edit records like candidates, companies, job '
                     . 'orders, etc. failed on your last operation. You may have entered incorrect data that it\'s not used '
                     . 'to handling or there is an internal issue.<p>The administrators have been notified and will '
                     . 'resolve the issue as soon as possible. We apologize for the inconvenience.';

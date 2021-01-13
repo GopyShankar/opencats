@@ -25,7 +25,7 @@ You have <?php echo number_format(count($this->documents), 0); ?> document<?php 
         <br /><br />
 
         <?php if (LicenseUtility::isProfessional()): ?>
-        If you need any assistance, please contact the CATS support team.</br >
+        If you need any assistance, please contact the VHS Consulting support team.</br >
         <?php else: ?>
         If you need assistance in uploading files to your web server, contact your system administrator.<br />
         <?php endif; ?>
@@ -64,17 +64,17 @@ You have <?php echo number_format(count($this->documents), 0); ?> document<?php 
 <div style="padding: 10px; margin-top: 15px; text-align: left;">
     <table cellpadding="0" cellspacing="0" border="0">
         <tr>
-            <td align="left" valign="top" style="padding-right: 20px;">
+            <!-- <td align="left" valign="top" style="padding-right: 20px;">
                 <a href="http://www.resfly.com" target="_blank">
                     <img src="images/poweredByResfly.jpg" border="0" style="border: 1px solid #c0c0c0;" />
                 </a>
-            </td>
+            </td> -->
             <td align="left" valign="top">
                 <span style="font-size: 16px;">
                 <?php if (LicenseUtility::isProfessional()): ?>
-                You are a registered CATS Professional user <b><?php echo LicenseUtility::getName(); ?></b>.
+                <!-- You are a registered CATS Professional user <b><?php // echo LicenseUtility::getName(); //comented by gopy ?></b>. -->
                 <?php elseif (LicenseUtility::isOpenSource()): ?>
-                <b>You are a registered open source user of CATS.</b>
+                <!-- <b>You are a registered open source user of CATS.</b> -->
                 <?php endif; ?>
                 </span>
 
@@ -89,11 +89,11 @@ You have <?php echo number_format(count($this->documents), 0); ?> document<?php 
                     Your resume documents will be imported as searchable documents but <b>not</b> as candidates unless
                     you manually complete the required fields for each document (first and last names).
                     <br /><br />
-                    With the
+                    <!-- With the
                     Resfly parsing service, much of the candidate's information can be imported automatically.
                     <br />
                     Consider <a href="http://www.catsone.com/?a=getcats" style="font-size: 14px;" target="_blank">upgrading to CATS Professional</a>
-                    for unlimited use of this service.
+                    for unlimited use of this service. -->
                     </span>
                 <?php endif; ?>
             </td>

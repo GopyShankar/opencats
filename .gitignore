@@ -7,3 +7,4 @@ docker/persist/*
 vendor/*
 attachments/*
 temp/*
+*.zip
