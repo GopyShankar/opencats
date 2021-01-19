@@ -31,9 +31,13 @@
 define('LICENSE_KEY','3163GQ-54ISGW-14E4SHD-ES9ICL-X02DTG-GYRSQ6');
 
 /* Database configuration. */
+/* Database configuration. */
+// define('DATABASE_USER', 'octest2');
+// define('DATABASE_PASS', 'JKMDk4Nzff87Je@');
+// define('DATABASE_HOST', 'octest2.db.8847379.0f3.hostedresource.net');
 define('DATABASE_USER', 'root');
 define('DATABASE_PASS', '');
-define('DATABASE_HOST', 'localhost:3308');
+define('DATABASE_HOST', 'localhost');
 define('DATABASE_NAME', 'octest2');
 
 /* Authentication Configuration

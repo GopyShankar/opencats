@@ -426,7 +426,12 @@ class LoginUI extends UserInterface
         else
         {
             if (!eval(Hooks::get('LOGGED_IN_HOME_PAGE'))) return;
-            CATSUtility::transferRelativeURI('m=home');
+            
+            if($_SESSION['CATS']->getUserrole()=='internal_employee'){
+                CATSUtility::transferRelativeURI('m=joborders');
+            }else{
+                CATSUtility::transferRelativeURI('m=home');
+            }
         }
     }
 
