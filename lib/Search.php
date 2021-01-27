@@ -818,6 +818,7 @@ class SearchJobOrders
     public function byTitle($wildCardString, $sortBy, $sortDirection,
         $activeOnly)
     {
+        $user_id = $_SESSION['CATS']->getUserID();
         if ($activeOnly)
         {
             //FIXME:  Remove session dependancy.
@@ -879,6 +880,8 @@ class SearchJobOrders
             AND
                 joborder.is_admin_hidden = 0
             AND
+                joborder.owner = $user_id 
+            AND
                 joborder.site_id = %s
             ORDER BY
                 %s %s",
@@ -905,6 +908,7 @@ class SearchJobOrders
      */
     public function byCompanyName($wildCardString, $sortBy, $sortDirection, $activeOnly)
     {
+        $user_id = $_SESSION['CATS']->getUserID();
         $wildCardString = str_replace('*', '%', $wildCardString) . '%';
         $wildCardString = $this->_db->makeQueryString($wildCardString);
 
@@ -963,6 +967,8 @@ class SearchJobOrders
                 company.name LIKE %s
             %s
             AND
+                joborder.owner = $user_id 
+            AND
                 joborder.is_admin_hidden = 0
             AND
                 joborder.site_id = %s
@@ -993,6 +999,7 @@ class SearchJobOrders
      */
     public function recentlyModified($sortDirection, $activeOnly, $limit)
     {
+        $user_id = $_SESSION['CATS']->getUserID();
         if ($activeOnly)
         {
             //FIXME:  Remove session dependancy.
@@ -1046,6 +1053,7 @@ class SearchJobOrders
             LEFT JOIN user AS owner_user
                 ON joborder.owner = owner_user.user_id
             WHERE
+                joborder.owner = $user_id AND
                 joborder.site_id = %s
                 %s
             AND

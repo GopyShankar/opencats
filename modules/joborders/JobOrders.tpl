@@ -38,7 +38,7 @@
                                         </select>
                                     </td>
 
-                                    <td valign="top" align="right" nowrap="nowrap">
+                                    <td valign="top" align="right" nowrap="nowrap" style="display: none;">
                                         <input type="checkbox" name="onlyMyJobOrders" id="onlyMyJobOrders" <?php if ($this->dataGrid->getFilterValue('OwnerID') ==  $this->userID): ?>checked<?php endif; ?> onclick="<?php echo $this->dataGrid->getJSAddRemoveFilterFromCheckbox('OwnerID', '==',  $this->userID); ?>" />
                                         <label for="onlyMyJobOrders">Only My Job Orders</label>&nbsp;
 

@@ -1041,6 +1041,7 @@ class SettingsUI extends UserInterface
 
         $rs = $users->getAll();
         $license = $users->getLicenseData();
+        $role_slug = $users->getUserRoleSlug();
 
         /* Get user categories, if any. */
         $modules = ModuleUtility::getModules();
@@ -1069,6 +1070,7 @@ class SettingsUI extends UserInterface
         $this->_template->assign('subActive', '');
         $this->_template->assign('accessLevels', $accessLevels);
         $this->_template->assign('license', $license);
+        $this->_template->assign('role_slug', $role_slug);
         $this->_template->assign('EEOSettingsRS', $EEOSettingsRS);
         $this->_template->assign('defaultAccessLevel', ACCESS_LEVEL_DELETE);
         $this->_template->assign('currentUser', $this->_userID);
@@ -1198,6 +1200,7 @@ class SettingsUI extends UserInterface
 
         $users = new Users($this->_siteID);
         $license = $users->getLicenseData();
+        $role_slug = $users->getUserRoleSlug();
         $accessLevels = $users->getAccessLevels();
         $data = $users->get($userID);
 
@@ -1262,6 +1265,7 @@ class SettingsUI extends UserInterface
         $this->_template->assign('subActive', '');
         $this->_template->assign('data', $data);
         $this->_template->assign('accessLevels', $accessLevels);
+        $this->_template->assign('role_slug', $role_slug);
         $this->_template->assign('defaultAccessLevel', ACCESS_LEVEL_DELETE);
         $this->_template->assign('EEOSettingsRS', $EEOSettingsRS);
         $this->_template->assign('license', $license);

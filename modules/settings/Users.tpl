@@ -23,6 +23,7 @@
                         <th align="left" nowrap="nowrap">First Name</th>
                         <th align="left" nowrap="nowrap">Last Name</th>
                         <th align="left">Username</th>
+                        <th align="left">Role</th>
                         <th align="left" nowrap="nowrap">Access Level</th>
                         <th align="left" nowrap="nowrap">Last Success</th>
                         <th align="left" nowrap="nowrap">Last Fail</th>
@@ -43,6 +44,7 @@
                                 </a>
                             </td>
                             <td valign="top" align="left"><?php $this->_($data['username']); ?></td>
+                            <td valign="top" align="left"><?php $this->_($data['role_slug_name']); ?></td>
                             <td valign="top" align="left"><?php $this->_($data['accessLevelDescription']); ?></td>
                             <td valign="top" align="left"><?php $this->_($data['successfulDate']); ?></td>
                             <td valign="top" align="left"><?php $this->_($data['unsuccessfulDate']); ?></td>

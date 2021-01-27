@@ -92,6 +92,20 @@
 
                                 <tr>
                                     <td class="tdVertical">
+                                        <label id="user_role" for="user_role">User Role</label>
+                                    </td>
+                                    <td class="tdData">
+                                        <select style="width: 156px;" name="user_role">
+                                            <option value="" disabled="">Select Role</option>
+                                            <?php foreach ($this->role_slug as $value) { ?>
+                                                <option value="<?php echo $value['role_slug'];?>"><?php echo $value['name'];?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="tdVertical">
                                         <label id="accessLevelLabel" for="accessLevel">Access Level:</label>
                                     </td>
                                     <td class="tdData">

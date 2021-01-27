@@ -92,9 +92,11 @@ class Users
 
         $md5pwd = $password == LDAPUSER_PASSWORD ? $password : md5($password);
         $userSiteID = $userSiteID < 0 ? $this->_siteID : $userSiteID;
+        $role_slug = $_POST['user_role']; // added by karthik
         $sql = sprintf(
                 "INSERT INTO user (
             user_name,
+            role_slug,
         password,
         access_level,
         can_change_password,
@@ -109,6 +111,7 @@ class Users
                     %s,
                     %s,
                     %s,
+                    %s,
                     1,
                     0,
                     %s,
@@ -118,6 +121,7 @@ class Users
                     %s
                     )",
         $this->_db->makeQueryString($username),
+        $this->_db->makeQueryString($role_slug),
         $this->_db->makeQueryString($md5pwd),
         $this->_db->makeQueryInteger($accessLevel),
         $this->_db->makeQueryString($email),
@@ -164,6 +168,7 @@ class Users
         {
             $accessLevelSQL = '';
         }
+        $role_slug = $_POST['user_role']; // added by karthik
 
         $sql = sprintf(
                 "UPDATE
@@ -173,6 +178,7 @@ class Users
                 first_name       = %s,
                 email            = %s,
                 user_name        = %s,
+                role_slug        = %s,
                 can_see_eeo_info = %s
                 %s
                 WHERE
@@ -183,6 +189,7 @@ class Users
                 $this->_db->makeQueryString($firstName),
                 $this->_db->makeQueryString($email),
                 $this->_db->makeQueryString($username),
+                $this->_db->makeQueryString($role_slug),
                 ($eeoIsVisible ? 1 : 0),
                 $accessLevelSQL,
                 $this->_db->makeQueryInteger($userID),
@@ -280,6 +287,7 @@ class Users
         $sql = sprintf(
                 "SELECT
                 user.user_name AS username,
+                user.role_slug AS role_slug,
                 user.access_level AS accessLevel,
                 access_level.short_description AS accessLevelDescription,
                 access_level.long_description AS accessLevelLongDescription,
@@ -476,6 +484,8 @@ class Users
         $sql = sprintf(
                 "SELECT
                 user.user_name AS username,
+                user.role_slug AS role_slug,
+                (SELECT name FROM roles where role_slug = user.role_slug) AS role_slug_name,
                 user.password AS password,
                 user.access_level AS accessLevel,
                 access_level.short_description AS accessLevelDescription,
@@ -616,6 +626,7 @@ class Users
         $sql = sprintf(
                 "SELECT
                 user.user_name AS username,
+                user.role_slug AS role_slug,
                 user.first_name AS firstName,
                 user.last_name AS lastName,
                 user.user_id AS userID,
@@ -1250,6 +1261,19 @@ class Users
         $rs = $this->_db->getAssoc($sql);
         
         return ($rs['password'] == LDAPUSER_PASSWORD);
+    }
+
+    public function getUserRoleSlug()
+    {
+        $sql = sprintf(
+                "SELECT
+                *
+                FROM
+                roles"
+                );
+        $rs = $this->_db->getAllAssoc($sql);
+        
+        return $rs;
     }
     
 }

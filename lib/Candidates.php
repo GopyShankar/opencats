@@ -1449,6 +1449,7 @@ class CandidatesDataGrid extends DataGrid
      */
     public function getSQL($selectSQL, $joinSQL, $whereSQL, $havingSQL, $orderSQL, $limitSQL, $distinct = '')
     {
+        $user_id = $_SESSION['CATS']->getUserID();
         // FIXME: Factor out Session dependency.
         if ($_SESSION['CATS']->isLoggedIn() && $_SESSION['CATS']->getAccessLevel('candidates') < ACCESS_LEVEL_MULTI_SA)
         {
@@ -1488,6 +1489,7 @@ class CandidatesDataGrid extends DataGrid
                 candidate
             %s
             WHERE
+                candidate.owner = $user_id AND
                 candidate.site_id = %s
             %s
             %s
