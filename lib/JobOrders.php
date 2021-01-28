@@ -1235,8 +1235,15 @@ class JobOrdersDataGrid extends DataGrid
      */
     public function getSQL($selectSQL, $joinSQL, $whereSQL, $havingSQL, $orderSQL, $limitSQL, $distinct = '')
     {
-        
+
         $user_id = $_SESSION['CATS']->getUserID();
+        if($_SESSION['CATS']->getUserrole()=='admin' || $_SESSION['CATS']->getUserrole()=='super_admin'){
+            $roleJoin = '';
+        }else{
+            $roleJoin = 'joborder.owner = '.$user_id.' AND';
+        }
+        
+
         // FIXME: Factor out Session dependency.
         if ($_SESSION['CATS']->isLoggedIn() && $_SESSION['CATS']->getAccessLevel(ACL::SECOBJ_ROOT) < ACCESS_LEVEL_MULTI_SA)
         {
@@ -1284,8 +1291,7 @@ class JobOrdersDataGrid extends DataGrid
                 ON joborder.joborder_id = attachment.data_item_id
                 AND attachment.data_item_type = %s
             %s
-            WHERE
-                joborder.owner = $user_id AND
+            WHERE $roleJoin
                 joborder.site_id = %s
             %s
             %s

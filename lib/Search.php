@@ -819,6 +819,11 @@ class SearchJobOrders
         $activeOnly)
     {
         $user_id = $_SESSION['CATS']->getUserID();
+        if($_SESSION['CATS']->getUserrole()=='admin' || $_SESSION['CATS']->getUserrole()=='super_admin'){
+            $roleJoin = '';
+        }else{
+            $roleJoin = 'AND joborder.owner = '.$user_id;
+        }
         if ($activeOnly)
         {
             //FIXME:  Remove session dependancy.
@@ -879,8 +884,7 @@ class SearchJobOrders
             %s
             AND
                 joborder.is_admin_hidden = 0
-            AND
-                joborder.owner = $user_id 
+                $roleJoin 
             AND
                 joborder.site_id = %s
             ORDER BY
@@ -909,6 +913,11 @@ class SearchJobOrders
     public function byCompanyName($wildCardString, $sortBy, $sortDirection, $activeOnly)
     {
         $user_id = $_SESSION['CATS']->getUserID();
+        if($_SESSION['CATS']->getUserrole()=='admin' || $_SESSION['CATS']->getUserrole()=='super_admin'){
+            $roleJoin = '';
+        }else{
+            $roleJoin = 'AND joborder.owner = '.$user_id;
+        }
         $wildCardString = str_replace('*', '%', $wildCardString) . '%';
         $wildCardString = $this->_db->makeQueryString($wildCardString);
 
@@ -966,8 +975,7 @@ class SearchJobOrders
             WHERE
                 company.name LIKE %s
             %s
-            AND
-                joborder.owner = $user_id 
+            $roleJoin 
             AND
                 joborder.is_admin_hidden = 0
             AND
@@ -1000,6 +1008,11 @@ class SearchJobOrders
     public function recentlyModified($sortDirection, $activeOnly, $limit)
     {
         $user_id = $_SESSION['CATS']->getUserID();
+        if($_SESSION['CATS']->getUserrole()=='admin' || $_SESSION['CATS']->getUserrole()=='super_admin'){
+            $roleJoin = '';
+        }else{
+            $roleJoin = 'joborder.owner = '.$user_id.' AND';
+        }
         if ($activeOnly)
         {
             //FIXME:  Remove session dependancy.
@@ -1053,7 +1066,7 @@ class SearchJobOrders
             LEFT JOIN user AS owner_user
                 ON joborder.owner = owner_user.user_id
             WHERE
-                joborder.owner = $user_id AND
+                $roleJoin
                 joborder.site_id = %s
                 %s
             AND
