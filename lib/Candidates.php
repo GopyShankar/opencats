@@ -96,7 +96,7 @@ class Candidates
         $source, $keySkills, $dateAvailable, $currentEmployer, $canRelocate,
         $currentPay, $desiredPay, $notes, $webSite, $bestTimeToCall, $enteredBy, $owner,
         $gender = '', $race = '', $veteran = '', $disability = '',
-        $skipHistory = false)
+        $skipHistory = false,$erName1,$erDoj1,$erDor1,$erName2,$erDoj2,$erDor2,$erName3,$erDoj3,$erDor3,$ectcConfirm,$doj,$currentErName,$currentErDoj,$currentErDor,$board10th,$passYr10th,$precent10th,$board12th,$passYr12th,$precent12th,$insName,$degreeCourse,$degreePassYr,$degreePrecent)
     {
         $sql = sprintf(
             "INSERT INTO candidate (
@@ -131,7 +131,31 @@ class Candidates
                 eeo_ethnic_type_id,
                 eeo_veteran_type_id,
                 eeo_disability_status,
-                eeo_gender
+                eeo_gender,
+                employer1_name,
+                employer1_doj,
+                employer1_dor,
+                employer2_name,
+                employer2_doj,
+                employer2_dor,
+                employer3_name,
+                employer3_doj,
+                employer3_dor,
+                ectc_confirmation,
+                doj,
+                current_er_name,
+                current_er_doj,
+                current_er_dor,
+                board10th,
+                passYr10th,
+                precent10th,
+                board12th,
+                passYr12th,
+                precent12th,
+                insName,
+                degreeCourse,
+                degreePassYr,
+                degreePrecent
             )
             VALUES (
                 %s,
@@ -165,6 +189,30 @@ class Candidates
                 %s,
                 %s,
                 %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
                 %s
             )",
             $this->_db->makeQueryString($firstName),
@@ -195,7 +243,31 @@ class Candidates
             $this->_db->makeQueryInteger($race),
             $this->_db->makeQueryInteger($veteran),
             $this->_db->makeQueryString($disability),
-            $this->_db->makeQueryString($gender)
+            $this->_db->makeQueryString($gender),
+            $this->_db->makeQueryString($erName1),
+            $this->_db->makeQueryString($erDoj1),
+            $this->_db->makeQueryString($erDor1),
+            $this->_db->makeQueryString($erName2),
+            $this->_db->makeQueryString($erDoj2),
+            $this->_db->makeQueryString($erDor2),
+            $this->_db->makeQueryString($erName3),
+            $this->_db->makeQueryString($erDoj3),
+            $this->_db->makeQueryString($erDor3),
+            $this->_db->makeQueryString($ectcConfirm),
+            $this->_db->makeQueryString($doj),
+            $this->_db->makeQueryString($currentErName),
+            $this->_db->makeQueryString($currentErDoj),
+            $this->_db->makeQueryString($currentErDor),
+            $this->_db->makeQueryString($board10th),
+            $this->_db->makeQueryString($passYr10th),
+            $this->_db->makeQueryString($precent10th),
+            $this->_db->makeQueryString($board12th),
+            $this->_db->makeQueryString($passYr12th),
+            $this->_db->makeQueryString($precent12th),
+            $this->_db->makeQueryString($insName),
+            $this->_db->makeQueryString($degreeCourse),
+            $this->_db->makeQueryString($degreePassYr),
+            $this->_db->makeQueryString($degreePrecent)
         );
         $queryResult = $this->_db->query($sql);
         if (!$queryResult)
@@ -251,7 +323,7 @@ class Candidates
         $city, $state, $zip, $source, $keySkills, $dateAvailable,
         $currentEmployer, $canRelocate, $currentPay, $desiredPay,
         $notes, $webSite, $bestTimeToCall, $owner, $isHot, $email, $emailAddress,
-        $gender = '', $race = '', $veteran = '', $disability = '')
+        $gender = '', $race = '', $veteran = '', $disability = '',$erName1,$erDoj1,$erDor1)
     {
         $sql = sprintf(
             "UPDATE
@@ -515,7 +587,10 @@ class Candidates
                     IF (candidate.eeo_gender = 'f',
                         'Female',
                         ''))
-                     AS eeoGenderText
+                     AS eeoGenderText,
+                     candidate.employer1_name AS employer1_name,
+                     candidate.employer1_doj AS employer1_doj,
+                     candidate.employer1_dor AS employer1_dor
             FROM
                 candidate
             LEFT JOIN user AS entered_by_user

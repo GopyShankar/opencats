@@ -530,12 +530,23 @@ class FileUtility
         {
             return false;
         }
+        if(is_array($uploadFileName)){
+            $filePath = array();
+            foreach ($uploadFileName as $key => $value) {
+                $path = sprintf('%s/%s', $uploadPath, $value);
+                if (!self::isUploadFileSafe($siteID, $subDirectory, $path))
+                {
+                    return false;
+                }
+                array_push($filePath, $path);
+            }
+        }else{
+            $filePath = sprintf('%s/%s', $uploadPath, $uploadFileName);
 
-        $filePath = sprintf('%s/%s', $uploadPath, $uploadFileName);
-
-        if (!self::isUploadFileSafe($siteID, $subDirectory, $filePath))
-        {
-            return false;
+            if (!self::isUploadFileSafe($siteID, $subDirectory, $filePath))
+            {
+                return false;
+            }
         }
 
         return $filePath;
@@ -554,43 +565,47 @@ class FileUtility
     {
         if (isset($_FILES[$id]))
         {
-            if (!@file_exists($_FILES[$id]['tmp_name']))
-            {
-                // File was removed, accessed from another window, or no longer exists
-                return false;
+            foreach ($_FILES[$id]['tmp_name'] as $value) {
+                if (!@file_exists($value)){
+                    // File was removed, accessed from another window, or no longer exists
+                    return false;
+                }   
             }
 
             if (!eval(Hooks::get('FILE_UTILITY_SPACE_CHECK'))) return;
 
             $uploadPath = FileUtility::getUploadPath($siteID, $subDirectory);
-            $newFileName = $_FILES[$id]['name'];
-
-            // Could just while(file_exists) it, but I'm paranoid of infinate loops
-            // Shouldn't have 1000 files of the same name anyway
-            for ($i = 0; @file_exists($uploadPath . '/' . $newFileName) && $i < 1000; $i++)
-            {
-                $mp = explode('.', $newFileName);
-                $fileNameBase = implode('.', array_slice($mp, 0, count($mp)-1));
-                $fileNameExt = $mp[count($mp)-1];
-
-                if (preg_match('/(.*)_Copy([0-9]{1,3})$/', $fileNameBase, $matches))
+            $newFileNameList = array();
+            foreach ($_FILES[$id]['name'] as $key => $value) {
+                $newFileName = $_FILES[$id]['name'][$key];
+                // Could just while(file_exists) it, but I'm paranoid of infinate loops
+                // Shouldn't have 1000 files of the same name anyway
+                for ($i = 0; @file_exists($uploadPath . '/' . $newFileName) && $i < 1000; $i++)
                 {
-                    // Copy already appending, increase the #
-                    $fileNameBase = sprintf('%s_Copy%d', $matches[1], intval($matches[2]) + 1);
+                    $mp = explode('.', $newFileName);
+                    $fileNameBase = implode('.', array_slice($mp, 0, count($mp)-1));
+                    $fileNameExt = $mp[count($mp)-1];
+
+                    if (preg_match('/(.*)_Copy([0-9]{1,3})$/', $fileNameBase, $matches))
+                    {
+                        // Copy already appending, increase the #
+                        $fileNameBase = sprintf('%s_Copy%d', $matches[1], intval($matches[2]) + 1);
+                    }
+                    else
+                    {
+                        $fileNameBase .= '_Copy1';
+                    }
+
+                    $newFileName = $fileNameBase . '.' . $fileNameExt;
                 }
-                else
+
+                if (@move_uploaded_file($_FILES[$id]['tmp_name'][$key], $uploadPath . '/' . $newFileName) &&
+                    @chmod($uploadPath . '/' . $newFileName, 0777))
                 {
-                    $fileNameBase .= '_Copy1';
-                }
-
-                $newFileName = $fileNameBase . '.' . $fileNameExt;
+                    array_push($newFileNameList, $newFileName);
+                }    
             }
-
-            if (@move_uploaded_file($_FILES[$id]['tmp_name'], $uploadPath . '/' . $newFileName) &&
-                @chmod($uploadPath . '/' . $newFileName, 0777))
-            {
-                return $newFileName;
-            }
+            return $newFileNameList;
         }
 
         return false;

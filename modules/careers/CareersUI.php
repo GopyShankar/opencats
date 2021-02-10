@@ -431,6 +431,33 @@ class CareersUI extends UserInterface
             // for <input-resumeUploadPreview>
             $resumeContents = isset($_POST[$id='resumeContents']) ? $_POST[$id] : '';
             $resumeFileLocation = isset($_POST[$id='file']) ? $_POST[$id] : '';
+            
+
+            $erName1 = isset($_POST[$id='erName1']) ? $_POST[$id] : '';
+            $erDoj1 = isset($_POST[$id='erDoj1']) ? $_POST[$id] : '';
+            $erDor1 = isset($_POST[$id='erDor1']) ? $_POST[$id] : '';
+            $erName2 = isset($_POST[$id='erName2']) ? $_POST[$id] : '';
+            $erDoj2 = isset($_POST[$id='erDoj2']) ? $_POST[$id] : '';
+            $erDor2 = isset($_POST[$id='erDor2']) ? $_POST[$id] : '';
+            $erName3 = isset($_POST[$id='erName3']) ? $_POST[$id] : '';
+            $erDoj3 = isset($_POST[$id='erDoj3']) ? $_POST[$id] : '';
+            $erDor3 = isset($_POST[$id='erDor3']) ? $_POST[$id] : '';
+            $ectcConfirm = isset($_POST[$id='ectcConfirm']) ? $_POST[$id] : '';
+            $doj = isset($_POST[$id='doj']) ? $_POST[$id] : '';
+
+            $currentErName = isset($_POST[$id='currentErName']) ? $_POST[$id] : '';
+            $currentErDoj = isset($_POST[$id='currentErDoj']) ? $_POST[$id] : '';
+            $currentErDor = isset($_POST[$id='currentErDor']) ? $_POST[$id] : '';
+            $board10th = isset($_POST[$id='board10th']) ? $_POST[$id] : '';
+            $passYr10th = isset($_POST[$id='passYr10th']) ? $_POST[$id] : '';
+            $precent10th = isset($_POST[$id='precent10th']) ? $_POST[$id] : '';
+            $board12th = isset($_POST[$id='board12th']) ? $_POST[$id] : '';
+            $passYr12th = isset($_POST[$id='passYr12th']) ? $_POST[$id] : '';
+            $precent12th = isset($_POST[$id='precent12th']) ? $_POST[$id] : '';
+            $insName = isset($_POST[$id='insName']) ? $_POST[$id] : '';
+            $degreeCourse = isset($_POST[$id='degreeCourse']) ? $_POST[$id] : '';
+            $degreePassYr = isset($_POST[$id='degreePassYr']) ? $_POST[$id] : '';
+            $degreePrecent = isset($_POST[$id='degreePrecent']) ? $_POST[$id] : '';
             // for returning candidates
             $candidateID = -1;
 
@@ -473,6 +500,7 @@ class CareersUI extends UserInterface
                     isset($_POST['isNew']) && !strcmp($_POST['isNew'], 'no') && $isRegistrationEnabled)
                 {
                     $candidate = $this->ProcessCandidateRegistration($siteID, $template['Content - Candidate Registration']);
+                    
                     if ($candidate !== false)
                     {
                         // Rewrite here, I'll fix it later
@@ -498,7 +526,7 @@ class CareersUI extends UserInterface
                 if (($uploadFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'resumeFile')) !== false)
                 {
                     $uploadFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadFile);
-
+                    $uploadFileLocationPath = implode(",",$uploadFilePath);
                     if ($uploadFilePath !== false)
                     {
                         $d2t = new DocumentToText();
@@ -565,16 +593,23 @@ class CareersUI extends UserInterface
             /* Get the attachment (friendly) file name is there is an attachment uploaded */
             if ($resumeFileLocation != '')
             {
-                $attachmentHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                $attachView = array();
+                foreach ($resumeFileLocation as $value) {
+                    $attachmentHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
                     . 'padding: 0 3px 0 5px; font-size: 11px;"> '
                     . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
-                    . 'Attachment: <span style="font-weight: bold;">'.$resumeFileLocation.'</span> '
+                    . 'Attachment: <span style="font-weight: bold;">'.$value.'</span> '
                     . '</div> ';
+                    array_push($attachView, $attachmentHTML);
+                }
+                $attachmentHTML = implode(" ",$attachView);
+                $uploadFileFullPath = implode(",",$resumeFileLocation);
             }
             else
             {
                 $attachmentHTML = '';
             }
+
 
             /* Replace input fields. */
             $template['Content'] = str_replace('<jobid>', $jobID, $template['Content']);
@@ -598,22 +633,11 @@ class CareersUI extends UserInterface
             $template['Content'] = str_replace('<input-resumeUpload>', '<input type="file" id="resume" name="file" class="inputBoxFile" />', $template['Content']);
             $template['Content'] = str_replace('<input-resumeUploadPreview>',
                 '<input type="hidden" id="applyToJobSubAction" name="applyToJobSubAction" value="" /> '
-                . '<input type="hidden" id="file" name="file" value="' . $resumeFileLocation . '" /> '
-                . '<input type="file" id="resumeFile" name="resumeFile" class="inputBoxFile" size="30" onchange="resumeLoadCheck();" /> '
+                . '<input type="hidden" id="file" name="file" value="' . $uploadFileFullPath . '" /> '
+                . '<input type="hidden" id="file_path" name="file_path" value="' . $uploadFileLocationPath . '" /> '
+                . '<input type="file" id="resumeFile" name="resumeFile[]" class="inputBoxFile" size="30" onchange="resumeLoadCheck();" multiple/> '
                 . '<input type="button" id="resumeLoad" name="resumeLoad" value="Upload" onclick="resumeLoadFile();" disabled /><br /> '
-                . $attachmentHTML
-                . '<textarea id="resumeContents" name="resumeContents" class="inputBoxArea" onmousemove="resumeContentsChange(this);" '
-                . 'onchange="resumeContentsChange(this);" onmousedown="resumeContentsChange(this);" '
-                . 'style="width: 410px; height: 150px;">' . $resumeContents . '</textarea><br /> '
-                . (
-                // If parsing is enabled, add the image link for it
-                LicenseUtility::isParsingEnabled() ?
-                    '<br /><div style="text-align: right;">'
-                    . '<input type="button" value="Populate Fields ->" id="resumePopulate" onclick="resumeParse();" '.(strlen($resumeContents)?'':'disabled').' />'
-                :
-                    ''
-                ),
-                $template['Content']);
+                . $attachmentHTML,$template['Content']);
             $template['Content'] = str_replace('<input-extraNotes>', '<textarea name="extraNotes" id="extraNotes" class="inputBoxArea" maxlength="450" onkeyup="mlength=this.getAttribute ? parseInt(this.getAttribute(\'maxlength\')) : \'\'; if (this.getAttribute && this.value.length>(mlength+7)) { alert(\'Sorry, you may only enter \'+mlength+\' characters into the extra notes.\');} if (this.getAttribute && this.value.length>mlength) {this.value=this.value.substring(0,mlength); this.scrollTop = this.scrollHeight;}">'.(isset($_POST[$id='extraNotes'])?$_POST[$id]:'').'</textarea>', $template['Content']);
             $template['Content'] = str_replace('<submit', '<input type="submit" class="submitButton"', $template['Content']);
 
@@ -646,6 +670,33 @@ class CareersUI extends UserInterface
                                                                         <option value="No">No</option>
                                                                         <option value="Yes">Yes</option>
                                                                     </select>', $template['Content']);
+            $template['Content'] = str_replace('<input-erName1>', '<input name="erName1" id="erName1" class="inputBoxName" value="' . $erName1 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDoj1>', '<input name="erDoj1" id="erDoj1" class="inputBoxName" value="' . $erDoj1 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDor1>', '<input name="erDor1" id="erDor1" class="inputBoxName" value="' . $erDor1 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erName2>', '<input name="erName2" id="erName2" class="inputBoxName" value="' . $erName2 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDoj2>', '<input name="erDoj2" id="erDoj2" class="inputBoxName" value="' . $erDoj2 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDor2>', '<input name="erDor2" id="erDor2" class="inputBoxName" value="' . $erDor2 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erName3>', '<input name="erName3" id="erName3" class="inputBoxName" value="' . $erName3 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDoj3>', '<input name="erDoj3" id="erDoj3" class="inputBoxName" value="' . $erDoj3 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDor3>', '<input name="erDor3" id="erDor3" class="inputBoxName" value="' . $erDor3 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-ectcConfirm>', '<input name="ectcConfirm" id="ectcConfirm" class="inputBoxName" value="' . $ectcConfirm . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-doj>', '<input name="doj" id="doj" class="inputBoxName" value="' . $doj . '" />', $template['Content']);
+
+            $template['Content'] = str_replace('<input-currentErName>', '<input name="currentErName" id="currentErName" class="inputBoxName" value="' . $currentErName . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-currentErDoj>', '<input name="currentErDoj" id="currentErDoj" class="inputBoxName" value="' . $currentErDoj . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-currentErDor>', '<input name="currentErDor" id="currentErDor" class="inputBoxName" value="' . $currentErDor . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-board10th>', '<input name="board10th" id="board10th" class="inputBoxName" value="' . $board10th . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-passYr10th>', '<input name="passYr10th" id="passYr10th" class="inputBoxName" value="' . $passYr10th . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-precent10th>', '<input name="precent10th" id="precent10th" class="inputBoxName" value="' . $precent10th . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-board12th>', '<input name="board12th" id="board12th" class="inputBoxName" value="' . $board12th . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-passYr12th>', '<input name="passYr12th" id="passYr12th" class="inputBoxName" value="' . $passYr12th . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-precent12th>', '<input name="precent12th" id="precent12th" class="inputBoxName" value="' . $precent12th . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-insName>', '<input name="insName" id="insName" class="inputBoxName" value="' . $insName . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-degreeCourse>', '<input name="degreeCourse" id="degreeCourse" class="inputBoxName" value="' . $degreeCourse . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-degreePassYr>', '<input name="degreePassYr" id="degreePassYr" class="inputBoxName" value="' . $degreePassYr . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-degreePrecent>', '<input name="degreePrecent" id="degreePrecent" class="inputBoxName" value="' . $degreePrecent . '" />', $template['Content']);
+
+
 
             /* Extra field inputs. */
             $candidates = new Candidates($siteID);
@@ -714,6 +765,7 @@ class CareersUI extends UserInterface
         }
         else if ($p == 'onApplyToJobOrder')
         {
+
             if (!$this->isRequiredIDValid('ID', $_POST))
             {
                 // FIXME: Generate valid XHTML error pages. Create an error/fatal method!
@@ -1230,6 +1282,33 @@ class CareersUI extends UserInterface
         $veteran        = $this->getTrimmedInput('eeoveteran', $_POST);
         $disability     = $this->getTrimmedInput('eeodisability', $_POST);
 
+        $erName1        = $this->getTrimmedInput('erName1', $_POST);
+        $erDoj1         = $this->getTrimmedInput('erDoj1', $_POST);
+        $erDor1         = $this->getTrimmedInput('erDor1', $_POST);
+        $erName2        = $this->getTrimmedInput('erName2', $_POST);
+        $erDoj2         = $this->getTrimmedInput('erDoj2', $_POST);
+        $erDor2         = $this->getTrimmedInput('erDor2', $_POST);
+        $erName3        = $this->getTrimmedInput('erName3', $_POST);
+        $erDoj3         = $this->getTrimmedInput('erDoj3', $_POST);
+        $erDor3         = $this->getTrimmedInput('erDor3', $_POST);
+        $ectcConfirm    = $this->getTrimmedInput('ectcConfirm', $_POST);
+        $doj            = $this->getTrimmedInput('doj', $_POST);
+
+        $currentErName  = $this->getTrimmedInput('currentErName', $_POST);
+        $currentErDoj   = $this->getTrimmedInput('currentErDoj', $_POST);
+        $currentErDor   = $this->getTrimmedInput('currentErDor', $_POST);
+        $board10th      = $this->getTrimmedInput('board10th', $_POST);
+        $passYr10th     = $this->getTrimmedInput('passYr10th', $_POST);
+        $precent10th    = $this->getTrimmedInput('precent10th', $_POST);
+        $board12th      = $this->getTrimmedInput('board12th', $_POST);
+        $passYr12th     = $this->getTrimmedInput('passYr12th', $_POST);
+        $precent12th    = $this->getTrimmedInput('precent12th', $_POST);
+        $insName        = $this->getTrimmedInput('insName', $_POST);
+        $degreeCourse   = $this->getTrimmedInput('degreeCourse', $_POST);
+        $degreePassYr   = $this->getTrimmedInput('degreePassYr', $_POST);
+        $degreePrecent  = $this->getTrimmedInput('degreePrecent', $_POST);
+
+
         if (empty($firstName))
         {
             CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'First Name is a required field - please have your administrator edit your templates to include the first name field.');
@@ -1275,6 +1354,7 @@ class CareersUI extends UserInterface
         // specify "remember me" which stores it for 2 weeks.
         @setcookie($this->getCareerPortalCookieName($siteID), $storedVal, time()+60*60);
 
+
         if ($candidateID !== false)
         {
             $candidate = $candidates->get($candidateID);
@@ -1285,7 +1365,7 @@ class CareersUI extends UserInterface
                 $lastName, $email, $email2, $phoneHome, $phoneCell, $phone, $address, $city,
                 $state, $zip, $source, $keySkills, '', $employer, '', '', '', $candidate['notes'],
                 '', $bestTimeToCall, $automatedUser['userID'], $automatedUser['userID'], $gender,
-                $race, $veteran, $disability
+                $race, $veteran, $disability,$erName1,$erDoj1,$erDor1,$erName2,$erDoj2,$erDor2,$erName3,$erDoj3,$erDor3
             );
 
             /* Update extra feilds */
@@ -1296,7 +1376,6 @@ class CareersUI extends UserInterface
             // Lookup the candidate by e-mail, use that candidate instead if found (but don't update profile)
             $candidateID = $candidates->getIDByEmail($email);
         }
-
         if ($candidateID === false || $candidateID < 0)
         {
             /* New candidate. */
@@ -1329,7 +1408,32 @@ class CareersUI extends UserInterface
                 $gender,
                 $race,
                 $veteran,
-                $disability
+                $disability,
+                false,
+                $erName1,
+                $erDoj1,
+                $erDor1,
+                $erName2,
+                $erDoj2,
+                $erDor2,
+                $erName3,
+                $erDoj3,
+                $erDor3,
+                $ectcConfirm,
+                $doj,
+                $currentErName,
+                $currentErDoj,
+                $currentErDor,
+                $board10th,
+                $passYr10th,
+                $precent10th,
+                $board12th,
+                $passYr12th,
+                $precent12th,
+                $insName,
+                $degreeCourse,
+                $degreePassYr,
+                $degreePrecent
             );
 
             /* Update extra fields. */
@@ -1347,11 +1451,11 @@ class CareersUI extends UserInterface
         $fileUploaded = false;
 
         /* Upload resume (no questionnaire) */
-        if (isset($_FILES['file']) && !empty($_FILES['file']['name']))
+        if (isset($_FILES['resumeFile']) && !empty($_FILES['resumeFile']['name']))
         {
             $attachmentCreator = new AttachmentCreator($siteID);
             $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'file', false, true
+                DATA_ITEM_CANDIDATE, $candidateID, 'resumeFile', false, true
             );
 
             if ($attachmentCreator->isError())
