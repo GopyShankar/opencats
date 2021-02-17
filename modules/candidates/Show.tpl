@@ -121,6 +121,58 @@ use OpenCATS\UI\CandidateQuickActionMenu;
                                 <td class="vertical">Source:</td>
                                 <td class="data"><?php $this->_($this->data['source']); ?></td>
                             </tr>
+                            <!-- Custom field Added -->
+                            <tr>
+                                <td class="vertical">Employer1 Name :</td>
+                                <td class="data"><?php $this->_($this->data['employer1_name']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Employer1 DOJ :</td>
+                                <td class="data"><?php $this->_($this->data['employer1_doj']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Employer1 DOR :</td>
+                                <td class="data"><?php $this->_($this->data['employer1_dor']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Employer2 Name :</td>
+                                <td class="data"><?php $this->_($this->data['employer2_name']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Employer2 DOJ :</td>
+                                <td class="data"><?php $this->_($this->data['employer2_doj']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Employer2 DOR :</td>
+                                <td class="data"><?php $this->_($this->data['employer2_dor']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Employer3 Name :</td>
+                                <td class="data"><?php $this->_($this->data['employer3_name']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Employer3 DOJ :</td>
+                                <td class="data"><?php $this->_($this->data['employer3_doj']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Employer3 DOR :</td>
+                                <td class="data"><?php $this->_($this->data['employer3_dor']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Current Employer Name :</td>
+                                <td class="data"><?php $this->_($this->data['current_er_name']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Current Employer DOJ :</td>
+                                <td class="data"><?php $this->_($this->data['current_er_doj']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Current Employer DOR/LWD :</td>
+                                <td class="data"><?php $this->_($this->data['current_er_dor']); ?></td>
+                            </tr>
+                            <!-- Custom field Added -->
+
+
 
                             <?php for ($i = 0; $i < intval(count($this->extraFieldRS)/2); $i++): ?>
                                 <tr>
@@ -191,6 +243,58 @@ use OpenCATS\UI\CandidateQuickActionMenu;
                                 <td class="vertical">Owner:</td>
                                 <td class="data"><?php $this->_($this->data['ownerFullName']); ?></td>
                             </tr>
+
+                            <!-- Custom field Added Start-->
+                            <tr>
+                                <td class="vertical">10th Board:</td>
+                                <td class="data"><?php $this->_($this->data['board10th']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">10th Year Of Passing:</td>
+                                <td class="data"><?php $this->_($this->data['passYr10th']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">10th Precentage:</td>
+                                <td class="data"><?php $this->_($this->data['precent10th']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">12th Board:</td>
+                                <td class="data"><?php $this->_($this->data['board12th']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">12th Year Of Passing:</td>
+                                <td class="data"><?php $this->_($this->data['passYr12th']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">12th Precentage:</td>
+                                <td class="data"><?php $this->_($this->data['precent12th']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">University/Institute:</td>
+                                <td class="data"><?php $this->_($this->data['insName']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Degree Course:</td>
+                                <td class="data"><?php $this->_($this->data['degreeCourse']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Degree Year Of Passing:</td>
+                                <td class="data"><?php $this->_($this->data['degreePassYr']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Degree Precentage:</td>
+                                <td class="data"><?php $this->_($this->data['degreePrecent']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">ECTC Confirmation:</td>
+                                <td class="data"><?php $this->_($this->data['ectc_confirmation']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">DOJ:</td>
+                                <td class="data"><?php $this->_($this->data['doj']); ?></td>
+                            </tr>
+
+                            <!-- Custom field Added End-->
 
                             <?php for ($i = (intval(count($this->extraFieldRS))/2); $i < (count($this->extraFieldRS)); $i++): ?>
                                 <tr>

@@ -590,7 +590,28 @@ class Candidates
                      AS eeoGenderText,
                      candidate.employer1_name AS employer1_name,
                      candidate.employer1_doj AS employer1_doj,
-                     candidate.employer1_dor AS employer1_dor
+                     candidate.employer1_dor AS employer1_dor,
+                     candidate.employer2_name AS employer2_name,
+                     candidate.employer2_doj AS employer2_doj,
+                     candidate.employer2_dor AS employer2_dor,
+                     candidate.employer3_name AS employer3_name,
+                     candidate.employer3_doj AS employer3_doj,
+                     candidate.employer3_dor AS employer3_dor,
+                     candidate.ectc_confirmation AS ectc_confirmation,
+                     candidate.doj AS doj,
+                     candidate.current_er_name AS current_er_name,
+                     candidate.current_er_doj AS current_er_doj,
+                     candidate.current_er_dor AS current_er_dor,
+                     candidate.board10th AS board10th,
+                     candidate.passYr10th AS passYr10th,
+                     candidate.precent10th AS precent10th,
+                     candidate.board12th AS board12th,
+                     candidate.passYr12th AS passYr12th,
+                     candidate.precent12th AS precent12th,
+                     candidate.insName AS insName,
+                     candidate.degreeCourse AS degreeCourse,
+                     candidate.degreePassYr AS degreePassYr,
+                     candidate.degreePrecent AS degreePrecent
             FROM
                 candidate
             LEFT JOIN user AS entered_by_user
