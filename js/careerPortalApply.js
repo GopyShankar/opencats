@@ -225,3 +225,14 @@ function validateCandidateRegistration()
 
     return true;
 }
+
+
+function removeDocFiles(val){
+    var removeFile = $(val).closest("div").find('span').html();
+    var fileList = $('#file').val();
+    var res = fileList.split(",");
+    res.splice(res.indexOf(removeFile), 1);
+    var files = res.toString();
+    $(val).closest("div").remove();
+    $('input#file').replaceWith('<input type="hidden" id="file" name="file" value="' +files+ '" />');
+}

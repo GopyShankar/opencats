@@ -4,6 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo(HTML_ENCODING); ?>" />
         <title><?php $this->_($this->siteName); ?> - Careers</title>
+            <script type="text/javascript" src="../js/jquery-1.3.2.min.js"></script>
             <script type="text/javascript" src="../js/careerPortalApply.js"></script>
         <?php global $careerPage; if (isset($careerPage) && $careerPage == true): ?>
             <script type="text/javascript" src="../js/lib.js"></script>

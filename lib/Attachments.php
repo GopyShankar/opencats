@@ -981,7 +981,8 @@ class AttachmentCreator
             foreach ($uploadFileName as $key => $value) {
                 /* Get file upload metadata. */
                 $originalFilename = $uploadFileName[$key];
-                $tempFilename     = $uploadFileFullPath[$key];
+                // $tempFilename     = $uploadFileFullPath[$key];
+                $tempFilename     = 'upload/careerportaladd/'.$uploadFileName[$key];
                 $contentType      = mime_content_type($tempFilename);
                 $fileSize         = filesize($tempFilename);
                 $uploadError      = $_FILES[$fileField]['error'][$key];

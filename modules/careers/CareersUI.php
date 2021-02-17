@@ -590,6 +590,16 @@ class CareersUI extends UserInterface
             /* Translate required fields into normal fields for replacement. */
             $template['Content'] = str_replace(' req>', '>', $template['Content']);
 
+            if(isset($_POST[$id='file'])){
+                foreach (explode(",",$_POST[$id='file']) as $key => $value) {
+                    if(!empty($value)){
+                        array_push($resumeFileLocation, $value);
+                    }
+                }
+            }else{
+                $resumeFileLocation = isset($_POST[$id='file']) ? $_POST[$id] : '';
+            }
+
             /* Get the attachment (friendly) file name is there is an attachment uploaded */
             if ($resumeFileLocation != '')
             {
@@ -598,7 +608,7 @@ class CareersUI extends UserInterface
                     $attachmentHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
                     . 'padding: 0 3px 0 5px; font-size: 11px;"> '
                     . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
-                    . 'Attachment: <span style="font-weight: bold;">'.$value.'</span> '
+                    . 'Attachment: <span style="font-weight: bold;">'.$value.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
                     . '</div> ';
                     array_push($attachView, $attachmentHTML);
                 }
@@ -671,20 +681,20 @@ class CareersUI extends UserInterface
                                                                         <option value="Yes">Yes</option>
                                                                     </select>', $template['Content']);
             $template['Content'] = str_replace('<input-erName1>', '<input name="erName1" id="erName1" class="inputBoxName" value="' . $erName1 . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-erDoj1>', '<input name="erDoj1" id="erDoj1" class="inputBoxName" value="' . $erDoj1 . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-erDor1>', '<input name="erDor1" id="erDor1" class="inputBoxName" value="' . $erDor1 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDoj1>', '<input name="erDoj1" type="date" id="erDoj1" class="inputBoxName" value="' . $erDoj1 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDor1>', '<input name="erDor1" type="date" id="erDor1" class="inputBoxName" value="' . $erDor1 . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-erName2>', '<input name="erName2" id="erName2" class="inputBoxName" value="' . $erName2 . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-erDoj2>', '<input name="erDoj2" id="erDoj2" class="inputBoxName" value="' . $erDoj2 . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-erDor2>', '<input name="erDor2" id="erDor2" class="inputBoxName" value="' . $erDor2 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDoj2>', '<input name="erDoj2" type="date" id="erDoj2" class="inputBoxName" value="' . $erDoj2 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDor2>', '<input name="erDor2" type="date" id="erDor2" class="inputBoxName" value="' . $erDor2 . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-erName3>', '<input name="erName3" id="erName3" class="inputBoxName" value="' . $erName3 . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-erDoj3>', '<input name="erDoj3" id="erDoj3" class="inputBoxName" value="' . $erDoj3 . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-erDor3>', '<input name="erDor3" id="erDor3" class="inputBoxName" value="' . $erDor3 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDoj3>', '<input name="erDoj3" type="date" id="erDoj3" class="inputBoxName" value="' . $erDoj3 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDor3>', '<input name="erDor3" type="date" id="erDor3" class="inputBoxName" value="' . $erDor3 . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-ectcConfirm>', '<input name="ectcConfirm" id="ectcConfirm" class="inputBoxName" value="' . $ectcConfirm . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-doj>', '<input name="doj" id="doj" class="inputBoxName" value="' . $doj . '" />', $template['Content']);
 
             $template['Content'] = str_replace('<input-currentErName>', '<input name="currentErName" id="currentErName" class="inputBoxName" value="' . $currentErName . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-currentErDoj>', '<input name="currentErDoj" id="currentErDoj" class="inputBoxName" value="' . $currentErDoj . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-currentErDor>', '<input name="currentErDor" id="currentErDor" class="inputBoxName" value="' . $currentErDor . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-currentErDoj>', '<input name="currentErDoj" type="date" id="currentErDoj" class="inputBoxName" value="' . $currentErDoj . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-currentErDor>', '<input name="currentErDor" type="date" id="currentErDor" class="inputBoxName" value="' . $currentErDor . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-board10th>', '<input name="board10th" id="board10th" class="inputBoxName" value="' . $board10th . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-passYr10th>', '<input name="passYr10th" id="passYr10th" class="inputBoxName" value="' . $passYr10th . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-precent10th>', '<input name="precent10th" id="precent10th" class="inputBoxName" value="' . $precent10th . '" />', $template['Content']);
@@ -1152,6 +1162,24 @@ class CareersUI extends UserInterface
                     document.getElementById(\'extraNotes\').focus();
                     return false;
                 }';
+        }
+
+        if(strpos($template['Content'], '<input-erDoj1>') !==false){
+            $validator .= '
+                var erDor1 = new Date(document.getElementById("erDor1").value).getFullYear();
+                var erDoj2 = new Date(document.getElementById("erDoj2").value).getFullYear();
+                var erDor2 = new Date(document.getElementById("erDor2").value).getFullYear();
+                var erDoj3 = new Date(document.getElementById("erDoj3").value).getFullYear();
+                if((erDoj2-erDor1)>=2){
+                    alert(\'Please contact your recruiter.\');
+                    return false;
+                }else{
+                    if((erDoj3-erDor2)>=2){
+                        alert(\'Please contact your recruiter.\');
+                        return false;
+                    }
+                }
+                ';
         }
 
         $validator = '<script type="text/javascript">function applyValidate() {'
