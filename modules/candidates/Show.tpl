@@ -281,7 +281,7 @@ use OpenCATS\UI\CandidateQuickActionMenu;
                                 <td class="data"><?php $this->_($this->data['ectc_confirmation']); ?></td>
                             </tr>
                             <tr>
-                                <td class="vertical">DOJ:</td>
+                                <td class="vertical">EDOJ:</td>
                                 <td class="data"><?php $this->_($this->data['doj']); ?></td>
                             </tr>
 
