@@ -401,8 +401,18 @@ class Pipelines
 
     // FIXME: Document me.
     // Throws out No Status.
-    public function getStatusesForPicking()
+    public function getStatusesForPicking($role=null)
     {
+        if($role == 'internal_employee'){
+            $roleCondition = 'AND candidate_joborder_status_id IN (100,200,250,500)';
+        }elseif ($role == 'team_lead') {
+            $roleCondition = 'AND candidate_joborder_status_id IN (300,650,400)';
+        }elseif ($role == 'account_manager') {
+            $roleCondition = 'AND candidate_joborder_status_id IN (700,800)';
+        }else{
+            $roleCondition = '';
+        }
+
         $sql = sprintf(
             "SELECT
                 candidate_joborder_status_id AS statusID,
@@ -415,9 +425,10 @@ class Pipelines
                 is_enabled = 1
             AND
                 candidate_joborder_status_id != 0
+                %s
             ORDER BY
                 candidate_joborder_status_id ASC",
-            $this->_siteID
+            $roleCondition
         );
 
         return $this->_db->getAllAssoc($sql);

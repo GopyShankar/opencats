@@ -1629,7 +1629,8 @@ class CandidatesUI extends UserInterface
         $pipelines = new Pipelines($this->_siteID);
         $pipelineRS = $pipelines->getCandidatePipeline($candidateID);
 
-        $statusRS = $pipelines->getStatusesForPicking();
+        $userRole = $_SESSION['CATS']->getUserrole();
+        $statusRS = $pipelines->getStatusesForPicking($userRole);
 
         if ($selectedJobOrderID != -1)
         {
