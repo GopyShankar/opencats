@@ -929,10 +929,9 @@ class AttachmentCreator
      * @return boolean Was the attachment created successfully?
      */
     public function createFromUpload($dataItemType, $dataItemID, $fileField,
-        $isProfileImage, $extractText)
+        $isProfileImage, $extractText,$fieldName='file')
     {
-        $uploadFileName = explode(",",$_POST['file']);
-        $uploadFileFullPath = explode(",",$_POST['file_path']);
+        $uploadFileName = explode(",",$_POST[$fieldName]);
 
         if(!empty($_FILES[$fileField]['name'][0])){
             

@@ -22,10 +22,48 @@ function resumeLoadCheck()
     }
 }
 
+function payslipLoadCheck()
+{
+    var fileInput = document.getElementById('payslipFile');
+    var parseButton = document.getElementById('payslipPopulate');
+    var resumeUpload = document.getElementById('payslipLoad');
+
+    resumeUpload.disabled = (fileInput.value).length ? false : true;
+    if (parseButton)
+    {
+        parseButton.disabled = (fileInput.value).length ? false : true;
+    }
+}
+
+function previousEmpLoadCheck()
+{
+    var fileInput = document.getElementById('previousEmpFile');
+    var parseButton = document.getElementById('previousEmpPopulate');
+    var resumeUpload = document.getElementById('previousEmpLoad');
+
+    resumeUpload.disabled = (fileInput.value).length ? false : true;
+    if (parseButton)
+    {
+        parseButton.disabled = (fileInput.value).length ? false : true;
+    }
+}
+
 /* Load the contents of the uploaded file into the textarea box */
 function resumeLoadFile()
 {
     setSubAction('resumeLoad');
+    document.applyToJobForm.submit();
+}
+
+function payslipLoadFile()
+{
+    setSubAction('payslipLoad');
+    document.applyToJobForm.submit();
+}
+
+function previousEmpLoadFile()
+{
+    setSubAction('previousEmpLoad');
     document.applyToJobForm.submit();
 }
 
@@ -228,11 +266,31 @@ function validateCandidateRegistration()
 
 
 function removeDocFiles(val){
-    var removeFile = $(val).closest("div").find('span').html();
-    var fileList = $('#file').val();
-    var res = fileList.split(",");
-    res.splice(res.indexOf(removeFile), 1);
-    var files = res.toString();
-    $(val).closest("div").remove();
-    $('input#file').replaceWith('<input type="hidden" id="file" name="file" value="' +files+ '" />');
+    var source = $(val).closest("span").next('input').val();
+    console.log(source,'source');
+    if(source == 'resume'){
+        var removeFile = $(val).closest("div").find('span').html();
+        var fileList = $('#file').val();
+        var res = fileList.split(",");
+        res.splice(res.indexOf(removeFile), 1);
+        var files = res.toString();
+        $(val).closest("div").remove();
+        $('input#file').replaceWith('<input type="hidden" id="file" name="file" value="' +files+ '" />');
+    }else if(source == 'payslip'){
+        var removeFile = $(val).closest("div").find('span').html();
+        var fileList = $('#payslip_file').val();
+        var res = fileList.split(",");
+        res.splice(res.indexOf(removeFile), 1);
+        var files = res.toString();
+        $(val).closest("div").remove();
+        $('input#payslip_file').replaceWith('<input type="hidden" id="payslip_file" name="payslip_file" value="' +files+ '" />');
+    }else if(source == "previousEmp"){
+        var removeFile = $(val).closest("div").find('span').html();
+        var fileList = $('#previousEmp_file').val();
+        var res = fileList.split(",");
+        res.splice(res.indexOf(removeFile), 1);
+        var files = res.toString();
+        $(val).closest("div").remove();
+        $('input#previousEmp_file').replaceWith('<input type="hidden" id="previousEmp_file" name="previousEmp_file" value="' +files+ '" />');
+    }
 }

@@ -563,7 +563,7 @@ class Candidates
                     AND
                         status_to = %s
                     AND
-                        site_id = %s
+                        site_id = 1
                 ) AS submitted,
                 CONCAT(
                     candidate.first_name, ' ', candidate.last_name
@@ -627,14 +627,14 @@ class Candidates
             WHERE
                 candidate.candidate_id = %s
             AND
-                candidate.site_id = %s
+                candidate.site_id = 1
             GROUP BY
                 candidate.candidate_id",
             $this->_db->makeQueryInteger($candidateID),
             PIPELINE_STATUS_SUBMITTED,
-            $this->_siteID,
-            $this->_db->makeQueryInteger($candidateID),
-            $this->_siteID
+            // $this->_siteID,
+            $this->_db->makeQueryInteger($candidateID)
+            // $this->_siteID
         );
 
         return $this->_db->getAssoc($sql);
