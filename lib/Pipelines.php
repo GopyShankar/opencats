@@ -406,9 +406,9 @@ class Pipelines
         if($role == 'internal_employee'){
             $roleCondition = 'AND candidate_joborder_status_id IN (100,200,250,500)';
         }elseif ($role == 'team_lead') {
-            $roleCondition = 'AND candidate_joborder_status_id IN (300,650,400)';
+            $roleCondition = 'AND candidate_joborder_status_id IN (300,650,400,750)';
         }elseif ($role == 'account_manager') {
-            $roleCondition = 'AND candidate_joborder_status_id IN (700,800)';
+            $roleCondition = 'AND candidate_joborder_status_id IN (700,800,750,900)';
         }else{
             $roleCondition = '';
         }
