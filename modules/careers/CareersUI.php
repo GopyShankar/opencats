@@ -807,21 +807,21 @@ class CareersUI extends UserInterface
                                                                         <option value="Yes">Yes</option>
                                                                     </select>', $template['Content']);
             $template['Content'] = str_replace('<input-erName1>', '<input name="erName1" id="erName1" class="inputBoxName" value="' . $erName1 . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-erDoj1>', '<input name="erDoj1" type="date" id="erDoj1" class="inputBoxName" value="' . $erDoj1 . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-erDor1>', '<input name="erDor1" type="date" id="erDor1" class="inputBoxName" value="' . $erDor1 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDoj1>', '<input name="erDoj1" type="text" id="erDoj1" class="inputBoxName date_picker" value="' . $erDoj1 . '" autocomplete="off" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDor1>', '<input name="erDor1" type="text" id="erDor1" class="inputBoxName date_picker" value="' . $erDor1 . '" autocomplete="off" />', $template['Content']);
             $template['Content'] = str_replace('<input-erName2>', '<input name="erName2" id="erName2" class="inputBoxName" value="' . $erName2 . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-erDoj2>', '<input name="erDoj2" type="date" id="erDoj2" class="inputBoxName" value="' . $erDoj2 . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-erDor2>', '<input name="erDor2" type="date" id="erDor2" class="inputBoxName" value="' . $erDor2 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDoj2>', '<input name="erDoj2" type="text" id="erDoj2" class="inputBoxName date_picker" value="' . $erDoj2 . '" autocomplete="off" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDor2>', '<input name="erDor2" type="text" id="erDor2" class="inputBoxName date_picker" value="' . $erDor2 . '" autocomplete="off" />', $template['Content']);
             $template['Content'] = str_replace('<input-erName3>', '<input name="erName3" id="erName3" class="inputBoxName" value="' . $erName3 . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-erDoj3>', '<input name="erDoj3" type="date" id="erDoj3" class="inputBoxName" value="' . $erDoj3 . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-erDor3>', '<input name="erDor3" type="date" id="erDor3" class="inputBoxName" value="' . $erDor3 . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDoj3>', '<input name="erDoj3" type="text" id="erDoj3" class="inputBoxName date_picker" value="' . $erDoj3 . '" autocomplete="off" />', $template['Content']);
+            $template['Content'] = str_replace('<input-erDor3>', '<input name="erDor3" type="text" id="erDor3" class="inputBoxName date_picker" value="' . $erDor3 . '" autocomplete="off" />', $template['Content']);
             $template['Content'] = str_replace('<input-currCTC>', '<input name="currCTC" id="currCTC" class="inputBoxName" value="' . $currCTC . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-ectcConfirm>', '<input name="ectcConfirm" id="ectcConfirm" class="inputBoxName" value="' . $ectcConfirm . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-doj>', '<input name="doj" type="date" id="doj" class="inputBoxName" value="' . $doj . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-doj>', '<input name="doj" type="text" id="doj" class="inputBoxName date_picker" value="' . $doj . '" autocomplete="off" />', $template['Content']);
 
             $template['Content'] = str_replace('<input-currentErName>', '<input name="currentErName" id="currentErName" class="inputBoxName" value="' . $currentErName . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-currentErDoj>', '<input name="currentErDoj" type="date" id="currentErDoj" class="inputBoxName" value="' . $currentErDoj . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-currentErDor>', '<input name="currentErDor" type="date" id="currentErDor" class="inputBoxName" value="' . $currentErDor . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-currentErDoj>', '<input name="currentErDoj" type="text" id="currentErDoj" class="inputBoxName date_picker" value="' . $currentErDoj . '" autocomplete="off"/>', $template['Content']);
+            $template['Content'] = str_replace('<input-currentErDor>', '<input name="currentErDor" type="text" id="currentErDor" class="inputBoxName date_picker" value="' . $currentErDor . '" autocomplete="off"/>', $template['Content']);
             $template['Content'] = str_replace('<input-board10th>', '<input name="board10th" id="board10th" class="inputBoxName" value="' . $board10th . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-passYr10th>', '<input name="passYr10th" id="passYr10th" class="inputBoxName" value="' . $passYr10th . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-precent10th>', '<input name="precent10th" id="precent10th" class="inputBoxName" value="' . $precent10th . '" />', $template['Content']);

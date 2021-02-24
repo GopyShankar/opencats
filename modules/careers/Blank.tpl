@@ -6,6 +6,9 @@
         <title><?php $this->_($this->siteName); ?> - Careers</title>
             <script type="text/javascript" src="../js/jquery-1.3.2.min.js"></script>
             <script type="text/javascript" src="../js/careerPortalApply.js"></script>
+            <link href='../js/datepicker/jquery-ui.css' rel='stylesheet'>
+            <script src="../js/datepicker/jquery.min.js"></script>
+            <script src="../js/datepicker/jquery-ui.min.js"></script>
         <?php global $careerPage; if (isset($careerPage) && $careerPage == true): ?>
             <script type="text/javascript" src="../js/lib.js"></script>
             <script type="text/javascript" src="../js/sorttable.js"></script>
@@ -20,6 +23,11 @@
             <?php echo($this->template['CSS']); ?>
 			#poweredCATS { clear: both; margin: 30px auto; clear: both; width: 140px; height: 40px; border: none;}
 			#poweredCATS img { border: none; }
+            input.date_picker {
+                background-image: url("../images/calendar.gif");
+                background-position: right center;
+                background-repeat: no-repeat;
+            }
         </style>
     </head>
     <body>
@@ -38,5 +46,15 @@
 
     </div>
     <script type="text/javascript">st_init();</script>
+    <script> 
+        $(document).ready(function() { 
+        
+            $(function() { 
+                $( ".date_picker" ).datepicker({
+                    dateFormat: 'dd-M-yy',
+                }); 
+            }); 
+        }) 
+    </script>
     </body>
 </html>
