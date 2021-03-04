@@ -225,7 +225,7 @@ function validateCandidateRegistration()
     var isNew = isNewObj ? isNewObj.checked : false;
 
     var formFields = [
-        'firstName', 'lastName', 'zipCode', 'address', 'city', 'state', 'homePhone',
+        'firstName', 'lastName', 'zipCode', 'zip','address', 'city', 'state', 'homePhone',
         'mobilePhone', 'workPhone'
     ];
 

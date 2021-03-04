@@ -426,6 +426,136 @@ class Candidates
         return true;
     }
 
+    /** Update function for career portal start */
+
+    public function updateCareerPortal($candidateID, $firstName, $middleName, $lastName,
+        $email1, $email2, $phoneCell, $phoneWork, $address, $city, $state, $zip, $keySkills, $currentEmployer, $currentPay, $owner, $erName1, $erDoj1, $erDor1, $erName2, $erDoj2, $erDor2, $erName3, $erDoj3, $erDor3, $ectcConfirm, $doj, $currentErName, $currentErDoj, $currentErDor, $board10th, $passYr10th, $precent10th, $board12th, $passYr12th, $precent12th, $insName, $degreeCourse, $degreePassYr, $degreePrecent)
+    {
+        $sql = sprintf(
+            "UPDATE
+                candidate
+            SET
+                
+                first_name            = %s,
+                middle_name           = %s,
+                last_name             = %s,
+                email1                = %s,
+                email2                = %s,
+                phone_work            = %s,
+                phone_cell            = %s,
+                address               = %s,
+                city                  = %s,
+                state                 = %s,
+                zip                   = %s,
+                key_skills            = %s,
+                current_employer      = %s,
+                current_pay           = %s,
+                owner                 = %s,
+                date_modified         = NOW(),
+                employer1_name        = %s,
+                employer1_doj         = %s,
+                employer1_dor         = %s,
+                employer2_name        = %s,
+                employer2_doj         = %s,
+                employer2_dor         = %s,
+                employer3_name        = %s,
+                employer3_doj         = %s,
+                employer3_dor         = %s,
+                ectc_confirmation     = %s,
+                doj                   = %s,
+                current_er_name       = %s,
+                current_er_doj        = %s,
+                current_er_dor        = %s,
+                board10th             = %s,
+                passYr10th            = %s,
+                precent10th           = %s,
+                board12th             = %s,
+                passYr12th            = %s,
+                precent12th           = %s,
+                insName               = %s,
+                degreeCourse          = %s,
+                degreePassYr          = %s,
+                degreePrecent         = %s
+            WHERE
+                candidate_id = %s
+            AND
+                site_id = %s",
+            
+            $this->_db->makeQueryString($firstName),
+            $this->_db->makeQueryString($middleName),
+            $this->_db->makeQueryString($lastName),
+            $this->_db->makeQueryString($email1),
+            $this->_db->makeQueryString($email2),
+            $this->_db->makeQueryString($phoneWork),
+            $this->_db->makeQueryString($phoneCell),
+            $this->_db->makeQueryString($address),
+            $this->_db->makeQueryString($city),
+            $this->_db->makeQueryString($state),
+            $this->_db->makeQueryString($zip),
+            $this->_db->makeQueryString($keySkills),
+            $this->_db->makeQueryString($currentEmployer),
+            $this->_db->makeQueryString($currentPay),
+            $this->_db->makeQueryInteger($owner),
+            $this->_db->makeQueryString($erName1),
+            $this->_db->makeQueryString($erDoj1),
+            $this->_db->makeQueryString($erDor1),
+            $this->_db->makeQueryString($erName2),
+            $this->_db->makeQueryString($erDoj2),
+            $this->_db->makeQueryString($erDor2),
+            $this->_db->makeQueryString($erName3),
+            $this->_db->makeQueryString($erDoj3),
+            $this->_db->makeQueryString($erDor3),
+            $this->_db->makeQueryString($ectcConfirm),
+            $this->_db->makeQueryString($doj),
+            $this->_db->makeQueryString($currentErName),
+            $this->_db->makeQueryString($currentErDoj),
+            $this->_db->makeQueryString($currentErDor),
+            $this->_db->makeQueryString($board10th),
+            $this->_db->makeQueryString($passYr10th),
+            $this->_db->makeQueryString($precent10th),
+            $this->_db->makeQueryString($board12th),
+            $this->_db->makeQueryString($passYr12th),
+            $this->_db->makeQueryString($precent12th),
+            $this->_db->makeQueryString($insName),
+            $this->_db->makeQueryString($degreeCourse),
+            $this->_db->makeQueryString($degreePassYr),
+            $this->_db->makeQueryString($degreePrecent),
+            $this->_db->makeQueryInteger($candidateID),
+            $this->_siteID
+        );
+
+        $preHistory = $this->get($candidateID);
+        $queryResult = $this->_db->query($sql);
+        $postHistory = $this->get($candidateID);
+
+        $history = new History($this->_siteID);
+        $history->storeHistoryChanges(
+            DATA_ITEM_CANDIDATE, $candidateID, $preHistory, $postHistory
+        );
+
+        if (!$queryResult)
+        {
+            return false;
+        }
+
+        if (!empty($emailAddress))
+        {
+            /* Send e-mail notification. */
+            //FIXME: Make subject configurable.
+            $mailer = new Mailer($this->_siteID);
+            $mailerStatus = $mailer->sendToOne(
+                array($emailAddress, ''),
+                'CATS Notification: Candidate Ownership Change',
+                $email,
+                true
+            );
+        }
+
+        return true;
+    }
+
+    /** Update function for career portal end */
+
     /**
      * Removes a candidate and all associated records from the system.
      *
@@ -589,19 +719,37 @@ class Candidates
                         ''))
                      AS eeoGenderText,
                      candidate.employer1_name AS employer1_name,
-                     candidate.employer1_doj AS employer1_doj,
-                     candidate.employer1_dor AS employer1_dor,
+                     DATE_FORMAT(
+                        candidate.employer1_doj, '%%d-%%b-%%Y'
+                     ) AS employer1_doj,
+                     DATE_FORMAT(
+                        candidate.employer1_dor, '%%d-%%b-%%Y'
+                     ) AS employer1_dor,
                      candidate.employer2_name AS employer2_name,
-                     candidate.employer2_doj AS employer2_doj,
-                     candidate.employer2_dor AS employer2_dor,
+                     DATE_FORMAT(
+                        candidate.employer2_doj, '%%d-%%b-%%Y'
+                     ) AS employer2_doj,
+                     DATE_FORMAT(
+                        candidate.employer2_dor, '%%d-%%b-%%Y'
+                     ) AS employer2_dor,
                      candidate.employer3_name AS employer3_name,
-                     candidate.employer3_doj AS employer3_doj,
-                     candidate.employer3_dor AS employer3_dor,
+                     DATE_FORMAT(
+                        candidate.employer3_doj, '%%d-%%b-%%Y'
+                     ) AS employer3_doj,
+                     DATE_FORMAT(
+                        candidate.employer3_dor, '%%d-%%b-%%Y'
+                     ) AS employer3_dor,
                      candidate.ectc_confirmation AS ectc_confirmation,
-                     candidate.doj AS doj,
+                     DATE_FORMAT(
+                        candidate.doj, '%%d-%%b-%%Y'
+                     ) AS doj,
                      candidate.current_er_name AS current_er_name,
-                     candidate.current_er_doj AS current_er_doj,
-                     candidate.current_er_dor AS current_er_dor,
+                     DATE_FORMAT(
+                        candidate.current_er_doj, '%%d-%%b-%%Y'
+                     ) AS current_er_doj,
+                     DATE_FORMAT(
+                        candidate.current_er_dor, '%%d-%%b-%%Y'
+                     ) AS current_er_dor,
                      candidate.board10th AS board10th,
                      candidate.passYr10th AS passYr10th,
                      candidate.precent10th AS precent10th,

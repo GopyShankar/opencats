@@ -976,45 +976,48 @@ class AttachmentCreator
                     );
                 }
         }else{
+
+            if(!empty($uploadFileName)){
             
-            foreach ($uploadFileName as $key => $value) {
-                /* Get file upload metadata. */
-                $originalFilename = $uploadFileName[$key];
-                // $tempFilename     = $uploadFileFullPath[$key];
-                $tempFilename     = 'upload/careerportaladd/'.$uploadFileName[$key];
-                $contentType      = mime_content_type($tempFilename);
-                $fileSize         = filesize($tempFilename);
-                $uploadError      = $_FILES[$fileField]['error'][$key];
+                foreach ($uploadFileName as $key => $value) {
+                    /* Get file upload metadata. */
+                    $originalFilename = $uploadFileName[$key];
+                    // $tempFilename     = $uploadFileFullPath[$key];
+                    $tempFilename     = 'upload/careerportaladd/'.$uploadFileName[$key];
+                    $contentType      = mime_content_type($tempFilename);
+                    $fileSize         = filesize($tempFilename);
+                    $uploadError      = $_FILES[$fileField]['error'][$key];
 
 
-                /* Recover from magic quotes. Note that tmp_name doesn't appear to
-                 * get escaped, and stripslashes() on it breaks on Windows. - Will
-                 */
-                if (get_magic_quotes_gpc())
-                {
-                    $originalFilename = stripslashes($originalFilename);
-                    $contentType      = stripslashes($contentType);
+                    /* Recover from magic quotes. Note that tmp_name doesn't appear to
+                     * get escaped, and stripslashes() on it breaks on Windows. - Will
+                     */
+                    if (get_magic_quotes_gpc())
+                    {
+                        $originalFilename = stripslashes($originalFilename);
+                        $contentType      = stripslashes($contentType);
+                    }
+
+                    /* Did a file upload error occur? */
+                    // if ($uploadError != UPLOAD_ERR_OK)
+                    // {
+                    //     $this->_isError = true;
+                    //     $this->_error = FileUtility::getErrorMessage($uploadError);
+                    //     return false;
+                    // }
+
+                    /* This usually indicates an error. */
+                    if ($fileSize <= 0)
+                    {
+                        $this->_isError = true;
+                        $this->_error = 'File size is less than 1 byte. hitting error... ';
+                        return false;
+                    }
+                    $this->createGeneric(
+                        $dataItemType, $dataItemID, $isProfileImage, $extractText, false,
+                        $originalFilename, $tempFilename, $contentType, false, true
+                    );
                 }
-
-                /* Did a file upload error occur? */
-                // if ($uploadError != UPLOAD_ERR_OK)
-                // {
-                //     $this->_isError = true;
-                //     $this->_error = FileUtility::getErrorMessage($uploadError);
-                //     return false;
-                // }
-
-                /* This usually indicates an error. */
-                if ($fileSize <= 0)
-                {
-                    $this->_isError = true;
-                    $this->_error = 'File size is less than 1 byte.';
-                    return false;
-                }
-                $this->createGeneric(
-                    $dataItemType, $dataItemID, $isProfileImage, $extractText, false,
-                    $originalFilename, $tempFilename, $contentType, false, true
-                );
             }
         }
 

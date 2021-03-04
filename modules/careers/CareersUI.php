@@ -224,7 +224,7 @@ class CareersUI extends UserInterface
             /* Replace input fields. */
             $content = str_replace('<input-firstName>', '<input name="firstName" id="firstName" class="inputBoxName" value="' . $candidate['firstName'] . '" />', $content);
             $content = str_replace('<input-lastName>', '<input name="lastName" id="lastName" class="inputBoxName" value="' . $candidate['lastName'] . '" />', $content);
-            $content = str_replace('<input-address>', '<textarea name="address" class="inputBoxArea">'. $candidate['address'] .'</textarea>', $content);
+            $content = str_replace('<input-address>', '<textarea name="address" id="address" class="inputBoxArea">'. $candidate['address'] .'</textarea>', $content);
             $content = str_replace('<input-city>', '<input name="city" id="city" class="inputBoxNormal" value="' . $candidate['city'] . '" />', $content);
             $content = str_replace('<input-state>', '<input name="state" id="state" class="inputBoxNormal" value="' . $candidate['state'] . '" />', $content);
             $content = str_replace('<input-zip>', '<input name="zip" id="zip" class="inputBoxNormal" value="' . $candidate['zip'] . '" />', $content);
@@ -411,6 +411,7 @@ class CareersUI extends UserInterface
         }
         else if ($p == 'applyToJob' || isset($_POST[$id='applyToJobSubAction']) && $_POST[$id] != '')
         {
+            $candidateID = isset($_POST[$id='candidateID']) ? $_POST[$id] : '';
             // Pre-populations
             $firstName = isset($_POST[$id='firstName']) ? $_POST[$id] : '';
             $lastName = isset($_POST[$id='lastName']) ? $_POST[$id] : '';
@@ -491,6 +492,35 @@ class CareersUI extends UserInterface
                     $source = $candidate['source'];
                     $employer = $candidate['currentEmployer'];
                     $candidateID = $candidate['candidateID'];
+                    
+                    $currCTC = $candidate['currentPay'];
+                    $erName1 = $candidate['employer1_name'];
+                    $erDoj1 = $candidate['employer1_doj'];
+                    $erDor1 = $candidate['employer1_dor'];
+                    $erName2 = $candidate['employer2_name'];
+                    $erDoj2 = $candidate['employer2_doj'];
+                    $erDor2 = $candidate['employer2_dor'];
+                    $erName3 = $candidate['employer3_name'];
+                    $erDoj3 = $candidate['employer3_doj'];
+                    $erDor3 = $candidate['employer3_dor'];
+                    $ectcConfirm = $candidate['ectc_confirmation'];
+                    $doj = $candidate['doj'];
+
+                    $currentErName = $candidate['current_er_name'];
+                    $currentErDoj = $candidate['current_er_doj'];
+                    $currentErDor = $candidate['current_er_dor'];
+                    $board10th = $candidate['board10th'];
+                    $passYr10th = $candidate['passYr10th'];
+                    $precent10th = $candidate['precent10th'];
+                    $board12th = $candidate['board12th'];
+                    $passYr12th = $candidate['passYr12th'];
+                    $precent12th = $candidate['precent12th'];
+                    $insName = $candidate['insName'];
+                    $degreeCourse = $candidate['degreeCourse'];
+                    $degreePassYr = $candidate['degreePassYr'];
+                    $degreePrecent = $candidate['degreePrecent'];
+
+                    $candidateID = $candidate['candidateID'];
                 }
             }
 
@@ -502,6 +532,24 @@ class CareersUI extends UserInterface
              */
             if (isset($_POST[$id='applyToJobSubAction']) && strlen($subAction = $_POST[$id]))
             {
+                $jobID = $_GET['ID'];
+                if(strcmp($subAction, 'processLogin')){}else{
+                    $checkData = $this->checkCandidatesData($siteID,$_POST);
+                    
+                    if(isset($_POST['isNew']) && !strcmp($_POST['isNew'], 'no') && $isRegistrationEnabled){
+                        if($checkData =='false' && $isRegistrationEnabled){
+                            // CATSUtility::transferRelativeURI('m=careers&p=candidateRegistration&ID='.$jobID);
+                            echo '<html><body>Because you have registered before, please complete all the fields to login.If you haven\'t registered before, please select I have not registered on this website<script>setTimeout("document.location.href=\'?m=careers&&p=candidateRegistration&&ID='.$jobID.'\';", 1500);</script></body></html>';
+                            die();
+                        }    
+                    }else{
+                        if($checkData =='true' && $isRegistrationEnabled){
+                            // CATSUtility::transferRelativeURI('m=careers&p=candidateRegistration&ID='.$jobID);
+                            echo '<html><body>Because you have registered before, please complete all the fields to login.If you haven\'t registered before, please select I have not registered on this website<script>setTimeout("document.location.href=\'?m=careers&&p=candidateRegistration&&ID='.$jobID.'\';", 1500);</script></body></html>';
+                            die();
+                        }
+                    }
+                }
                 // Check if a candidate has registered and has indicated it
                 if (!strcmp($subAction, 'processLogin') &&
                     isset($_POST['isNew']) && !strcmp($_POST['isNew'], 'no') && $isRegistrationEnabled)
@@ -526,6 +574,37 @@ class CareersUI extends UserInterface
                         $source = $candidate['source'];
                         $employer = $candidate['currentEmployer'];
                         $candidateID = $candidate['candidateID'];
+
+                        $currCTC = $candidate['currentPay'];
+                        $erName1 = $candidate['employer1_name'];
+                        $erDoj1 = $candidate['employer1_doj'];
+                        $erDor1 = $candidate['employer1_dor'];
+                        $erName2 = $candidate['employer2_name'];
+                        $erDoj2 = $candidate['employer2_doj'];
+                        $erDor2 = $candidate['employer2_dor'];
+                        $erName3 = $candidate['employer3_name'];
+                        $erDoj3 = $candidate['employer3_doj'];
+                        $erDor3 = $candidate['employer3_dor'];
+                        $ectcConfirm = $candidate['ectc_confirmation'];
+                        $doj = $candidate['doj'];
+
+                        $currentErName = $candidate['current_er_name'];
+                        $currentErDoj = $candidate['current_er_doj'];
+                        $currentErDor = $candidate['current_er_dor'];
+                        $board10th = $candidate['board10th'];
+                        $passYr10th = $candidate['passYr10th'];
+                        $precent10th = $candidate['precent10th'];
+                        $board12th = $candidate['board12th'];
+                        $passYr12th = $candidate['passYr12th'];
+                        $precent12th = $candidate['precent12th'];
+                        $insName = $candidate['insName'];
+                        $degreeCourse = $candidate['degreeCourse'];
+                        $degreePassYr = $candidate['degreePassYr'];
+                        $degreePrecent = $candidate['degreePrecent'];
+
+                        $candidateID = $candidate['candidateID'];
+
+
                     }
                 }
 
@@ -746,13 +825,16 @@ class CareersUI extends UserInterface
                 $attachmentPreviousEmpHTML = '';
             }
 
-
+            
             /* Replace input fields. */
             $template['Content'] = str_replace('<jobid>', $jobID, $template['Content']);
             $template['Content'] = str_replace('<title>', $jobOrderData['title'], $template['Content']);
-            $template['Content'] = str_replace('<input-firstName>', '<input name="firstName" id="firstName" class="inputBoxName" value="' . $firstName . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-firstName>', 
+                '<input name="firstName" id="firstName" class="inputBoxName" value="' . $firstName . '" />'
+                .'<input type="hidden" name="candidateID" id="candidateID" value="' . $candidateID . '">',
+                $template['Content']);
             $template['Content'] = str_replace('<input-lastName>', '<input name="lastName" id="lastName" class="inputBoxName" value="' . $lastName . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-address>', '<textarea name="address" class="inputBoxArea">'. $address .'</textarea>', $template['Content']);
+            $template['Content'] = str_replace('<input-address>', '<textarea name="address" id="address" class="inputBoxArea">'. $address .'</textarea>', $template['Content']);
             $template['Content'] = str_replace('<input-city>', '<input name="city" id="city" class="inputBoxNormal" value="' . $city . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-state>', '<input name="state" id="state" class="inputBoxNormal" value="' . $state . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-zip>', '<input name="zip" id="zip" class="inputBoxNormal" value="' . $zip . '" />', $template['Content']);
@@ -1180,37 +1262,42 @@ class CareersUI extends UserInterface
         if (strpos($template['Content'], '<input-resumeUploadPreview>') !== false || strpos($template['Content'], '<input-resumeUploadPreview req>') !== false)
         {
             $validator .= '
-                if (document.getElementById(\'file\').value == \'\')
-                {
-                    alert(\'Please upload your resume\');
-                    document.getElementById(\'file\').focus();
-                    return false;
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if (document.getElementById(\'file\').value == \'\')
+                    {
+                        alert(\'Please upload your resume\');
+                        document.getElementById(\'file\').focus();
+                        return false;
+                    }
                 }';
         }
 
         if (strpos($template['Content'], '<input-payslipUploadPreview>') !== false || strpos($template['Content'], '<input-payslipUploadPreview req>') !== false)
         {
             $validator .= '
-                if (document.getElementById(\'payslip_file\').value == \'\')
-                {
-                    alert(\'Please upload your current payslips\');
-                    document.getElementById(\'payslipFile\').focus();
-                    return false;
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if (document.getElementById(\'payslip_file\').value == \'\')
+                    {
+                        alert(\'Please upload your current payslips\');
+                        document.getElementById(\'payslipFile\').focus();
+                        return false;
+                    }
                 }';
         }
 
         if (strpos($template['Content'], '<input-previousEmpUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpUploadPreview req>') !== false)
         {
             $validator .= '
-                if(document.getElementById(\'erName1\').value != \'\'){
-                    if (document.getElementById(\'previousEmp_file\').value == \'\')
-                    {
-                        alert(\'Please upload your previous employer docs\');
-                        document.getElementById(\'previousEmp_file\').focus();
-                        return false;
-                    }    
-                }
-                ';
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if(document.getElementById(\'erName1\').value != \'\'){
+                        if (document.getElementById(\'previousEmp_file\').value == \'\')
+                        {
+                            alert(\'Please upload your previous employer docs\');
+                            document.getElementById(\'previousEmp_file\').focus();
+                            return false;
+                        }    
+                    }
+                }';
         }
 
 
@@ -1265,7 +1352,184 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-address req>') !== false)
+        if (strpos($template['Content'], '<input-currentErName>') !== false || strpos($template['Content'], '<input-currentErName req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'currentErName\').value == \'\')
+                {
+                    alert(\'Please enter the current employr name.\');
+                    document.getElementById(\'currentErName\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-currentErDoj>') !== false || strpos($template['Content'], '<input-currentErDoj req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'currentErDoj\').value == \'\')
+                {
+                    alert(\'Please enter the current employr DOJ.\');
+                    document.getElementById(\'currentErDoj\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-erName1>') !== false || strpos($template['Content'], '<input-erName1 req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'erName1\').value == \'\')
+                {
+                    alert(\'Please enter the employr1 name.\');
+                    document.getElementById(\'erName1\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-erDoj1>') !== false || strpos($template['Content'], '<input-erDoj1 req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'erDoj1\').value == \'\')
+                {
+                    alert(\'Please enter the employr1 DOJ.\');
+                    document.getElementById(\'erDoj1\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-erDor1>') !== false || strpos($template['Content'], '<input-erDor1 req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'erDor1\').value == \'\')
+                {
+                    alert(\'Please enter the employr1 DOR.\');
+                    document.getElementById(\'erDor1\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-insName>') !== false || strpos($template['Content'], '<input-insName req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'insName\').value == \'\')
+                {
+                    alert(\'Please enter the University/Institute.\');
+                    document.getElementById(\'insName\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-degreeCourse>') !== false || strpos($template['Content'], '<input-degreeCourse req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'degreeCourse\').value == \'\')
+                {
+                    alert(\'Please enter the course.\');
+                    document.getElementById(\'degreeCourse\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-degreePassYr>') !== false || strpos($template['Content'], '<input-degreePassYr req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'degreePassYr\').value == \'\')
+                {
+                    alert(\'Please enter the year of passing.\');
+                    document.getElementById(\'degreePassYr\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-degreePrecent>') !== false || strpos($template['Content'], '<input-degreePrecent req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'degreePrecent\').value == \'\')
+                {
+                    alert(\'Please enter the percentage.\');
+                    document.getElementById(\'degreePrecent\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-board12th>') !== false || strpos($template['Content'], '<input-board12th req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'board12th\').value == \'\')
+                {
+                    alert(\'Please enter the 12th board.\');
+                    document.getElementById(\'board12th\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-passYr12th>') !== false || strpos($template['Content'], '<input-passYr12th req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'passYr12th\').value == \'\')
+                {
+                    alert(\'Please enter the 12th year of passing.\');
+                    document.getElementById(\'passYr12th\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-precent12th>') !== false || strpos($template['Content'], '<input-precent12th req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'precent12th\').value == \'\')
+                {
+                    alert(\'Please enter the 12th percentage.\');
+                    document.getElementById(\'precent12th\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-board10th>') !== false || strpos($template['Content'], '<input-board10th req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'board10th\').value == \'\')
+                {
+                    alert(\'Please enter the 10th board.\');
+                    document.getElementById(\'board10th\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-passYr10th>') !== false || strpos($template['Content'], '<input-passYr10th req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'passYr10th\').value == \'\')
+                {
+                    alert(\'Please enter the 10th year of passing.\');
+                    document.getElementById(\'passYr10th\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-precent10th>') !== false || strpos($template['Content'], '<input-precent10th req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'precent10th\').value == \'\')
+                {
+                    alert(\'Please enter the 10th percentage.\');
+                    document.getElementById(\'precent10th\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-phone-cell>') !== false || strpos($template['Content'], '<input-phone-cell req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'phoneCell\').value == \'\')
+                {
+                    alert(\'Please enter a phone number.\');
+                    document.getElementById(\'phoneCell\').focus();
+                    return false;
+                }';
+        }
+
+
+        if (strpos($template['Content'], '<input-address>') !== false || strpos($template['Content'], '<input-address req>') !== false)
         {
             $validator .= '
                 if (document.getElementById(\'address\').value == \'\')
@@ -1276,7 +1540,7 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-city req>') !== false)
+        if (strpos($template['Content'], '<input-city>') !== false || strpos($template['Content'], '<input-city req>') !== false)
         {
             $validator .= '
                 if (document.getElementById(\'city\').value == \'\')
@@ -1287,7 +1551,7 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-state req>') !== false)
+        if (strpos($template['Content'], '<input-state>') !== false || strpos($template['Content'], '<input-state req>') !== false)
         {
             $validator .= '
                 if (document.getElementById(\'state\').value == \'\')
@@ -1298,7 +1562,7 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-zip req>') !== false)
+        if (strpos($template['Content'], '<input-zip>') !== false || strpos($template['Content'], '<input-zip req>') !== false)
         {
             $validator .= '
                 if (document.getElementById(\'zip\').value == \'\')
@@ -1307,18 +1571,8 @@ class CareersUI extends UserInterface
                     document.getElementById(\'zip\').focus();
                     return false;
                 }';
-        }
+        }        
 
-        if (strpos($template['Content'], '<input-phone req>') !== false)
-        {
-            $validator .= '
-                if (document.getElementById(\'phone\').value == \'\')
-                {
-                    alert(\'Please enter a phone number.\');
-                    document.getElementById(\'phone\').focus();
-                    return false;
-                }';
-        }
 
         if (strpos($template['Content'], '<input-keySkills req>') !== false)
         {
@@ -1447,6 +1701,7 @@ class CareersUI extends UserInterface
     /* Called by Careers Page function to handle the processing of candidate input. */
     private function onApplyToJobOrder($siteID, $candidateID = false)
     {
+        echo "candidateID--".$candidateID;
         $jobOrders = new JobOrders($siteID);
         $careerPortalSettings = new CareerPortalSettings($siteID);
 
@@ -1513,7 +1768,35 @@ class CareersUI extends UserInterface
         $degreeCourse   = $this->getTrimmedInput('degreeCourse', $_POST);
         $degreePassYr   = $this->getTrimmedInput('degreePassYr', $_POST);
         $degreePrecent  = $this->getTrimmedInput('degreePrecent', $_POST);
-        $currCTC        = $this->getTrimmedInput('currCTC', $_POST); 
+        $currCTC        = $this->getTrimmedInput('currCTC', $_POST);
+
+        if(!empty($erDoj1)){
+            $erDoj1 = date_format(date_create($erDoj1),"Y-m-d");
+        }
+        if(!empty($erDor1)){
+            $erDor1 = date_format(date_create($erDor1),"Y-m-d");
+        }
+        if(!empty($erDoj2)){
+            $erDoj2 = date_format(date_create($erDoj2),"Y-m-d");
+        }
+        if(!empty($erDor2)){
+            $erDor2 = date_format(date_create($erDor2),"Y-m-d");
+        }
+        if(!empty($erDoj3)){
+            $erDoj3 = date_format(date_create($erDoj3),"Y-m-d");
+        }
+        if(!empty($erDor3)){
+            $erDor3 = date_format(date_create($erDor3),"Y-m-d");
+        }
+        if(!empty($doj)){
+            $doj = date_format(date_create($doj),"Y-m-d");
+        }
+        if(!empty($currentErDoj)){
+            $currentErDoj = date_format(date_create($currentErDoj),"Y-m-d");
+        }
+        if(!empty($currentErDor)){
+            $currentErDor = date_format(date_create($currentErDor),"Y-m-d");
+        }
 
 
         if (empty($firstName))
@@ -1567,12 +1850,47 @@ class CareersUI extends UserInterface
             $candidate = $candidates->get($candidateID);
 
             // Candidate exists and registered. Update their profile with new values (if provided)
-            $candidates->update(
-                $candidateID, $candidate['isActive'] ? true : false, $firstName, $middleName,
-                $lastName, $email, $email2, $phoneHome, $phoneCell, $phone, $address, $city,
-                $state, $zip, $source, $keySkills, '', $employer, '', '', '', $candidate['notes'],
-                '', $bestTimeToCall, $automatedUser['userID'], $automatedUser['userID'], $gender,
-                $race, $veteran, $disability,$erName1,$erDoj1,$erDor1,$erName2,$erDoj2,$erDor2,$erName3,$erDoj3,$erDor3
+            $candidates->updateCareerPortal(
+                $candidateID, 
+                $firstName, 
+                $middleName,
+                $lastName, 
+                $email, 
+                $email2,
+                $phoneCell, 
+                $phone, 
+                $address, 
+                $city,
+                $state, 
+                $zip, 
+                $keySkills,
+                $employer,
+                $currCTC,
+                $automatedUser['userID'],
+                $erName1,
+                $erDoj1,
+                $erDor1,
+                $erName2,
+                $erDoj2,
+                $erDor2,
+                $erName3,
+                $erDoj3,
+                $erDor3,
+                $ectcConfirm,
+                $doj,
+                $currentErName,
+                $currentErDoj,
+                $currentErDor,
+                $board10th,
+                $passYr10th,
+                $precent10th,
+                $board12th,
+                $passYr12th,
+                $precent12th,
+                $insName,
+                $degreeCourse,
+                $degreePassYr,
+                $degreePrecent
             );
 
             /* Update extra feilds */
@@ -1658,19 +1976,11 @@ class CareersUI extends UserInterface
         $fileUploaded = false;
 
         /* Upload resume (no questionnaire) */
-        if (isset($_FILES['resumeFile']) && !empty($_FILES['resumeFile']['name']))
+        if (isset($_FILES['resumeFile']) && !empty($_FILES['resumeFile']['name'][0]))
         {
             $attachmentCreator = new AttachmentCreator($siteID);
             $attachmentCreator->createFromUpload(
                 DATA_ITEM_CANDIDATE, $candidateID, 'resumeFile', false, true,'file'
-            );
-
-            $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'payslipFile', false, true,'payslip_file'
-            );
-
-            $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpFile', false, true,'previousEmp_file'
             );
 
             if ($attachmentCreator->isError())
@@ -1719,6 +2029,62 @@ class CareersUI extends UserInterface
                 $fileUploaded = true;
                 $resumePath = $attachmentCreator->getNewFilePath();
             }
+        }
+
+        /* Upload resume (no questionnaire) */
+        if (isset($_FILES['payslipFile']) && !empty($_FILES['resumeFile']['name'][0]))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+            
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'payslipFile', false, true,'payslip_file'
+            );
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpFile', false, true,'previousEmp_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }
+
+        /* Upload resume (no questionnaire) */
+        if (isset($_FILES['previousEmpFile']) && !empty($_FILES['previousEmpFile']['name'][0]))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpFile', false, true,'previousEmp_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
         }
 
         $pipelines = new Pipelines($siteID);
@@ -2106,6 +2472,35 @@ class CareersUI extends UserInterface
         }
 
         return '';
+    }
+
+    private function checkCandidatesData($siteID, $data){
+        $db = DatabaseConnection::getInstance();
+        $sql = 'SELECT candidate_id FROM candidate WHERE ';
+        if($data['isNew'] == 'no'){
+            $sql .= sprintf('site_id = %d AND (LCASE(email1) = %s OR LCASE(email2) = %s) AND last_name = %s AND zip = %s LIMIT 1',
+                $siteID,
+                $db->makeQueryString(strtolower($data['email'])),
+                $db->makeQueryString(strtolower($data['email'])),
+                $db->makeQueryString(strtolower($data['lastName'])),
+                $db->makeQueryString(strtolower($data['zip']))
+            );
+        }else{
+            $sql .= sprintf('site_id = %d AND (LCASE(email1) = %s OR LCASE(email2) = %s) LIMIT 1',
+                $siteID,
+                $db->makeQueryString(strtolower($data['email'])),
+                $db->makeQueryString(strtolower($data['email']))
+            );
+        }
+
+        $rs = $db->getAssoc($sql);
+        if ($db->getNumRows()){
+            $status = 'true';
+        }else{
+            $status = 'false';
+        }
+
+        return $status;
     }
 }
 
