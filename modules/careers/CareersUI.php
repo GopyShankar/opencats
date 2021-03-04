@@ -1357,7 +1357,7 @@ class CareersUI extends UserInterface
             $validator .= '
                 if (document.getElementById(\'currentErName\').value == \'\')
                 {
-                    alert(\'Please enter the current employr name.\');
+                    alert(\'Please enter the current employer name.\');
                     document.getElementById(\'currentErName\').focus();
                     return false;
                 }';
@@ -1368,7 +1368,7 @@ class CareersUI extends UserInterface
             $validator .= '
                 if (document.getElementById(\'currentErDoj\').value == \'\')
                 {
-                    alert(\'Please enter the current employr DOJ.\');
+                    alert(\'Please enter the current employer DOJ.\');
                     document.getElementById(\'currentErDoj\').focus();
                     return false;
                 }';
@@ -1379,7 +1379,7 @@ class CareersUI extends UserInterface
             $validator .= '
                 if (document.getElementById(\'erName1\').value == \'\')
                 {
-                    alert(\'Please enter the employr1 name.\');
+                    alert(\'Please enter the employer1 name.\');
                     document.getElementById(\'erName1\').focus();
                     return false;
                 }';
@@ -1390,7 +1390,7 @@ class CareersUI extends UserInterface
             $validator .= '
                 if (document.getElementById(\'erDoj1\').value == \'\')
                 {
-                    alert(\'Please enter the employr1 DOJ.\');
+                    alert(\'Please enter the employer1 DOJ.\');
                     document.getElementById(\'erDoj1\').focus();
                     return false;
                 }';
@@ -1401,7 +1401,7 @@ class CareersUI extends UserInterface
             $validator .= '
                 if (document.getElementById(\'erDor1\').value == \'\')
                 {
-                    alert(\'Please enter the employr1 DOR.\');
+                    alert(\'Please enter the employer1 DOR.\');
                     document.getElementById(\'erDor1\').focus();
                     return false;
                 }';
