@@ -1701,7 +1701,6 @@ class CareersUI extends UserInterface
     /* Called by Careers Page function to handle the processing of candidate input. */
     private function onApplyToJobOrder($siteID, $candidateID = false)
     {
-        echo "candidateID--".$candidateID;
         $jobOrders = new JobOrders($siteID);
         $careerPortalSettings = new CareerPortalSettings($siteID);
 

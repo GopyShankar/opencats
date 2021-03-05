@@ -76,7 +76,8 @@ class SettingsUI extends UserInterface
 
         $mp = array(
             'Administration' => CATSUtility::getIndexName() . '?m=settings&amp;a=administration',
-            'My Profile'     => CATSUtility::getIndexName() . '?m=settings'
+            'My Profile'     => CATSUtility::getIndexName() . '?m=settings',
+            'careerLink' => CATSUtility::getIndexName() . '?m=settings&a=careerLinkView'
         );
 
         $this->_subTabs = $mp;
@@ -870,6 +871,10 @@ class SettingsUI extends UserInterface
                     }
                     $this->administration();
                 }
+                break;
+            /* Career Link View */
+            case 'careerLinkView':
+                $this->careerLinkView();
                 break;
 
             /* Main settings page. */
@@ -1754,6 +1759,22 @@ class SettingsUI extends UserInterface
         $this->_template->assign('sessionCookie', $_SESSION['CATS']->getCookie());
         $this->_template->display('./modules/settings/CareerPortalSettings.tpl');
     }
+
+    /*** Career portal link only view start */
+    private function careerLinkView()
+    {
+        
+        $careerPortalURL = CATSUtility::getAbsoluteURI() . 'careers/';
+
+        if (!eval(Hooks::get('SETTINGS_CAREER_PORTAL'))) return;
+
+        $this->_template->assign('active', $this);
+        $this->_template->assign('subActive', 'careerLink');
+        $this->_template->assign('careerPortalURL', $careerPortalURL);
+        $this->_template->assign('sessionCookie', $_SESSION['CATS']->getCookie());
+        $this->_template->display('./modules/settings/CareerLinkView.tpl');
+    }
+    /*** Career portal link only view end */
 
     //FIXME: Document me.
     private function onCareerPortalSettings()
