@@ -494,6 +494,11 @@ class CareersUI extends UserInterface
             $currCTC = isset($_POST[$id='currCTC']) ? $_POST[$id] : '';
             $panCard = isset($_POST[$id='panCard']) ? $_POST[$id] : '';
 
+            $totalExp = isset($_POST[$id='totalExp']) ? $_POST[$id] : '';
+            $relevantExp = isset($_POST[$id='relevantExp']) ? $_POST[$id] : '';
+            $currentCity = isset($_POST[$id='currentCity']) ? $_POST[$id] : '';
+            $preferredCity = isset($_POST[$id='preferredCity']) ? $_POST[$id] : '';
+
 
 
             // for returning candidates
@@ -551,6 +556,10 @@ class CareersUI extends UserInterface
                     $degreePrecent = $candidate['degreePrecent'];
 
                     $panCard = $candidate['panCard'];
+                    $totalExp = $candidate['totalExp'];
+                    $relevantExp = $candidate['relevantExp'];
+                    $currentCity = $candidate['currentCity'];
+                    $preferredCity = $candidate['preferredCity'];
 
                     $candidateID = $candidate['candidateID'];
                 }
@@ -635,6 +644,10 @@ class CareersUI extends UserInterface
                         $degreePrecent = $candidate['degreePrecent'];
 
                         $panCard = $candidate['panCard'];
+                        $totalExp = $candidate['totalExp'];
+                        $relevantExp = $candidate['relevantExp'];
+                        $currentCity = $candidate['currentCity'];
+                        $preferredCity = $candidate['preferredCity'];
 
                         $candidateID = $candidate['candidateID'];
 
@@ -1541,6 +1554,11 @@ class CareersUI extends UserInterface
 
             $template['Content'] = str_replace('<input-panCard>', '<input name="panCard" id="panCard" class="inputBoxName" value="' . $panCard . '" />', $template['Content']);
 
+            $template['Content'] = str_replace('<input-totalExp>', '<input name="totalExp" id="totalExp" class="inputBoxName" value="' . $totalExp . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-relevantExp>', '<input name="relevantExp" id="relevantExp" class="inputBoxName" value="' . $relevantExp . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-currentCity>', '<input name="currentCity" id="currentCity" class="inputBoxName" value="' . $currentCity . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-preferredCity>', '<input name="preferredCity" id="preferredCity" class="inputBoxName" value="' . $preferredCity . '" />', $template['Content']);
+
             $template['Content'] = str_replace('<input-payslipUploadPreview>',
                  '<input type="hidden" id="payslip_file" name="payslip_file" value="' . $payslipFileLocation . '" /> '
                 . '<input type="file" id="payslipFile" name="payslipFile" class="inputBoxFile" size="30" onchange="payslipLoadCheck();"/> '
@@ -2172,50 +2190,50 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-previousEmpOLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpOLUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if(document.getElementById(\'erName1\').value != \'\'){
-                        if (document.getElementById(\'previousEmpOL_file\').value == \'\')
-                        {
-                            alert(\'Please Upload Your Previous Employer1 Offer Letter\');
-                            document.getElementById(\'previousEmpOLFile\').focus();
-                            return false;
-                        }  
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-previousEmpOLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpOLUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if(document.getElementById(\'erName1\').value != \'\'){
+        //                 if (document.getElementById(\'previousEmpOL_file\').value == \'\')
+        //                 {
+        //                     alert(\'Please Upload Your Previous Employer1 Offer Letter\');
+        //                     document.getElementById(\'previousEmpOLFile\').focus();
+        //                     return false;
+        //                 }  
+        //             }
+        //         }';
+        // }
 
-        if (strpos($template['Content'], '<input-previousEmpELUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpELUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if(document.getElementById(\'erName1\').value != \'\'){
-                        if (document.getElementById(\'previousEmpEL_file\').value == \'\')
-                        {
-                            alert(\'Please Upload Your Previous Employer1 Experience Letter\');
-                            document.getElementById(\'previousEmpELFile\').focus();
-                            return false;
-                        }  
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-previousEmpELUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpELUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if(document.getElementById(\'erName1\').value != \'\'){
+        //                 if (document.getElementById(\'previousEmpEL_file\').value == \'\')
+        //                 {
+        //                     alert(\'Please Upload Your Previous Employer1 Experience Letter\');
+        //                     document.getElementById(\'previousEmpELFile\').focus();
+        //                     return false;
+        //                 }  
+        //             }
+        //         }';
+        // }
 
-        if (strpos($template['Content'], '<input-previousEmpRLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpRLUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if(document.getElementById(\'erName1\').value != \'\'){
-                        if (document.getElementById(\'previousEmpRL_file\').value == \'\')
-                        {
-                            alert(\'Please Upload Your Previous Employer1 Relieving Letter\');
-                            document.getElementById(\'previousEmpRLFile\').focus();
-                            return false;
-                        }  
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-previousEmpRLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpRLUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if(document.getElementById(\'erName1\').value != \'\'){
+        //                 if (document.getElementById(\'previousEmpRL_file\').value == \'\')
+        //                 {
+        //                     alert(\'Please Upload Your Previous Employer1 Relieving Letter\');
+        //                     document.getElementById(\'previousEmpRLFile\').focus();
+        //                     return false;
+        //                 }  
+        //             }
+        //         }';
+        // }
 
         if (strpos($template['Content'], '<input-previousEmp2UploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp2UploadPreview req>') !== false)
         {
@@ -2232,50 +2250,50 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-previousEmp2OLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp2OLUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if(document.getElementById(\'erName2\').value != \'\'){
-                        if (document.getElementById(\'previousEmp2OL_file\').value == \'\')
-                        {
-                            alert(\'Please Upload Your Previous Employer2 Offer Letter\');
-                            document.getElementById(\'previousEmp2OLFile\').focus();
-                            return false;
-                        }  
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-previousEmp2OLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp2OLUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if(document.getElementById(\'erName2\').value != \'\'){
+        //                 if (document.getElementById(\'previousEmp2OL_file\').value == \'\')
+        //                 {
+        //                     alert(\'Please Upload Your Previous Employer2 Offer Letter\');
+        //                     document.getElementById(\'previousEmp2OLFile\').focus();
+        //                     return false;
+        //                 }  
+        //             }
+        //         }';
+        // }
 
-        if (strpos($template['Content'], '<input-previousEmp2ELUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp2ELUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if(document.getElementById(\'erName2\').value != \'\'){
-                        if (document.getElementById(\'previousEmp2EL_file\').value == \'\')
-                        {
-                            alert(\'Please Upload Your Previous Employer2 Experience Letter\');
-                            document.getElementById(\'previousEmp2ELFile\').focus();
-                            return false;
-                        }  
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-previousEmp2ELUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp2ELUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if(document.getElementById(\'erName2\').value != \'\'){
+        //                 if (document.getElementById(\'previousEmp2EL_file\').value == \'\')
+        //                 {
+        //                     alert(\'Please Upload Your Previous Employer2 Experience Letter\');
+        //                     document.getElementById(\'previousEmp2ELFile\').focus();
+        //                     return false;
+        //                 }  
+        //             }
+        //         }';
+        // }
 
-        if (strpos($template['Content'], '<input-previousEmp2RLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp2RLUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if(document.getElementById(\'erName2\').value != \'\'){
-                        if (document.getElementById(\'previousEmp2RL_file\').value == \'\')
-                        {
-                            alert(\'Please Upload Your Previous Employer2 Relieving Letter\');
-                            document.getElementById(\'previousEmp2RLFile\').focus();
-                            return false;
-                        }  
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-previousEmp2RLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp2RLUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if(document.getElementById(\'erName2\').value != \'\'){
+        //                 if (document.getElementById(\'previousEmp2RL_file\').value == \'\')
+        //                 {
+        //                     alert(\'Please Upload Your Previous Employer2 Relieving Letter\');
+        //                     document.getElementById(\'previousEmp2RLFile\').focus();
+        //                     return false;
+        //                 }  
+        //             }
+        //         }';
+        // }
 
         if (strpos($template['Content'], '<input-previousEmp3UploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp3UploadPreview req>') !== false)
         {
@@ -2292,50 +2310,50 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-previousEmp3OLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp3OLUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if(document.getElementById(\'erName3\').value != \'\'){
-                        if (document.getElementById(\'previousEmp3OL_file\').value == \'\')
-                        {
-                            alert(\'Please Upload Your Previous Employer3 Offer Letter\');
-                            document.getElementById(\'previousEmp3OLFile\').focus();
-                            return false;
-                        }  
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-previousEmp3OLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp3OLUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if(document.getElementById(\'erName3\').value != \'\'){
+        //                 if (document.getElementById(\'previousEmp3OL_file\').value == \'\')
+        //                 {
+        //                     alert(\'Please Upload Your Previous Employer3 Offer Letter\');
+        //                     document.getElementById(\'previousEmp3OLFile\').focus();
+        //                     return false;
+        //                 }  
+        //             }
+        //         }';
+        // }
 
-        if (strpos($template['Content'], '<input-previousEmp3ELUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp3ELUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if(document.getElementById(\'erName3\').value != \'\'){
-                        if (document.getElementById(\'previousEmp3EL_file\').value == \'\')
-                        {
-                            alert(\'Please Upload Your Previous Employer3 Experience Letter\');
-                            document.getElementById(\'previousEmp3ELFile\').focus();
-                            return false;
-                        }  
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-previousEmp3ELUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp3ELUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if(document.getElementById(\'erName3\').value != \'\'){
+        //                 if (document.getElementById(\'previousEmp3EL_file\').value == \'\')
+        //                 {
+        //                     alert(\'Please Upload Your Previous Employer3 Experience Letter\');
+        //                     document.getElementById(\'previousEmp3ELFile\').focus();
+        //                     return false;
+        //                 }  
+        //             }
+        //         }';
+        // }
 
-        if (strpos($template['Content'], '<input-previousEmp3RLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp3RLUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if(document.getElementById(\'erName3\').value != \'\'){
-                        if (document.getElementById(\'previousEmp3RL_file\').value == \'\')
-                        {
-                            alert(\'Please Upload Your Previous Employer3 Relieving Letter\');
-                            document.getElementById(\'previousEmp3RLFile\').focus();
-                            return false;
-                        }  
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-previousEmp3RLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp3RLUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if(document.getElementById(\'erName3\').value != \'\'){
+        //                 if (document.getElementById(\'previousEmp3RL_file\').value == \'\')
+        //                 {
+        //                     alert(\'Please Upload Your Previous Employer3 Relieving Letter\');
+        //                     document.getElementById(\'previousEmp3RLFile\').focus();
+        //                     return false;
+        //                 }  
+        //             }
+        //         }';
+        // }
 
 
         if (strpos($template['Content'], '<input-insName>') !== false || strpos($template['Content'], '<input-insName req>') !== false)
@@ -2594,6 +2612,50 @@ class CareersUI extends UserInterface
                 }';
         }
 
+        if (strpos($template['Content'], '<input-totalExp>') !== false  || strpos($template['Content'], '<input-totalExp req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'totalExp\').value == \'\')
+                {
+                    alert(\'Please enter the total experience.\');
+                    document.getElementById(\'totalExp\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-relevantExp>') !== false  || strpos($template['Content'], '<input-relevantExp req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'relevantExp\').value == \'\')
+                {
+                    alert(\'Please enter the relevant experience.\');
+                    document.getElementById(\'relevantExp\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-currentCity>') !== false  || strpos($template['Content'], '<input-currentCity req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'currentCity\').value == \'\')
+                {
+                    alert(\'Please enter the current city.\');
+                    document.getElementById(\'currentCity\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-preferredCity>') !== false  || strpos($template['Content'], '<input-preferredCity req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'preferredCity\').value == \'\')
+                {
+                    alert(\'Please enter the preferred city.\');
+                    document.getElementById(\'preferredCity\').focus();
+                    return false;
+                }';
+        }
+
         if (strpos($template['Content'], '<input-extraNotes req>') !== false)
         {
             $validator .= '
@@ -2785,6 +2847,10 @@ class CareersUI extends UserInterface
         $degreePrecent  = $this->getTrimmedInput('degreePrecent', $_POST);
         $currCTC        = $this->getTrimmedInput('currCTC', $_POST);
         $panCard        = $this->getTrimmedInput('panCard', $_POST);
+        $totalExp       = $this->getTrimmedInput('totalExp', $_POST);
+        $relevantExp    = $this->getTrimmedInput('relevantExp', $_POST);
+        $currentCity    = $this->getTrimmedInput('currentCity', $_POST);
+        $preferredCity  = $this->getTrimmedInput('preferredCity', $_POST);
 
         if(!empty($erDoj1)){
             $erDoj1 = date_format(date_create($erDoj1),"Y-m-d");
@@ -2906,7 +2972,11 @@ class CareersUI extends UserInterface
                 $degreeCourse,
                 $degreePassYr,
                 $degreePrecent,
-                $panCard
+                $panCard,
+                $totalExp,
+                $relevantExp,
+                $currentCity,
+                $preferredCity
             );
 
             /* Update extra feilds */
@@ -2975,7 +3045,11 @@ class CareersUI extends UserInterface
                 $degreePassYr,
                 $degreePrecent,
                 $panCard,
-                $recruiterID
+                $recruiterID,
+                $totalExp,
+                $relevantExp,
+                $currentCity,
+                $preferredCity
             );
 
             /* Update extra fields. */
@@ -3164,18 +3238,6 @@ class CareersUI extends UserInterface
                 DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpFile', false, true,'previousEmp_file'
             );
 
-            $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpOLFile', false, true,'previousEmpOL_file'
-            );
-
-            $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpELFile', false, true,'previousEmpEL_file'
-            );
-
-            $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpRLFile', false, true,'previousEmpRL_file'
-            );
-
             if ($attachmentCreator->isError())
             {
                 CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
@@ -3220,6 +3282,34 @@ class CareersUI extends UserInterface
                 $resumePath = $attachmentCreator->getNewFilePath();
             }
 
+        }
+
+        if (isset($_FILES['previousEmpOLFile']) && !empty($_FILES['previousEmpOLFile']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpOLFile', false, true,'previousEmpOL_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['previousEmpOL_file']) && !empty($_POST['previousEmpOL_file'])){
+            $resumePath = '';
+
             $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmpOL_file']);
 
             if ($newFilePath !== false)
@@ -3246,6 +3336,34 @@ class CareersUI extends UserInterface
                 $resumePath = $attachmentCreator->getNewFilePath();
             }
 
+        }
+
+        if (isset($_FILES['previousEmpEL_file']) && !empty($_FILES['previousEmpEL_file']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpELFile', false, true,'previousEmpEL_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['previousEmpEL_file']) && !empty($_POST['previousEmpEL_file'])){
+            $resumePath = '';
+
             $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmpEL_file']);
 
             if ($newFilePath !== false)
@@ -3271,6 +3389,34 @@ class CareersUI extends UserInterface
                 $fileUploaded = true;
                 $resumePath = $attachmentCreator->getNewFilePath();
             }
+
+        }
+
+        if (isset($_FILES['previousEmpRLFile']) && !empty($_FILES['previousEmpRLFile']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpRLFile', false, true,'previousEmpRL_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['previousEmpRL_file']) && !empty($_POST['previousEmpRL_file'])){
+            $resumePath = '';
 
             $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmpRL_file']);
 
@@ -3299,24 +3445,12 @@ class CareersUI extends UserInterface
             }
         }
 
-        if (isset($_FILES['previousEmpFile']) && !empty($_FILES['previousEmp2File']['name']))
+        if (isset($_FILES['previousEmp2File']) && !empty($_FILES['previousEmp2File']['name']))
         {
             $attachmentCreator = new AttachmentCreator($siteID);
 
             $attachmentCreator->createFromUpload(
                 DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2File', false, true,'previousEmp2_file'
-            );
-
-            $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2OLFile', false, true,'previousEmp2OL_file'
-            );
-
-            $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2ELFile', false, true,'previousEmp2EL_file'
-            );
-
-            $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2RLFile', false, true,'previousEmp2RL_file'
             );
 
             if ($attachmentCreator->isError())
@@ -3363,6 +3497,34 @@ class CareersUI extends UserInterface
                 $resumePath = $attachmentCreator->getNewFilePath();
             }
 
+        }
+
+        if (isset($_FILES['previousEmp2OLFile']) && !empty($_FILES['previousEmp2OLFile']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2OLFile', false, true,'previousEmp2OL_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['previousEmp2OL_file']) && !empty($_POST['previousEmp2OL_file'])){
+            $resumePath = '';
+
             $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp2OL_file']);
 
             if ($newFilePath !== false)
@@ -3389,6 +3551,34 @@ class CareersUI extends UserInterface
                 $resumePath = $attachmentCreator->getNewFilePath();
             }
 
+        }
+
+        if (isset($_FILES['previousEmp2EL_file']) && !empty($_FILES['previousEmp2EL_file']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2ELFile', false, true,'previousEmp2EL_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['previousEmp2EL_file']) && !empty($_POST['previousEmp2EL_file'])){
+            $resumePath = '';
+
             $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp2EL_file']);
 
             if ($newFilePath !== false)
@@ -3414,6 +3604,34 @@ class CareersUI extends UserInterface
                 $fileUploaded = true;
                 $resumePath = $attachmentCreator->getNewFilePath();
             }
+
+        }
+
+        if (isset($_FILES['previousEmp2RLFile']) && !empty($_FILES['previousEmp2RLFile']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2RLFile', false, true,'previousEmp2RL_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['previousEmp2RL_file']) && !empty($_POST['previousEmp2RL_file'])){
+            $resumePath = '';
 
             $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp2RL_file']);
 
@@ -3442,24 +3660,12 @@ class CareersUI extends UserInterface
             }
         }
 
-        if (isset($_FILES['previousEmpFile']) && !empty($_FILES['previousEmp3File']['name']))
+        if (isset($_FILES['previousEmp3File']) && !empty($_FILES['previousEmp3File']['name']))
         {
             $attachmentCreator = new AttachmentCreator($siteID);
 
             $attachmentCreator->createFromUpload(
                 DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3File', false, true,'previousEmp3_file'
-            );
-
-            $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3OLFile', false, true,'previousEmp3OL_file'
-            );
-
-            $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3ELFile', false, true,'previousEmp3EL_file'
-            );
-
-            $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3RLFile', false, true,'previousEmp3RL_file'
             );
 
             if ($attachmentCreator->isError())
@@ -3480,7 +3686,7 @@ class CareersUI extends UserInterface
         }else if (isset($_POST['previousEmp3_file']) && !empty($_POST['previousEmp3_file'])){
             $resumePath = '';
 
-            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previous3Emp_file']);
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp3_file']);
 
             if ($newFilePath !== false)
             {
@@ -3505,6 +3711,34 @@ class CareersUI extends UserInterface
                 $fileUploaded = true;
                 $resumePath = $attachmentCreator->getNewFilePath();
             }
+
+        }
+
+        if (isset($_FILES['previousEmp3OLFile']) && !empty($_FILES['previousEmp3OLFile']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3OLFile', false, true,'previousEmp3OL_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['previousEmp3OL_file']) && !empty($_POST['previousEmp3OL_file'])){
+            $resumePath = '';
 
             $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp3OL_file']);
 
@@ -3532,6 +3766,34 @@ class CareersUI extends UserInterface
                 $resumePath = $attachmentCreator->getNewFilePath();
             }
 
+        }
+
+        if (isset($_FILES['previousEmp3EL_file']) && !empty($_FILES['previousEmp3EL_file']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3ELFile', false, true,'previousEmp3EL_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['previousEmp3EL_file']) && !empty($_POST['previousEmp3EL_file'])){
+            $resumePath = '';
+
             $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp3EL_file']);
 
             if ($newFilePath !== false)
@@ -3557,6 +3819,34 @@ class CareersUI extends UserInterface
                 $fileUploaded = true;
                 $resumePath = $attachmentCreator->getNewFilePath();
             }
+
+        }
+
+        if (isset($_FILES['previousEmp3RLFile']) && !empty($_FILES['previousEmp3RLFile']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3RLFile', false, true,'previousEmp3RL_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['previousEmp3RL_file']) && !empty($_POST['previousEmp3RL_file'])){
+            $resumePath = '';
 
             $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp3RL_file']);
 
@@ -3585,6 +3875,8 @@ class CareersUI extends UserInterface
             }
         }
 
+
+
         if (isset($_FILES['eduDocFile']) && !empty($_FILES['eduDocFile']['name']))
         {
             $attachmentCreator = new AttachmentCreator($siteID);
@@ -3592,18 +3884,6 @@ class CareersUI extends UserInterface
             $attachmentCreator->createFromUpload(
                 DATA_ITEM_CANDIDATE, $candidateID, 'eduDocFile', false, true,'eduDoc_file'
             );
-
-            $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'eduDocCMFile', false, true,'eduDocCM_file'
-            );
-
-            // $attachmentCreator->createFromUpload(
-            //     DATA_ITEM_CANDIDATE, $candidateID, 'eduDocPCFile', false, true,'eduDocPC_file'
-            // );
-
-            // $attachmentCreator->createFromUpload(
-            //     DATA_ITEM_CANDIDATE, $candidateID, 'eduDocCCFile', false, true,'eduDocCC_file'
-            // );
 
             if ($attachmentCreator->isError())
             {
@@ -3649,6 +3929,34 @@ class CareersUI extends UserInterface
                 $resumePath = $attachmentCreator->getNewFilePath();
             }
 
+        }
+
+        if (isset($_FILES['eduDocCMFile']) && !empty($_FILES['eduDocCMFile']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'eduDocCMFile', false, true,'eduDocCM_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['eduDocCM_file']) && !empty($_POST['eduDocCM_file'])){
+            $resumePath = '';
+
             $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['eduDocCM_file']);
 
             if ($newFilePath !== false)
@@ -3675,58 +3983,116 @@ class CareersUI extends UserInterface
                 $resumePath = $attachmentCreator->getNewFilePath();
             }
 
-            // $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['eduDocPC_file']);
-
-            // if ($newFilePath !== false)
-            // {
-            //     $attachmentCreator = new AttachmentCreator($siteID);
-            //     $attachmentCreator->createFromFile(
-            //         DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
-            //     );
-
-            //     if ($attachmentCreator->isError())
-            //     {
-            //         CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
-            //         return;
-            //     }
-
-            //     $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
-
-            //     $isTextExtractionError = $attachmentCreator->isTextExtractionError();
-            //     $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
-
-            //     // FIXME: Show parse errors!
-
-            //     $fileUploaded = true;
-            //     $resumePath = $attachmentCreator->getNewFilePath();
-            // }
-
-            // $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['eduDocCC_file']);
-
-            // if ($newFilePath !== false)
-            // {
-            //     $attachmentCreator = new AttachmentCreator($siteID);
-            //     $attachmentCreator->createFromFile(
-            //         DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
-            //     );
-
-            //     if ($attachmentCreator->isError())
-            //     {
-            //         CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
-            //         return;
-            //     }
-
-            //     $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
-
-            //     $isTextExtractionError = $attachmentCreator->isTextExtractionError();
-            //     $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
-
-            //     // FIXME: Show parse errors!
-
-            //     $fileUploaded = true;
-            //     $resumePath = $attachmentCreator->getNewFilePath();
-            // }
         }
+
+
+        // if (isset($_FILES['eduDocPCFile']) && !empty($_FILES['eduDocPCFile']['name']))
+        // {
+        //     $attachmentCreator = new AttachmentCreator($siteID);
+
+        //     $attachmentCreator->createFromUpload(
+        //         DATA_ITEM_CANDIDATE, $candidateID, 'eduDocPCFile', false, true,'eduDocPC_file'
+        //     );
+
+        //     if ($attachmentCreator->isError())
+        //     {
+        //         CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+        //         return;
+        //     }
+
+        //     $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+        //     $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+        //     $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+        //     // FIXME: Show parse errors!
+
+        //     $fileUploaded = true;
+        //     $resumePath = $attachmentCreator->getNewFilePath();
+        // }else if (isset($_POST['eduDocPC_file']) && !empty($_POST['eduDocPC_file'])){
+        //     $resumePath = '';
+
+        //     $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['eduDocPC_file']);
+
+        //     if ($newFilePath !== false)
+        //     {
+        //         $attachmentCreator = new AttachmentCreator($siteID);
+        //         $attachmentCreator->createFromFile(
+        //             DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+        //         );
+
+        //         if ($attachmentCreator->isError())
+        //         {
+        //             CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+        //             return;
+        //         }
+
+        //         $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+        //         $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+        //         $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+        //         // FIXME: Show parse errors!
+
+        //         $fileUploaded = true;
+        //         $resumePath = $attachmentCreator->getNewFilePath();
+        //     }
+
+        // }
+
+        // if (isset($_FILES['eduDocCCFile']) && !empty($_FILES['eduDocCCFile']['name']))
+        // {
+        //     $attachmentCreator = new AttachmentCreator($siteID);
+
+        //     $attachmentCreator->createFromUpload(
+        //         DATA_ITEM_CANDIDATE, $candidateID, 'eduDocCCFile', false, true,'eduDocCC_file'
+        //     );
+
+        //     if ($attachmentCreator->isError())
+        //     {
+        //         CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+        //         return;
+        //     }
+
+        //     $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+        //     $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+        //     $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+        //     // FIXME: Show parse errors!
+
+        //     $fileUploaded = true;
+        //     $resumePath = $attachmentCreator->getNewFilePath();
+        // }else if (isset($_POST['eduDocCC_file']) && !empty($_POST['eduDocCC_file'])){
+        //     $resumePath = '';
+
+        //     $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['eduDocCC_file']);
+
+        //     if ($newFilePath !== false)
+        //     {
+        //         $attachmentCreator = new AttachmentCreator($siteID);
+        //         $attachmentCreator->createFromFile(
+        //             DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+        //         );
+
+        //         if ($attachmentCreator->isError())
+        //         {
+        //             CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+        //             return;
+        //         }
+
+        //         $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+        //         $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+        //         $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+        //         // FIXME: Show parse errors!
+
+        //         $fileUploaded = true;
+        //         $resumePath = $attachmentCreator->getNewFilePath();
+        //     }
+
+        // }
 
         if (isset($_FILES['eduDoc12File']) && !empty($_FILES['eduDoc12File']['name']))
         {

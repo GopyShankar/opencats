@@ -96,7 +96,7 @@ class Candidates
         $source, $keySkills, $dateAvailable, $currentEmployer, $canRelocate,
         $currentPay, $desiredPay, $notes, $webSite, $bestTimeToCall, $enteredBy, $owner,
         $gender = '', $race = '', $veteran = '', $disability = '',
-        $skipHistory = false,$erName1,$erDoj1,$erDor1,$erName2,$erDoj2,$erDor2,$erName3,$erDoj3,$erDor3,$ectcConfirm,$doj,$currentErDoj,$currentErDor,$board10th,$passYr10th,$precent10th,$board12th,$passYr12th,$precent12th,$insName,$degreeCourse,$degreePassYr,$degreePrecent,$panCard,$recruiterID)
+        $skipHistory = false,$erName1,$erDoj1,$erDor1,$erName2,$erDoj2,$erDor2,$erName3,$erDoj3,$erDor3,$ectcConfirm,$doj,$currentErDoj,$currentErDor,$board10th,$passYr10th,$precent10th,$board12th,$passYr12th,$precent12th,$insName,$degreeCourse,$degreePassYr,$degreePrecent,$panCard,$recruiterID,$totalExp,$relevantExp,$currentCity,$preferredCity)
     {
         $sql = sprintf(
             "INSERT INTO candidate (
@@ -156,7 +156,11 @@ class Candidates
                 degreePassYr,
                 degreePrecent,
                 panCard,
-                recruiter_id
+                recruiter_id,
+                totalExp,
+                relevantExp,
+                currentCity,
+                preferredCity
             )
             VALUES (
                 %s,
@@ -187,6 +191,10 @@ class Candidates
                 %s,
                 NOW(),
                 NOW(),
+                %s,
+                %s,
+                %s,
+                %s,
                 %s,
                 %s,
                 %s,
@@ -270,7 +278,11 @@ class Candidates
             $this->_db->makeQueryString($degreePassYr),
             $this->_db->makeQueryString($degreePrecent),
             $this->_db->makeQueryString($panCard),
-            $this->_db->makeQueryString($recruiterID)
+            $this->_db->makeQueryString($recruiterID),
+            $this->_db->makeQueryString($totalExp),
+            $this->_db->makeQueryString($relevantExp),
+            $this->_db->makeQueryString($currentCity),
+            $this->_db->makeQueryString($preferredCity)
         );
         $queryResult = $this->_db->query($sql);
         if (!$queryResult)
@@ -432,7 +444,7 @@ class Candidates
     /** Update function for career portal start */
 
     public function updateCareerPortal($candidateID, $firstName, $middleName, $lastName,
-        $email1, $email2, $phoneCell, $phoneWork, $address, $city, $state, $zip, $keySkills, $currentEmployer, $currentPay, $owner, $erName1, $erDoj1, $erDor1, $erName2, $erDoj2, $erDor2, $erName3, $erDoj3, $erDor3, $ectcConfirm, $doj, $currentErDoj, $currentErDor, $board10th, $passYr10th, $precent10th, $board12th, $passYr12th, $precent12th, $insName, $degreeCourse, $degreePassYr, $degreePrecent,$panCard)
+        $email1, $email2, $phoneCell, $phoneWork, $address, $city, $state, $zip, $keySkills, $currentEmployer, $currentPay, $owner, $erName1, $erDoj1, $erDor1, $erName2, $erDoj2, $erDor2, $erName3, $erDoj3, $erDor3, $ectcConfirm, $doj, $currentErDoj, $currentErDor, $board10th, $passYr10th, $precent10th, $board12th, $passYr12th, $precent12th, $insName, $degreeCourse, $degreePassYr, $degreePrecent,$panCard,$totalExp,$relevantExp,$currentCity,$preferredCity)
     {
         $sql = sprintf(
             "UPDATE
@@ -478,7 +490,11 @@ class Candidates
                 degreeCourse          = %s,
                 degreePassYr          = %s,
                 degreePrecent         = %s,
-                panCard               = %s
+                panCard               = %s,
+                totalExp              = %s,
+                relevantExp           = %s,
+                currentCity           = %s,
+                preferredCity         = %s
             WHERE
                 candidate_id = %s
             AND
@@ -523,6 +539,10 @@ class Candidates
             $this->_db->makeQueryString($degreePassYr),
             $this->_db->makeQueryString($degreePrecent),
             $this->_db->makeQueryString($panCard),
+            $this->_db->makeQueryString($totalExp),
+            $this->_db->makeQueryString($relevantExp),
+            $this->_db->makeQueryString($currentCity),
+            $this->_db->makeQueryString($preferredCity),
             $this->_db->makeQueryInteger($candidateID),
             $this->_siteID
         );
@@ -762,7 +782,11 @@ class Candidates
                      candidate.degreeCourse AS degreeCourse,
                      candidate.degreePassYr AS degreePassYr,
                      candidate.degreePrecent AS degreePrecent,
-                     candidate.panCard AS panCard
+                     candidate.panCard AS panCard,
+                     candidate.totalExp AS totalExp,
+                     candidate.relevantExp AS relevantExp,
+                     candidate.currentCity AS currentCity,
+                     candidate.preferredCity AS preferredCity
             FROM
                 candidate
             LEFT JOIN user AS entered_by_user
