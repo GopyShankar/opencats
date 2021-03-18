@@ -127,6 +127,8 @@ class CareersUI extends UserInterface
         $pa = isset($_GET['pa']) ? $_GET['pa'] : '';
         $pa = isset($_POST['pa']) ? $_POST['pa'] : $pa;
 
+        $rid = isset($_GET['RID']) ? $_GET['RID'] : '';
+
         $isRegistrationEnabled = $careerPortalSettingsRS['candidateRegistration'];
 
         switch ($pa)
@@ -396,14 +398,16 @@ class CareersUI extends UserInterface
                 $js .= "}\n</script>\n";
             }
 
+
             // Insert the form block
             $content = sprintf(
                 '%s<form name="register" id="register" method="post" onsubmit="return validateCandidateRegistration()" '
-                . 'action="%s?m=careers&p=applyToJob&ID=%d">'
+                . 'action="%s?m=careers&p=applyToJob&ID=%d&RID=%d">'
                 . '<input type="hidden" name="applyToJobSubAction" value="processLogin" />',
                 $js,
                 CATSUtility::getIndexName(),
-                $jobID
+                $jobID,
+                $rid
             ) . $content . '<script>enableFormFields(false); ' . ($js != '' ? 'populateSavedFields();' : '')
             . '</script></form>';
 
@@ -411,7 +415,8 @@ class CareersUI extends UserInterface
         }
         else if ($p == 'applyToJob' || isset($_POST[$id='applyToJobSubAction']) && $_POST[$id] != '')
         {
-            $candidateID = isset($_POST[$id='candidateID']) ? $_POST[$id] : '';
+
+            $candidateID = isset($_POST[$id='candidateID']) ? $_POST[$id] : -1;
             // Pre-populations
             $firstName = isset($_POST[$id='firstName']) ? $_POST[$id] : '';
             $lastName = isset($_POST[$id='lastName']) ? $_POST[$id] : '';
@@ -462,12 +467,37 @@ class CareersUI extends UserInterface
 
             $payslipFileLocation = isset($_POST[$id='payslip_file']) ? $_POST[$id] : '';
             $previousEmpFileLocation = isset($_POST[$id='previousEmp_file']) ? $_POST[$id] : '';
+            $previousEmpOLFileLocation = isset($_POST[$id='previousEmpOL_file']) ? $_POST[$id] : '';
+            $previousEmpELFileLocation = isset($_POST[$id='previousEmpEL_file']) ? $_POST[$id] : '';
+            $previousEmpRLFileLocation = isset($_POST[$id='previousEmpRL_file']) ? $_POST[$id] : '';
+            $previousEmp2FileLocation = isset($_POST[$id='previousEmp2_file']) ? $_POST[$id] : '';
+            $previousEmp2OLFileLocation = isset($_POST[$id='previousEmp2OL_file']) ? $_POST[$id] : '';
+            $previousEmp2ELFileLocation = isset($_POST[$id='previousEmp2EL_file']) ? $_POST[$id] : '';
+            $previousEmp2RLFileLocation = isset($_POST[$id='previousEmp2RL_file']) ? $_POST[$id] : '';
+            $previousEmp3FileLocation = isset($_POST[$id='previousEmp3_file']) ? $_POST[$id] : '';
+            $previousEmp3OLFileLocation = isset($_POST[$id='previousEmp3OL_file']) ? $_POST[$id] : '';
+            $previousEmp3ELFileLocation = isset($_POST[$id='previousEmp3EL_file']) ? $_POST[$id] : '';
+            $previousEmp3RLFileLocation = isset($_POST[$id='previousEmp3RL_file']) ? $_POST[$id] : '';
 
-            $currCTC = isset($_POST[$id='currCTC']) ? $_POST[$id] : ''; 
+            $eduDocFileLocation = isset($_POST[$id='eduDoc_file']) ? $_POST[$id] : '';
+            $eduDocCMFileLocation = isset($_POST[$id='eduDocCM_file']) ? $_POST[$id] : '';
+            $eduDocPCFileLocation = isset($_POST[$id='eduDocPC_file']) ? $_POST[$id] : '';
+            $eduDocCCFileLocation = isset($_POST[$id='eduDocCC_file']) ? $_POST[$id] : '';
+
+            $eduDoc10FileLocation = isset($_POST[$id='eduDoc10_file']) ? $_POST[$id] : '';
+            $eduDoc12FileLocation = isset($_POST[$id='eduDoc12_file']) ? $_POST[$id] : '';
+
+            $addressProofFileLocation = isset($_POST[$id='addressProof_file']) ? $_POST[$id] : '';
+
+            $relievingProofFileLocation = isset($_POST[$id='relievingProof_file']) ? $_POST[$id] : '';
+
+            $currCTC = isset($_POST[$id='currCTC']) ? $_POST[$id] : '';
+            $panCard = isset($_POST[$id='panCard']) ? $_POST[$id] : '';
+
 
 
             // for returning candidates
-            $candidateID = -1;
+            // $candidateID = -1;
 
             if ($isRegistrationEnabled)
             {
@@ -506,7 +536,7 @@ class CareersUI extends UserInterface
                     $ectcConfirm = $candidate['ectc_confirmation'];
                     $doj = $candidate['doj'];
 
-                    $currentErName = $candidate['current_er_name'];
+                    $currentErName = $candidate['currentEmployer'];
                     $currentErDoj = $candidate['current_er_doj'];
                     $currentErDor = $candidate['current_er_dor'];
                     $board10th = $candidate['board10th'];
@@ -519,6 +549,8 @@ class CareersUI extends UserInterface
                     $degreeCourse = $candidate['degreeCourse'];
                     $degreePassYr = $candidate['degreePassYr'];
                     $degreePrecent = $candidate['degreePrecent'];
+
+                    $panCard = $candidate['panCard'];
 
                     $candidateID = $candidate['candidateID'];
                 }
@@ -588,7 +620,7 @@ class CareersUI extends UserInterface
                         $ectcConfirm = $candidate['ectc_confirmation'];
                         $doj = $candidate['doj'];
 
-                        $currentErName = $candidate['current_er_name'];
+                        $currentErName = $candidate['currentEmployer'];
                         $currentErDoj = $candidate['current_er_doj'];
                         $currentErDor = $candidate['current_er_dor'];
                         $board10th = $candidate['board10th'];
@@ -602,6 +634,8 @@ class CareersUI extends UserInterface
                         $degreePassYr = $candidate['degreePassYr'];
                         $degreePrecent = $candidate['degreePrecent'];
 
+                        $panCard = $candidate['panCard'];
+
                         $candidateID = $candidate['candidateID'];
 
 
@@ -612,7 +646,6 @@ class CareersUI extends UserInterface
                 if (($uploadFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'resumeFile')) !== false)
                 {
                     $uploadFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadFile);
-                    $uploadFileLocationPath = implode(",",$uploadFilePath);
                     if ($uploadFilePath !== false)
                     {
                         $d2t = new DocumentToText();
@@ -636,7 +669,6 @@ class CareersUI extends UserInterface
                 if (($uploadPayslipFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'payslipFile')) !== false)
                 {
                     $uploadPayslipFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadPayslipFile);
-                    $uploadPayslipFileLocationPath = implode(",",$uploadPayslipFilePath);
                     if ($uploadPayslipFilePath !== false)
                     {
                         $d2t = new DocumentToText();
@@ -649,7 +681,7 @@ class CareersUI extends UserInterface
                         }
                         else
                         {
-                            $resumeContents = 'Unable to load your resume contents. Your resume will '
+                            $resumeContents = 'Unable to load your resume contents. Your payslip will '
                                 . 'still be uploaded and attached to your application.';
                         }
                         $payslipFileLocation = $uploadPayslipFile;
@@ -657,10 +689,9 @@ class CareersUI extends UserInterface
                 }
 
                 // Check if a file has been uploaded, if so populate the contents textarea
-                if (($uploadPreviousEmpFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'previousEmpFile')) !== false)
+                if (($uploadPreviousEmpFile = FileUtility::getUploadFileFromPostMultiple($siteID, 'careerportaladd', 'previousEmpFile')) !== false)
                 {
-                    $uploadPreviousEmpFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadPreviousEmpFile);
-                    $uploadPreviousEmpFileLocationPath = implode(",",$uploadPreviousEmpFilePath);
+                    $uploadPreviousEmpFilePath = FileUtility::getUploadFilePathMultiple($siteID, 'careerportaladd', $uploadPreviousEmpFile);
                     if ($uploadPreviousEmpFilePath !== false)
                     {
                         $d2t = new DocumentToText();
@@ -673,10 +704,429 @@ class CareersUI extends UserInterface
                         }
                         else
                         {
-                            $resumeContents = 'Unable to load your resume contents. Your resume will '
+                            $resumeContents = 'Unable to load your resume contents. Your previous employer docs will '
                                 . 'still be uploaded and attached to your application.';
                         }
                         $previousEmpFileLocation = $uploadPreviousEmpFile;
+                    }
+                }
+
+                if (($uploadPreviousEmpOLFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'previousEmpOLFile')) !== false)
+                {
+                    $uploadPreviousEmpOLFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadPreviousEmpOLFile);
+                    if ($uploadPreviousEmpOLFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadPreviousEmpOLFilePath);
+                        if ($d2t->convert($uploadPreviousEmpOLFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your previous employer offer letter docs will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $previousEmpOLFileLocation = $uploadPreviousEmpOLFile;
+                    }
+                }
+
+                if (($uploadPreviousEmpELFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'previousEmpELFile')) !== false)
+                {
+                    $uploadPreviousEmpELFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadPreviousEmpELFile);
+                    if ($uploadPreviousEmpELFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadPreviousEmpELFilePath);
+                        if ($d2t->convert($uploadPreviousEmpELFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your previous employer experience letter docs will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $previousEmpELFileLocation = $uploadPreviousEmpELFile;
+                    }
+                }
+
+                if (($uploadPreviousEmpRLFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'previousEmpRLFile')) !== false)
+                {
+                    $uploadPreviousEmpRLFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadPreviousEmpRLFile);
+                    if ($uploadPreviousEmpRLFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadPreviousEmpRLFilePath);
+                        if ($d2t->convert($uploadPreviousEmpRLFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your previous employer relieving letter docs will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $previousEmpRLFileLocation = $uploadPreviousEmpRLFile;
+                    }
+                }
+
+                if (($uploadPreviousEmp2File = FileUtility::getUploadFileFromPostMultiple($siteID, 'careerportaladd', 'previousEmp2File')) !== false)
+                {
+                    $uploadPreviousEmp2FilePath = FileUtility::getUploadFilePathMultiple($siteID, 'careerportaladd', $uploadPreviousEmp2File);
+                    if ($uploadPreviousEmp2FilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadPreviousEmp2FilePath);
+                        if ($d2t->convert($uploadPreviousEmp2FilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your previous employer2 docs will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $previousEmp2FileLocation = $uploadPreviousEmp2File;
+                    }
+                }
+
+                if (($uploadPreviousEmp2OLFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'previousEmp2OLFile')) !== false)
+                {
+                    $uploadPreviousEmp2OLFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadPreviousEmp2OLFile);
+                    if ($uploadPreviousEmp2OLFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadPreviousEmp2OLFilePath);
+                        if ($d2t->convert($uploadPreviousEmp2OLFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your previous employer2 offer letter docs will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $previousEmp2OLFileLocation = $uploadPreviousEmp2OLFile;
+                    }
+                }
+
+                if (($uploadPreviousEmp2ELFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'previousEmp2ELFile')) !== false)
+                {
+                    $uploadPreviousEmp2ELFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadPreviousEmp2ELFile);
+                    if ($uploadPreviousEmp2ELFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadPreviousEmp2ELFilePath);
+                        if ($d2t->convert($uploadPreviousEmp2ELFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your previous employer2 experience letter docs will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $previousEmp2ELFileLocation = $uploadPreviousEmp2ELFile;
+                    }
+                }
+
+                if (($uploadPreviousEmp2RLFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'previousEmp2RLFile')) !== false)
+                {
+                    $uploadPreviousEmp2RLFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadPreviousEmp2RLFile);
+                    if ($uploadPreviousEmp2RLFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadPreviousEmp2RLFilePath);
+                        if ($d2t->convert($uploadPreviousEmp2RLFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your previous employer2 relieving letter docs will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $previousEmp2RLFileLocation = $uploadPreviousEmp2RLFile;
+                    }
+                }
+
+                if (($uploadPreviousEmp3File = FileUtility::getUploadFileFromPostMultiple($siteID, 'careerportaladd', 'previousEmp3File')) !== false)
+                {
+                    $uploadPreviousEmp3FilePath = FileUtility::getUploadFilePathMultiple($siteID, 'careerportaladd', $uploadPreviousEmp3File);
+                    if ($uploadPreviousEmp3FilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadPreviousEmp3FilePath);
+                        if ($d2t->convert($uploadPreviousEmp3FilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your previous employer3 docs will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $previousEmp3FileLocation = $uploadPreviousEmp3File;
+                    }
+                }
+
+                if (($uploadPreviousEmp3OLFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'previousEmp3OLFile')) !== false)
+                {
+                    $uploadPreviousEmp3OLFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadPreviousEmp3OLFile);
+                    if ($uploadPreviousEmp3OLFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadPreviousEmp3OLFilePath);
+                        if ($d2t->convert($uploadPreviousEmp3OLFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your previous employer3 offer letter docs will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $previousEmp3OLFileLocation = $uploadPreviousEmp3OLFile;
+                    }
+                }
+
+                if (($uploadPreviousEmp3ELFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'previousEmp3ELFile')) !== false)
+                {
+                    $uploadPreviousEmp3ELFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadPreviousEmp3ELFile);
+                    if ($uploadPreviousEmp3ELFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadPreviousEmp3ELFilePath);
+                        if ($d2t->convert($uploadPreviousEmp3ELFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your previous employer3 experience letter docs will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $previousEmp3ELFileLocation = $uploadPreviousEmp3ELFile;
+                    }
+                }
+
+                if (($uploadPreviousEmp3RLFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'previousEmp3RLFile')) !== false)
+                {
+                    $uploadPreviousEmp3RLFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadPreviousEmp3RLFile);
+                    if ($uploadPreviousEmp3RLFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadPreviousEmp3RLFilePath);
+                        if ($d2t->convert($uploadPreviousEmp3RLFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your previous employer3 relieving letter docs will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $previousEmp3RLFileLocation = $uploadPreviousEmp3RLFile;
+                    }
+                }
+
+
+                if (($uploadEduDocFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'eduDocFile')) !== false)
+                {
+                    $uploadEduDocFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadEduDocFile);
+                    if ($uploadEduDocFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadEduDocFilePath);
+                        if ($d2t->convert($uploadEduDocFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your educational docs will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $eduDocFileLocation = $uploadEduDocFile;
+                    }
+                }
+
+                if (($uploadEduDocCMFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'eduDocCMFile')) !== false)
+                {
+                    $uploadEduDocCMFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadEduDocCMFile);
+                    if ($uploadEduDocCMFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadEduDocCMFilePath);
+                        if ($d2t->convert($uploadEduDocCMFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your consolidated marksheet will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $eduDocCMFileLocation = $uploadEduDocCMFile;
+                    }
+                }
+
+                if (($uploadEduDocPCFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'eduDocPCFile')) !== false)
+                {
+                    $uploadEduDocPCFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadEduDocPCFile);
+                    if ($uploadEduDocPCFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadEduDocPCFilePath);
+                        if ($d2t->convert($uploadEduDocPCFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your provisional certificate will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $eduDocPCFileLocation = $uploadEduDocPCFile;
+                    }
+                }
+
+                if (($uploadEduDocCCFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'eduDocCCFile')) !== false)
+                {
+                    $uploadEduDocCCFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadEduDocCCFile);
+                    if ($uploadEduDocCCFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadEduDocCCFilePath);
+                        if ($d2t->convert($uploadEduDocCCFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your convocation certificate will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $eduDocCCFileLocation = $uploadEduDocCCFile;
+                    }
+                }
+
+                if (($uploadEduDoc12File = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'eduDoc12File')) !== false)
+                {
+                    $uploadEduDoc12FilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadEduDoc12File);
+                    if ($uploadEduDoc12FilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadEduDoc12FilePath);
+                        if ($d2t->convert($uploadEduDoc12FilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your educational docs will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $eduDoc12FileLocation = $uploadEduDoc12File;
+                    }
+                }
+
+                if (($uploadEduDoc10File = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'eduDoc10File')) !== false)
+                {
+                    $uploadEduDoc10FilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadEduDoc10File);
+                    if ($uploadEduDoc10FilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadEduDoc10FilePath);
+                        if ($d2t->convert($uploadEduDoc10FilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your educational docs will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $eduDoc10FileLocation = $uploadEduDoc10File;
+                    }
+                }
+
+                if (($uploadAddressProofFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'addressProofFile')) !== false)
+                {
+                    $uploadAddressProofFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadAddressProofFile);
+                    if ($uploadAddressProofFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadAddressProofFilePath);
+                        if ($d2t->convert($uploadAddressProofFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your address proof will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $addressProofFileLocation = $uploadAddressProofFile;
+                    }
+                }
+
+                if (($uploadRelievingProofFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'relievingProofFile')) !== false)
+                {
+                    $uploadRelievingProofFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadRelievingProofFile);
+                    if ($uploadRelievingProofFilePath !== false)
+                    {
+                        $d2t = new DocumentToText();
+                        $docType = $d2t->getDocumentType($uploadRelievingProofFilePath);
+                        if ($d2t->convert($uploadRelievingProofFilePath, $docType) !== false)
+                        {
+                            $resumeContents = $d2t->getString();
+                            // Remove nasty things like _rATr in favor of @
+                            $resumeContents = DatabaseSearch::fulltextDecode($resumeContents);
+                        }
+                        else
+                        {
+                            $resumeContents = 'Unable to load your resume contents. Your Reliveing Proof will '
+                                . 'still be uploaded and attached to your application.';
+                        }
+                        $relievingProofFileLocation = $uploadRelievingProofFile;
                     }
                 }
 
@@ -737,60 +1187,27 @@ class CareersUI extends UserInterface
             /* Get the attachment (friendly) file name is there is an attachment uploaded */
             if ($resumeFileLocation != '')
             {
-                if(!is_array($resumeFileLocation)){
-                    $resumeFileLocation = explode(",",$resumeFileLocation);
-                }
-                $attachView = array();
-                foreach ($resumeFileLocation as $value) {
-                    $attachmentHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
-                    . 'padding: 0 3px 0 5px; font-size: 11px;"> '
-                    . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
-                    . 'Attachment: <span style="font-weight: bold;">'.$value.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
-                    .'<input type="hidden" value="resume" id="resumeRemove">'
-                    . '</div> ';
-                    array_push($attachView, $attachmentHTML);
-                }
-                $attachmentHTML = implode(" ",$attachView);
-                $uploadFileFullPath = implode(",",$resumeFileLocation);
-            }
-            else
-            {
-                $attachmentHTML = '';
-            }
-
-            if(isset($_POST[$id='payslip_file'])){
-                foreach (explode(",",$_POST[$id='payslip_file']) as $key => $value) {
-                    if(!empty($value)){
-                        array_push($payslipFileLocation, $value);
-                    }
-                }
+                $attachmentHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$resumeFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="resume" id="resumeRemove">'
+                . '</div> ';
             }else{
-                $payslipFileLocation = isset($_POST[$id='payslip_file']) ? $_POST[$id] : '';
+                $attachmentHTML = '';
             }
 
             if ($payslipFileLocation != '')
             {
-                if(!is_array($payslipFileLocation)){
-                    $payslipFileLocation = explode(",",$payslipFileLocation);
-                }
-                $attachPayslipView = array();
-                foreach ($payslipFileLocation as $value) {
-                    $attachmentPayslipHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
-                    . 'padding: 0 3px 0 5px; font-size: 11px;"> '
-                    . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
-                    . 'Attachment: <span style="font-weight: bold;">'.$value.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
-                    .'<input type="hidden" value="payslip" id="payslipRemove">'
-                    . '</div> ';
-                    array_push($attachPayslipView, $attachmentPayslipHTML);
-                }
-                $attachmentPayslipHTML = implode(" ",$attachPayslipView);
-                $payslipFileFullPath = implode(",",$payslipFileLocation);
-            }
-            else
-            {
+                $attachmentPayslipHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$payslipFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="payslip" id="payslipRemove">'
+                . '</div> ';
+            }else{
                 $attachmentPayslipHTML = '';
             }
-
 
             if(isset($_POST[$id='previousEmp_file'])){
                 foreach (explode(",",$_POST[$id='previousEmp_file']) as $key => $value) {
@@ -825,6 +1242,278 @@ class CareersUI extends UserInterface
                 $attachmentPreviousEmpHTML = '';
             }
 
+
+            if ($previousEmpOLFileLocation != '')
+            {
+                $attachmentPreviousEmpOLHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$previousEmpOLFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="previousEmpOL" id="previousEmpOLRemove">'
+                . '</div> ';
+            }else{
+                $attachmentPreviousEmpOLHTML = '';
+            }
+
+            if ($previousEmpELFileLocation != '')
+            {
+                $attachmentPreviousEmpELHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$previousEmpELFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="previousEmpEL" id="previousEmpELRemove">'
+                . '</div> ';
+            }else{
+                $attachmentPreviousEmpELHTML = '';
+            }
+
+            if ($previousEmpRLFileLocation != '')
+            {
+                $attachmentPreviousEmpRLHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$previousEmpRLFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="previousEmpRL" id="previousEmpRLRemove">'
+                . '</div> ';
+            }else{
+                $attachmentPreviousEmpRLHTML = '';
+            }
+
+            if(isset($_POST[$id='previousEmp2_file'])){
+                foreach (explode(",",$_POST[$id='previousEmp2_file']) as $key => $value) {
+                    if(!empty($value)){
+                        array_push($previousEmp2FileLocation, $value);
+                    }
+                }
+            }else{
+                $previousEmp2FileLocation = isset($_POST[$id='previousEmp2_file']) ? $_POST[$id] : '';
+            }
+
+            if ($previousEmp2FileLocation != '')
+            {
+                if(!is_array($previousEmp2FileLocation)){
+                    $previousEmp2FileLocation = explode(",",$previousEmp2FileLocation);
+                }
+                $attachPreviousEmp2View = array();
+                foreach ($previousEmp2FileLocation as $value) {
+                    $attachmentPreviousEmp2HTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                    . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                    . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                    . 'Attachment: <span style="font-weight: bold;">'.$value.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                    .'<input type="hidden" value="previousEmp2" id="previousEmp2Remove">'
+                    . '</div> ';
+                    array_push($attachPreviousEmp2View, $attachmentPreviousEmp2HTML);
+                }
+                $attachmentPreviousEmp2HTML = implode(" ",$attachPreviousEmp2View);
+                $previousEmp2FileFullPath = implode(",",$previousEmp2FileLocation);
+            }
+            else
+            {
+                $attachmentPreviousEmp2HTML = '';
+            }
+
+            if ($previousEmp2OLFileLocation != '')
+            {
+                $attachmentPreviousEmp2OLHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$previousEmp2OLFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="previousEmp2OL" id="previousEmp2OLRemove">'
+                . '</div> ';
+            }else{
+                $attachmentPreviousEmp2OLHTML = '';
+            }
+
+            if ($previousEmp2ELFileLocation != '')
+            {
+                $attachmentPreviousEmp2ELHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$previousEmp2ELFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="previousEmp2EL" id="previousEmp2ELRemove">'
+                . '</div> ';
+            }else{
+                $attachmentPreviousEmp2ELHTML = '';
+            }
+
+            if ($previousEmp2RLFileLocation != '')
+            {
+                $attachmentPreviousEmp2RLHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$previousEmp2RLFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="previousEmp2RL" id="previousEmp2RLRemove">'
+                . '</div> ';
+            }else{
+                $attachmentPreviousEmp2RLHTML = '';
+            }
+
+            if(isset($_POST[$id='previousEmp3_file'])){
+                foreach (explode(",",$_POST[$id='previousEmp3_file']) as $key => $value) {
+                    if(!empty($value)){
+                        array_push($previousEmp3FileLocation, $value);
+                    }
+                }
+            }else{
+                $previousEmp3FileLocation = isset($_POST[$id='previousEmp3_file']) ? $_POST[$id] : '';
+            }
+
+            if ($previousEmp3FileLocation != '')
+            {
+                if(!is_array($previousEmp3FileLocation)){
+                    $previousEmp3FileLocation = explode(",",$previousEmp3FileLocation);
+                }
+                $attachPreviousEmp3View = array();
+                foreach ($previousEmp3FileLocation as $value) {
+                    $attachmentPreviousEmp3HTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                    . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                    . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                    . 'Attachment: <span style="font-weight: bold;">'.$value.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                    .'<input type="hidden" value="previousEmp3" id="previousEmp3Remove">'
+                    . '</div> ';
+                    array_push($attachPreviousEmp3View, $attachmentPreviousEmp3HTML);
+                }
+                $attachmentPreviousEmp3HTML = implode(" ",$attachPreviousEmp3View);
+                $previousEmp3FileFullPath = implode(",",$previousEmp3FileLocation);
+            }
+            else
+            {
+                $attachmentPreviousEmp3HTML = '';
+            }
+
+            if ($previousEmp3OLFileLocation != '')
+            {
+                $attachmentPreviousEmp3OLHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$previousEmp3OLFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="previousEmp3OL" id="previousEmp3OLRemove">'
+                . '</div> ';
+            }else{
+                $attachmentPreviousEmp3OLHTML = '';
+            }
+
+            if ($previousEmp3ELFileLocation != '')
+            {
+                $attachmentPreviousEmp3ELHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$previousEmp3ELFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="previousEmp3EL" id="previousEmp3ELRemove">'
+                . '</div> ';
+            }else{
+                $attachmentPreviousEmp3ELHTML = '';
+            }
+
+            if ($previousEmp3RLFileLocation != '')
+            {
+                $attachmentPreviousEmp3RLHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$previousEmp3RLFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="previousEmp3RL" id="previousEmp3RLRemove">'
+                . '</div> ';
+            }else{
+                $attachmentPreviousEmp3RLHTML = '';
+            }
+
+
+            if ($eduDocFileLocation != '')
+            {
+                $attachmentEduDocHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$eduDocFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="eduDoc" id="eduDocRemove">'
+                . '</div> ';
+            }else{
+                $attachmentEduDocHTML = '';
+            }
+
+            if ($eduDocCMFileLocation != '')
+            {
+                $attachmentEduDocCMHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$eduDocCMFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="eduDocCM" id="eduDocCMRemove">'
+                . '</div> ';
+            }else{
+                $attachmentEduDocCMHTML = '';
+            }
+
+            if ($eduDocPCFileLocation != '')
+            {
+                $attachmentEduDocPCHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$eduDocPCFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="eduDocPC" id="eduDocPCRemove">'
+                . '</div> ';
+            }else{
+                $attachmentEduDocPCHTML = '';
+            }
+
+            if ($eduDocCCFileLocation != '')
+            {
+                $attachmentEduDocCCHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$eduDocCCFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="eduDocCC" id="eduDocCCRemove">'
+                . '</div> ';
+            }else{
+                $attachmentEduDocCCHTML = '';
+            }
+
+            if ($eduDoc12FileLocation != '')
+            {
+                $attachmentEduDoc12HTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$eduDoc12FileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="eduDoc12" id="eduDocRemove">'
+                . '</div> ';
+            }else{
+                $attachmentEduDoc12HTML = '';
+            }
+
+            if ($eduDoc10FileLocation != '')
+            {
+                $attachmentEduDoc10HTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$eduDoc10FileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="eduDoc10" id="eduDocRemove">'
+                . '</div> ';
+            }else{
+                $attachmentEduDoc10HTML = '';
+            }
+
+            if ($addressProofFileLocation != '')
+            {
+                $attachmentAddressProofHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$addressProofFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="addressProof" id="addressProofRemove">'
+                . '</div> ';
+            }else{
+                $attachmentAddressProofHTML = '';
+            }
+
+            if ($relievingProofFileLocation != '')
+            {
+                $attachmentRelievingProofHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$relievingProofFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="relievingProof" id="relievingProofRemove">'
+                . '</div> ';
+            }else{
+                $attachmentRelievingProofHTML = '';
+            }
+
             
             /* Replace input fields. */
             $template['Content'] = str_replace('<jobid>', $jobID, $template['Content']);
@@ -851,9 +1540,8 @@ class CareersUI extends UserInterface
             $template['Content'] = str_replace('<input-resumeUpload>', '<input type="file" id="resume" name="file" class="inputBoxFile" />', $template['Content']);
             $template['Content'] = str_replace('<input-resumeUploadPreview>',
                 '<input type="hidden" id="applyToJobSubAction" name="applyToJobSubAction" value="" /> '
-                . '<input type="hidden" id="file" name="file" value="' . $uploadFileFullPath . '" /> '
-                . '<input type="hidden" id="file_path" name="file_path" value="' . $uploadFileLocationPath . '" /> '
-                . '<input type="file" id="resumeFile" name="resumeFile[]" class="inputBoxFile" size="30" onchange="resumeLoadCheck();" multiple/> '
+                . '<input type="hidden" id="file" name="file" value="' . $resumeFileLocation . '" /> '
+                . '<input type="file" id="resumeFile" name="resumeFile" class="inputBoxFile" size="30" onchange="resumeLoadCheck();"/> '
                 . '<input type="button" id="resumeLoad" name="resumeLoad" value="Upload" onclick="resumeLoadFile();" disabled /><br /> '
                 . $attachmentHTML,$template['Content']);
             $template['Content'] = str_replace('<input-extraNotes>', '<textarea name="extraNotes" id="extraNotes" class="inputBoxArea" maxlength="450" onkeyup="mlength=this.getAttribute ? parseInt(this.getAttribute(\'maxlength\')) : \'\'; if (this.getAttribute && this.value.length>(mlength+7)) { alert(\'Sorry, you may only enter \'+mlength+\' characters into the extra notes.\');} if (this.getAttribute && this.value.length>mlength) {this.value=this.value.substring(0,mlength); this.scrollTop = this.scrollHeight;}">'.(isset($_POST[$id='extraNotes'])?$_POST[$id]:'').'</textarea>', $template['Content']);
@@ -915,19 +1603,134 @@ class CareersUI extends UserInterface
             $template['Content'] = str_replace('<input-degreePassYr>', '<input name="degreePassYr" id="degreePassYr" class="inputBoxName" value="' . $degreePassYr . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-degreePrecent>', '<input name="degreePrecent" id="degreePrecent" class="inputBoxName" value="' . $degreePrecent . '" />', $template['Content']);
 
+            $template['Content'] = str_replace('<input-panCard>', '<input name="panCard" id="panCard" class="inputBoxName" value="' . $panCard . '" />', $template['Content']);
+
             $template['Content'] = str_replace('<input-payslipUploadPreview>',
-                 '<input type="hidden" id="payslip_file" name="payslip_file" value="' . $payslipFileFullPath . '" /> '
-                . '<input type="hidden" id="payslipFile_path" name="payslipFile_path" value="' . $uploadPayslipFileLocationPath . '" /> '
-                . '<input type="file" id="payslipFile" name="payslipFile[]" class="inputBoxFile" size="30" onchange="payslipLoadCheck();" multiple/> '
+                 '<input type="hidden" id="payslip_file" name="payslip_file" value="' . $payslipFileLocation . '" /> '
+                . '<input type="file" id="payslipFile" name="payslipFile" class="inputBoxFile" size="30" onchange="payslipLoadCheck();"/> '
                 . '<input type="button" id="payslipLoad" name="payslipLoad" value="Upload" onclick="payslipLoadFile();" disabled /><br /> '
                 . $attachmentPayslipHTML,$template['Content']);
 
             $template['Content'] = str_replace('<input-previousEmpUploadPreview>',
                  '<input type="hidden" id="previousEmp_file" name="previousEmp_file" value="' . $previousEmpFileFullPath . '" /> '
-                . '<input type="hidden" id="previousEmpFile_path" name="previousEmpFile_path" value="' . $uploadpreviousEmpFileLocationPath . '" /> '
                 . '<input type="file" id="previousEmpFile" name="previousEmpFile[]" class="inputBoxFile" size="30" onchange="previousEmpLoadCheck();" multiple/> '
                 . '<input type="button" id="previousEmpLoad" name="previousEmpLoad" value="Upload" onclick="previousEmpLoadFile();" disabled /><br /> '
                 . $attachmentPreviousEmpHTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-previousEmpOLUploadPreview>',
+                 '<input type="hidden" id="previousEmpOL_file" name="previousEmpOL_file" value="' . $previousEmpOLFileLocation . '" /> '
+                . '<input type="file" id="previousEmpOLFile" name="previousEmpOLFile" class="inputBoxFile" size="30" onchange="previousEmpOLLoadCheck();" /> '
+                . '<input type="button" id="previousEmpOLLoad" name="previousEmpOLLoad" value="Upload" onclick="previousEmpOLLoadFile();" disabled /><br /> '
+                . $attachmentPreviousEmpOLHTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-previousEmpELUploadPreview>',
+                 '<input type="hidden" id="previousEmpEL_file" name="previousEmpEL_file" value="' . $previousEmpELFileLocation . '" /> '
+                . '<input type="file" id="previousEmpELFile" name="previousEmpELFile" class="inputBoxFile" size="30" onchange="previousEmpELLoadCheck();" /> '
+                . '<input type="button" id="previousEmpELLoad" name="previousEmpELLoad" value="Upload" onclick="previousEmpELLoadFile();" disabled /><br /> '
+                . $attachmentPreviousEmpELHTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-previousEmpRLUploadPreview>',
+                 '<input type="hidden" id="previousEmpRL_file" name="previousEmpRL_file" value="' . $previousEmpRLFileLocation . '" /> '
+                . '<input type="file" id="previousEmpRLFile" name="previousEmpRLFile" class="inputBoxFile" size="30" onchange="previousEmpRLLoadCheck();" /> '
+                . '<input type="button" id="previousEmpRLLoad" name="previousEmpRLLoad" value="Upload" onclick="previousEmpRLLoadFile();" disabled /><br /> '
+                . $attachmentPreviousEmpRLHTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-previousEmp2UploadPreview>',
+                 '<input type="hidden" id="previousEmp2_file" name="previousEmp2_file" value="' . $previousEmp2FileFullPath . '" /> '
+                . '<input type="file" id="previousEmp2File" name="previousEmp2File[]" class="inputBoxFile" size="30" onchange="previousEmp2LoadCheck();" multiple/> '
+                . '<input type="button" id="previousEmp2Load" name="previousEmp2Load" value="Upload" onclick="previousEmp2LoadFile();" disabled /><br /> '
+                . $attachmentPreviousEmp2HTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-previousEmp2OLUploadPreview>',
+                 '<input type="hidden" id="previousEmp2OL_file" name="previousEmp2OL_file" value="' . $previousEmp2OLFileLocation . '" /> '
+                . '<input type="file" id="previousEmp2OLFile" name="previousEmp2OLFile" class="inputBoxFile" size="30" onchange="previousEmp2OLLoadCheck();" /> '
+                . '<input type="button" id="previousEmp2OLLoad" name="previousEmp2OLLoad" value="Upload" onclick="previousEmp2OLLoadFile();" disabled /><br /> '
+                . $attachmentPreviousEmp2OLHTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-previousEmp2ELUploadPreview>',
+                 '<input type="hidden" id="previousEmp2EL_file" name="previousEmp2EL_file" value="' . $previousEmp2ELFileLocation . '" /> '
+                . '<input type="file" id="previousEmp2ELFile" name="previousEmp2ELFile" class="inputBoxFile" size="30" onchange="previousEmp2ELLoadCheck();" /> '
+                . '<input type="button" id="previousEmp2ELLoad" name="previousEmp2ELLoad" value="Upload" onclick="previousEmp2ELLoadFile();" disabled /><br /> '
+                . $attachmentPreviousEmp2ELHTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-previousEmp2RLUploadPreview>',
+                 '<input type="hidden" id="previousEmp2RL_file" name="previousEmp2RL_file" value="' . $previousEmp2RLFileLocation . '" /> '
+                . '<input type="file" id="previousEmp2RLFile" name="previousEmp2RLFile" class="inputBoxFile" size="30" onchange="previousEmp2RLLoadCheck();" /> '
+                . '<input type="button" id="previousEmp2RLLoad" name="previousEmp2RLLoad" value="Upload" onclick="previousEmp2RLLoadFile();" disabled /><br /> '
+                . $attachmentPreviousEmp2RLHTML,$template['Content']);
+
+
+            $template['Content'] = str_replace('<input-previousEmp3UploadPreview>',
+                 '<input type="hidden" id="previousEmp3_file" name="previousEmp3_file" value="' . $previousEmp3FileFullPath . '" /> '
+                . '<input type="file" id="previousEmp3File" name="previousEmp3File[]" class="inputBoxFile" size="30" onchange="previousEmp3LoadCheck();" multiple/> '
+                . '<input type="button" id="previousEmp3Load" name="previousEmp3Load" value="Upload" onclick="previousEmp3LoadFile();" disabled /><br /> '
+                . $attachmentPreviousEmp3HTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-previousEmp3OLUploadPreview>',
+                 '<input type="hidden" id="previousEmp3OL_file" name="previousEmp3OL_file" value="' . $previousEmp3OLFileLocation . '" /> '
+                . '<input type="file" id="previousEmp3OLFile" name="previousEmp3OLFile" class="inputBoxFile" size="30" onchange="previousEmp3OLLoadCheck();" /> '
+                . '<input type="button" id="previousEmp3OLLoad" name="previousEmp3OLLoad" value="Upload" onclick="previousEmp3OLLoadFile();" disabled /><br /> '
+                . $attachmentPreviousEmp3OLHTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-previousEmp3ELUploadPreview>',
+                 '<input type="hidden" id="previousEmp3EL_file" name="previousEmp3EL_file" value="' . $previousEmp3ELFileLocation . '" /> '
+                . '<input type="file" id="previousEmp3ELFile" name="previousEmp3ELFile" class="inputBoxFile" size="30" onchange="previousEmp3ELLoadCheck();" /> '
+                . '<input type="button" id="previousEmp3ELLoad" name="previousEmp3ELLoad" value="Upload" onclick="previousEmp3ELLoadFile();" disabled /><br /> '
+                . $attachmentPreviousEmp3ELHTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-previousEmp3RLUploadPreview>',
+                 '<input type="hidden" id="previousEmp3RL_file" name="previousEmp3RL_file" value="' . $previousEmp3RLFileLocation . '" /> '
+                . '<input type="file" id="previousEmp3RLFile" name="previousEmp3RLFile" class="inputBoxFile" size="30" onchange="previousEmp3RLLoadCheck();" /> '
+                . '<input type="button" id="previousEmp3RLLoad" name="previousEmp3RLLoad" value="Upload" onclick="previousEmp3RLLoadFile();" disabled /><br /> '
+                . $attachmentPreviousEmp3RLHTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-eduDocUploadPreview>',
+                 '<input type="hidden" id="eduDoc_file" name="eduDoc_file" value="' . $eduDocFileLocation . '" /> '
+                . '<input type="file" id="eduDocFile" name="eduDocFile" class="inputBoxFile" size="30" onchange="eduDocLoadCheck();" /> '
+                . '<input type="button" id="eduDocLoad" name="eduDocLoad" value="Upload" onclick="eduDocLoadFile();" disabled /><br /> '
+                . $attachmentEduDocHTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-eduDocCMUploadPreview>',
+                 '<input type="hidden" id="eduDocCM_file" name="eduDocCM_file" value="' . $eduDocCMFileLocation . '" /> '
+                . '<input type="file" id="eduDocCMFile" name="eduDocCMFile" class="inputBoxFile" size="30" onchange="eduDocCMLoadCheck();" /> '
+                . '<input type="button" id="eduDocCMLoad" name="eduDocCMLoad" value="Upload" onclick="eduDocCMLoadFile();" disabled /><br /> '
+                . $attachmentEduDocCMHTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-eduDocPCUploadPreview>',
+                 '<input type="hidden" id="eduDocPC_file" name="eduDocPC_file" value="' . $eduDocPCFileLocation . '" /> '
+                . '<input type="file" id="eduDocPCFile" name="eduDocPCFile" class="inputBoxFile" size="30" onchange="eduDocPCLoadCheck();" /> '
+                . '<input type="button" id="eduDocPCLoad" name="eduDocPCLoad" value="Upload" onclick="eduDocPCLoadFile();" disabled /><br /> '
+                . $attachmentEduDocPCHTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-eduDocCCUploadPreview>',
+                 '<input type="hidden" id="eduDocCC_file" name="eduDocCC_file" value="' . $eduDocCCFileLocation . '" /> '
+                . '<input type="file" id="eduDocCCFile" name="eduDocCCFile" class="inputBoxFile" size="30" onchange="eduDocCCLoadCheck();" /> '
+                . '<input type="button" id="eduDocCCLoad" name="eduDocCCLoad" value="Upload" onclick="eduDocCCLoadFile();" disabled /><br /> '
+                . $attachmentEduDocCCHTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-eduDoc12UploadPreview>',
+                 '<input type="hidden" id="eduDoc12_file" name="eduDoc12_file" value="' . $eduDoc12FileLocation . '" /> '
+                . '<input type="file" id="eduDoc12File" name="eduDoc12File" class="inputBoxFile" size="30" onchange="eduDoc12LoadCheck();" /> '
+                . '<input type="button" id="eduDoc12Load" name="eduDoc12Load" value="Upload" onclick="eduDoc12LoadFile();" disabled /><br /> '
+                . $attachmentEduDoc12HTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-eduDoc10UploadPreview>',
+                 '<input type="hidden" id="eduDoc10_file" name="eduDoc10_file" value="' . $eduDoc10FileLocation . '" /> '
+                . '<input type="file" id="eduDoc10File" name="eduDoc10File" class="inputBoxFile" size="30" onchange="eduDoc10LoadCheck();" /> '
+                . '<input type="button" id="eduDoc10Load" name="eduDoc10Load" value="Upload" onclick="eduDoc10LoadFile();" disabled /><br /> '
+                . $attachmentEduDoc10HTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-addressProofUploadPreview>',
+                 '<input type="hidden" id="addressProof_file" name="addressProof_file" value="' . $addressProofFileLocation . '" /> '
+                . '<input type="file" id="addressProofFile" name="addressProofFile" class="inputBoxFile" size="30" onchange="addressProofLoadCheck();" /> '
+                . '<input type="button" id="addressProofLoad" name="addressProofLoad" value="Upload" onclick="addressProofLoadFile();" disabled /><br /> '
+                . $attachmentAddressProofHTML,$template['Content']);
+
+            $template['Content'] = str_replace('<input-relievingProofUploadPreview>',
+                 '<input type="hidden" id="relievingProof_file" name="relievingProof_file" value="' . $relievingProofFileLocation . '" /> '
+                . '<input type="file" id="relievingProofFile" name="relievingProofFile" class="inputBoxFile" size="30" onchange="relievingProofLoadCheck();" /> '
+                . '<input type="button" id="relievingProofLoad" name="relievingProofLoad" value="Upload" onclick="relievingProofLoadFile();" disabled /><br /> '
+                . $attachmentRelievingProofHTML,$template['Content']);
 
 
 
@@ -971,7 +1774,8 @@ class CareersUI extends UserInterface
             {
                 $endTD = '';
             }
-
+            $rid = intval(isset($_GET['RID']) ? $_GET['RID'] : $_POST['RID']);
+            
             if (strpos($template['Content'], '<catsform>') === false)
             {
                 $template['Content'] = $startTD . "\n" . $validator . "\n"
@@ -980,6 +1784,7 @@ class CareersUI extends UserInterface
                     . '?m=careers&amp;p=onApplyToJobOrder" '
                     . 'enctype="multipart/form-data" method="post" onsubmit="return applyValidate();">'
                     . '<input type="hidden" name="ID" value="' . $jobID . '">'
+                    . '<input type="hidden" name="RID" value="' . $rid . '">'
                     . '<input type="hidden" name="candidateID" value="' . $candidateID . '">'
                     . $template['Content'] . '</form>' . "\n" . $endTD;
             }
@@ -991,6 +1796,7 @@ class CareersUI extends UserInterface
                         . '?m=careers&amp;p=onApplyToJobOrder" '
                         . 'enctype="multipart/form-data" method="post" onsubmit="return applyValidate();">'
                         . '<input type="hidden" name="ID" value="' . $jobID . '">'
+                        . '<input type="hidden" name="RID" value="' . $rid . '">'
                         . '<input type="hidden" name="candidateID" value="' . $candidateID . '">',
                         $template['Content'])
                     . "\n" . $endTD;
@@ -1127,7 +1933,7 @@ class CareersUI extends UserInterface
             }
             else
             {
-                $template['Content'] = str_replace('<a-applyToJob', '<a href="'.CATSUtility::getIndexName().'?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'&p=applyToJob&ID='.$jobID.'"', $template['Content']);
+                $template['Content'] = str_replace('<a-applyToJob', '<a href="'.CATSUtility::getIndexName().'?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'&p=applyToJob&ID='.$jobID.'&RID='.$rid.'"', $template['Content']);
             }
 
             $jobOrders = new JobOrders($siteID);
@@ -1259,47 +2065,16 @@ class CareersUI extends UserInterface
     {
         $validator = '';
 
-        if (strpos($template['Content'], '<input-resumeUploadPreview>') !== false || strpos($template['Content'], '<input-resumeUploadPreview req>') !== false)
+        if (strpos($template['Content'], '<input-panCard>') !== false || strpos($template['Content'], '<input-panCard req>') !== false)
         {
             $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if (document.getElementById(\'file\').value == \'\')
-                    {
-                        alert(\'Please upload your resume\');
-                        document.getElementById(\'file\').focus();
-                        return false;
-                    }
+                if (document.getElementById(\'panCard\').value == \'\')
+                {
+                    alert(\'Please enter a pan card number.\');
+                    document.getElementById(\'panCard\').focus();
+                    return false;
                 }';
-        }
-
-        if (strpos($template['Content'], '<input-payslipUploadPreview>') !== false || strpos($template['Content'], '<input-payslipUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if (document.getElementById(\'payslip_file\').value == \'\')
-                    {
-                        alert(\'Please upload your current payslips\');
-                        document.getElementById(\'payslipFile\').focus();
-                        return false;
-                    }
-                }';
-        }
-
-        if (strpos($template['Content'], '<input-previousEmpUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if(document.getElementById(\'erName1\').value != \'\'){
-                        if (document.getElementById(\'previousEmp_file\').value == \'\')
-                        {
-                            alert(\'Please upload your previous employer docs\');
-                            document.getElementById(\'previousEmp_file\').focus();
-                            return false;
-                        }    
-                    }
-                }';
-        }
-
+        }  
 
         if (strpos($template['Content'], '<input-firstName>') !== false || strpos($template['Content'], '<input-firstName req>') !== false)
         {
@@ -1352,6 +2127,19 @@ class CareersUI extends UserInterface
                 }';
         }
 
+        if (strpos($template['Content'], '<input-resumeUploadPreview>') !== false || strpos($template['Content'], '<input-resumeUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if (document.getElementById(\'file\').value == \'\')
+                    {
+                        alert(\'Please upload your resume\');
+                        document.getElementById(\'file\').focus();
+                        return false;
+                    }
+                }';
+        }
+
         if (strpos($template['Content'], '<input-currentErName>') !== false || strpos($template['Content'], '<input-currentErName req>') !== false)
         {
             $validator .= '
@@ -1371,6 +2159,32 @@ class CareersUI extends UserInterface
                     alert(\'Please enter the current employer DOJ.\');
                     document.getElementById(\'currentErDoj\').focus();
                     return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-payslipUploadPreview>') !== false || strpos($template['Content'], '<input-payslipUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if (document.getElementById(\'payslip_file\').value == \'\')
+                    {
+                        alert(\'Please Upload Your Latest Payslip\');
+                        document.getElementById(\'payslipFile\').focus();
+                        return false;
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-relievingProofUploadPreview>') !== false || strpos($template['Content'], '<input-relievingProofUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if (document.getElementById(\'relievingProof_file\').value == \'\')
+                    {
+                        alert(\'Please Upload Relieving Letter/Resignation Proof\');
+                        document.getElementById(\'relievingProofFile\').focus();
+                        return false;
+                    }
                 }';
         }
 
@@ -1406,6 +2220,187 @@ class CareersUI extends UserInterface
                     return false;
                 }';
         }
+
+        if (strpos($template['Content'], '<input-previousEmpUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if(document.getElementById(\'erName1\').value != \'\'){
+                        if (document.getElementById(\'previousEmp_file\').value == \'\')
+                        {
+                            alert(\'Please Upload Your Previous Employer1 Payslip\');
+                            document.getElementById(\'previousEmpFile\').focus();
+                            return false;
+                        }  
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-previousEmpOLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpOLUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if(document.getElementById(\'erName1\').value != \'\'){
+                        if (document.getElementById(\'previousEmpOL_file\').value == \'\')
+                        {
+                            alert(\'Please Upload Your Previous Employer1 Offer Letter\');
+                            document.getElementById(\'previousEmpOLFile\').focus();
+                            return false;
+                        }  
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-previousEmpELUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpELUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if(document.getElementById(\'erName1\').value != \'\'){
+                        if (document.getElementById(\'previousEmpEL_file\').value == \'\')
+                        {
+                            alert(\'Please Upload Your Previous Employer1 Experience Letter\');
+                            document.getElementById(\'previousEmpELFile\').focus();
+                            return false;
+                        }  
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-previousEmpRLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpRLUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if(document.getElementById(\'erName1\').value != \'\'){
+                        if (document.getElementById(\'previousEmpRL_file\').value == \'\')
+                        {
+                            alert(\'Please Upload Your Previous Employer1 Relieving Letter\');
+                            document.getElementById(\'previousEmpRLFile\').focus();
+                            return false;
+                        }  
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-previousEmp2UploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp2UploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if(document.getElementById(\'erName2\').value != \'\'){
+                        if (document.getElementById(\'previousEmp2_file\').value == \'\')
+                        {
+                            alert(\'Please Upload Your Previous Employer2 Payslip\');
+                            document.getElementById(\'previousEmp2File\').focus();
+                            return false;
+                        }  
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-previousEmp2OLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp2OLUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if(document.getElementById(\'erName2\').value != \'\'){
+                        if (document.getElementById(\'previousEmp2OL_file\').value == \'\')
+                        {
+                            alert(\'Please Upload Your Previous Employer2 Offer Letter\');
+                            document.getElementById(\'previousEmp2OLFile\').focus();
+                            return false;
+                        }  
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-previousEmp2ELUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp2ELUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if(document.getElementById(\'erName2\').value != \'\'){
+                        if (document.getElementById(\'previousEmp2EL_file\').value == \'\')
+                        {
+                            alert(\'Please Upload Your Previous Employer2 Experience Letter\');
+                            document.getElementById(\'previousEmp2ELFile\').focus();
+                            return false;
+                        }  
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-previousEmp2RLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp2RLUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if(document.getElementById(\'erName2\').value != \'\'){
+                        if (document.getElementById(\'previousEmp2RL_file\').value == \'\')
+                        {
+                            alert(\'Please Upload Your Previous Employer2 Relieving Letter\');
+                            document.getElementById(\'previousEmp2RLFile\').focus();
+                            return false;
+                        }  
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-previousEmp3UploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp3UploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if(document.getElementById(\'erName3\').value != \'\'){
+                        if (document.getElementById(\'previousEmp3_file\').value == \'\')
+                        {
+                            alert(\'Please Upload Your Previous Employer3 Payslip\');
+                            document.getElementById(\'previousEmp3File\').focus();
+                            return false;
+                        }  
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-previousEmp3OLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp3OLUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if(document.getElementById(\'erName3\').value != \'\'){
+                        if (document.getElementById(\'previousEmp3OL_file\').value == \'\')
+                        {
+                            alert(\'Please Upload Your Previous Employer3 Offer Letter\');
+                            document.getElementById(\'previousEmp3OLFile\').focus();
+                            return false;
+                        }  
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-previousEmp3ELUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp3ELUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if(document.getElementById(\'erName3\').value != \'\'){
+                        if (document.getElementById(\'previousEmp3EL_file\').value == \'\')
+                        {
+                            alert(\'Please Upload Your Previous Employer3 Experience Letter\');
+                            document.getElementById(\'previousEmp3ELFile\').focus();
+                            return false;
+                        }  
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-previousEmp3RLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp3RLUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if(document.getElementById(\'erName3\').value != \'\'){
+                        if (document.getElementById(\'previousEmp3RL_file\').value == \'\')
+                        {
+                            alert(\'Please Upload Your Previous Employer3 Relieving Letter\');
+                            document.getElementById(\'previousEmp3RLFile\').focus();
+                            return false;
+                        }  
+                    }
+                }';
+        }
+
 
         if (strpos($template['Content'], '<input-insName>') !== false || strpos($template['Content'], '<input-insName req>') !== false)
         {
@@ -1451,6 +2446,58 @@ class CareersUI extends UserInterface
                 }';
         }
 
+        if (strpos($template['Content'], '<input-eduDocUploadPreview>') !== false || strpos($template['Content'], '<input-eduDocUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if (document.getElementById(\'eduDoc_file\').value == \'\')
+                    {
+                        alert(\'Please Upload Your Degree Certificate\');
+                        document.getElementById(\'eduDocFile\').focus();
+                        return false;
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-eduDocCMUploadPreview>') !== false || strpos($template['Content'], '<input-eduDocCMUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if (document.getElementById(\'eduDocCM_file\').value == \'\')
+                    {
+                        alert(\'Please upload your Consolidated marksheet\');
+                        document.getElementById(\'eduDocCMFile\').focus();
+                        return false;
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-eduDocPCUploadPreview>') !== false || strpos($template['Content'], '<input-eduDocPCUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if (document.getElementById(\'eduDocPC_file\').value == \'\')
+                    {
+                        alert(\'Please upload your provisional certificate\');
+                        document.getElementById(\'eduDocPCFile\').focus();
+                        return false;
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-eduDocCCUploadPreview>') !== false || strpos($template['Content'], '<input-eduDocCCUploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if (document.getElementById(\'eduDocCC_file\').value == \'\')
+                    {
+                        alert(\'Please upload your convocation certificate\');
+                        document.getElementById(\'eduDocCCFile\').focus();
+                        return false;
+                    }
+                }';
+        }
+
         if (strpos($template['Content'], '<input-board12th>') !== false || strpos($template['Content'], '<input-board12th req>') !== false)
         {
             $validator .= '
@@ -1481,6 +2528,19 @@ class CareersUI extends UserInterface
                     alert(\'Please enter the 12th percentage.\');
                     document.getElementById(\'precent12th\').focus();
                     return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-eduDoc12UploadPreview>') !== false || strpos($template['Content'], '<input-eduDoc12UploadPreview req>') !== false)
+        {
+            $validator .= '
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if (document.getElementById(\'eduDoc12_file\').value == \'\')
+                    {
+                        alert(\'Please Upload Your 12th Marksheet\');
+                        document.getElementById(\'eduDoc12File\').focus();
+                        return false;
+                    }
                 }';
         }
 
@@ -1517,13 +2577,26 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-phone-cell>') !== false || strpos($template['Content'], '<input-phone-cell req>') !== false)
+        if (strpos($template['Content'], '<input-eduDoc10UploadPreview>') !== false || strpos($template['Content'], '<input-eduDoc10UploadPreview req>') !== false)
         {
             $validator .= '
-                if (document.getElementById(\'phoneCell\').value == \'\')
+                if(document.getElementById(\'candidateID\').value == -1){
+                    if (document.getElementById(\'eduDoc10_file\').value == \'\')
+                    {
+                        alert(\'Please Upload Your 10th Marksheet\');
+                        document.getElementById(\'eduDoc10File\').focus();
+                        return false;
+                    }
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-phone>') !== false || strpos($template['Content'], '<input-phone req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'phone\').value == \'\')
                 {
                     alert(\'Please enter a phone number.\');
-                    document.getElementById(\'phoneCell\').focus();
+                    document.getElementById(\'phone\').focus();
                     return false;
                 }';
         }
@@ -1571,10 +2644,10 @@ class CareersUI extends UserInterface
                     document.getElementById(\'zip\').focus();
                     return false;
                 }';
-        }        
+        }      
 
 
-        if (strpos($template['Content'], '<input-keySkills req>') !== false)
+        if (strpos($template['Content'], '<input-keySkills>') !== false  || strpos($template['Content'], '<input-keySkills req>') !== false)
         {
             $validator .= '
                 if (document.getElementById(\'keySkills\').value == \'\')
@@ -1711,11 +2784,19 @@ class CareersUI extends UserInterface
         }
 
         $jobOrderID = $_POST['ID'];
+        $recruiterID = $_POST['RID'];
 
         $jobOrderData = $jobOrders->get($jobOrderID);
         if (!isset($jobOrderData['public']) || $jobOrderData['public'] == 0)
         {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'The specified job order could not be found.');
+            return;
+        }
+
+        $recruiterData = $jobOrders->getRecruiterData($recruiterID);
+        if (!isset($recruiterData) || $recruiterData['user_id'] != $recruiterID)
+        {
+            CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'The specified recruiter detail could not be found.');
             return;
         }
 
@@ -1731,7 +2812,6 @@ class CareersUI extends UserInterface
         $source         = $this->getTrimmedInput('source', $_POST);
         $phone          = $this->getTrimmedInput('phone', $_POST);
         $phoneHome      = $this->getTrimmedInput('phoneHome', $_POST);
-        $phoneCell      = $this->getTrimmedInput('phoneCell', $_POST);
         $bestTimeToCall = $this->getTrimmedInput('bestTimeToCall', $_POST);
         $keySkills      = $this->getTrimmedInput('keySkills', $_POST);
         $extraNotes     = $this->getTrimmedInput('extraNotes', $_POST);
@@ -1768,6 +2848,7 @@ class CareersUI extends UserInterface
         $degreePassYr   = $this->getTrimmedInput('degreePassYr', $_POST);
         $degreePrecent  = $this->getTrimmedInput('degreePrecent', $_POST);
         $currCTC        = $this->getTrimmedInput('currCTC', $_POST);
+        $panCard        = $this->getTrimmedInput('panCard', $_POST);
 
         if(!empty($erDoj1)){
             $erDoj1 = date_format(date_create($erDoj1),"Y-m-d");
@@ -1856,14 +2937,14 @@ class CareersUI extends UserInterface
                 $lastName, 
                 $email, 
                 $email2,
-                $phoneCell, 
+                $phoneHome, 
                 $phone, 
                 $address, 
                 $city,
                 $state, 
                 $zip, 
                 $keySkills,
-                $employer,
+                $currentErName,
                 $currCTC,
                 $automatedUser['userID'],
                 $erName1,
@@ -1877,7 +2958,6 @@ class CareersUI extends UserInterface
                 $erDor3,
                 $ectcConfirm,
                 $doj,
-                $currentErName,
                 $currentErDoj,
                 $currentErDor,
                 $board10th,
@@ -1889,7 +2969,8 @@ class CareersUI extends UserInterface
                 $insName,
                 $degreeCourse,
                 $degreePassYr,
-                $degreePrecent
+                $degreePrecent,
+                $panCard
             );
 
             /* Update extra feilds */
@@ -1919,7 +3000,7 @@ class CareersUI extends UserInterface
                 $source,
                 $keySkills,
                 '',
-                $employer,
+                $currentErName,
                 '',
                 $currCTC,
                 '',
@@ -1945,7 +3026,6 @@ class CareersUI extends UserInterface
                 $erDor3,
                 $ectcConfirm,
                 $doj,
-                $currentErName,
                 $currentErDoj,
                 $currentErDor,
                 $board10th,
@@ -1957,7 +3037,9 @@ class CareersUI extends UserInterface
                 $insName,
                 $degreeCourse,
                 $degreePassYr,
-                $degreePrecent
+                $degreePrecent,
+                $panCard,
+                $recruiterID
             );
 
             /* Update extra fields. */
@@ -1975,7 +3057,7 @@ class CareersUI extends UserInterface
         $fileUploaded = false;
 
         /* Upload resume (no questionnaire) */
-        if (isset($_FILES['resumeFile']) && !empty($_FILES['resumeFile']['name'][0]))
+        if (isset($_FILES['resumeFile']) && !empty($_FILES['resumeFile']['name']))
         {
             $attachmentCreator = new AttachmentCreator($siteID);
             $attachmentCreator->createFromUpload(
@@ -2031,7 +3113,7 @@ class CareersUI extends UserInterface
         }
 
         /* Upload resume (no questionnaire) */
-        if (isset($_FILES['payslipFile']) && !empty($_FILES['resumeFile']['name'][0]))
+        if (isset($_FILES['payslipFile']) && !empty($_FILES['payslipFile']['name']))
         {
             $attachmentCreator = new AttachmentCreator($siteID);
             
@@ -2039,10 +3121,6 @@ class CareersUI extends UserInterface
                 DATA_ITEM_CANDIDATE, $candidateID, 'payslipFile', false, true,'payslip_file'
             );
 
-            $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpFile', false, true,'previousEmp_file'
-            );
-
             if ($attachmentCreator->isError())
             {
                 CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
@@ -2058,6 +3136,34 @@ class CareersUI extends UserInterface
 
             $fileUploaded = true;
             $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['payslip_file']) && !empty($_POST['payslip_file'])){
+            $resumePath = '';
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['payslip_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
         }
 
         /* Upload resume (no questionnaire) */
@@ -2065,8 +3171,20 @@ class CareersUI extends UserInterface
         {
             $attachmentCreator = new AttachmentCreator($siteID);
 
-            $attachmentCreator->createFromUpload(
+            $attachmentCreator->createFromUpload_multiple(
                 DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpFile', false, true,'previousEmp_file'
+            );
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpOLFile', false, true,'previousEmpOL_file'
+            );
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpELFile', false, true,'previousEmpEL_file'
+            );
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpRLFile', false, true,'previousEmpRL_file'
             );
 
             if ($attachmentCreator->isError())
@@ -2084,6 +3202,700 @@ class CareersUI extends UserInterface
 
             $fileUploaded = true;
             $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['previousEmp_file']) && !empty($_POST['previousEmp_file'])){
+            $resumePath = '';
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmpOL_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmpEL_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmpRL_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+        }
+
+        if (isset($_FILES['previousEmpFile']) && !empty($_FILES['previousEmp2File']['name'][0]))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload_multiple(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2File', false, true,'previousEmp2_file'
+            );
+
+            $attachmentCreator->createFromUpload_multiple(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2OLFile', false, true,'previousEmp2OL_file'
+            );
+
+            $attachmentCreator->createFromUpload_multiple(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2ELFile', false, true,'previousEmp2EL_file'
+            );
+
+            $attachmentCreator->createFromUpload_multiple(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2RLFile', false, true,'previousEmp2RL_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['previousEmp2_file']) && !empty($_POST['previousEmp2_file'])){
+            $resumePath = '';
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp2_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp2OL_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp2EL_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp2RL_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+        }
+
+        if (isset($_FILES['previousEmpFile']) && !empty($_FILES['previousEmp3File']['name'][0]))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload_multiple(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3File', false, true,'previousEmp3_file'
+            );
+
+            $attachmentCreator->createFromUpload_multiple(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3OLFile', false, true,'previousEmp3OL_file'
+            );
+
+            $attachmentCreator->createFromUpload_multiple(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3ELFile', false, true,'previousEmp3EL_file'
+            );
+
+            $attachmentCreator->createFromUpload_multiple(
+                DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3RLFile', false, true,'previousEmp3RL_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['previousEmp3_file']) && !empty($_POST['previousEmp3_file'])){
+            $resumePath = '';
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previous3Emp_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp3OL_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp3EL_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['previousEmp3RL_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+        }
+
+        if (isset($_FILES['eduDocFile']) && !empty($_FILES['eduDocFile']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'eduDocFile', false, true,'eduDoc_file'
+            );
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'eduDocCMFile', false, true,'eduDocCM_file'
+            );
+
+            // $attachmentCreator->createFromUpload(
+            //     DATA_ITEM_CANDIDATE, $candidateID, 'eduDocPCFile', false, true,'eduDocPC_file'
+            // );
+
+            // $attachmentCreator->createFromUpload(
+            //     DATA_ITEM_CANDIDATE, $candidateID, 'eduDocCCFile', false, true,'eduDocCC_file'
+            // );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['eduDoc_file']) && !empty($_POST['eduDoc_file'])){
+            $resumePath = '';
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['eduDoc_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['eduDocCM_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+
+            // $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['eduDocPC_file']);
+
+            // if ($newFilePath !== false)
+            // {
+            //     $attachmentCreator = new AttachmentCreator($siteID);
+            //     $attachmentCreator->createFromFile(
+            //         DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+            //     );
+
+            //     if ($attachmentCreator->isError())
+            //     {
+            //         CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+            //         return;
+            //     }
+
+            //     $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            //     $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            //     $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            //     // FIXME: Show parse errors!
+
+            //     $fileUploaded = true;
+            //     $resumePath = $attachmentCreator->getNewFilePath();
+            // }
+
+            // $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['eduDocCC_file']);
+
+            // if ($newFilePath !== false)
+            // {
+            //     $attachmentCreator = new AttachmentCreator($siteID);
+            //     $attachmentCreator->createFromFile(
+            //         DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+            //     );
+
+            //     if ($attachmentCreator->isError())
+            //     {
+            //         CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+            //         return;
+            //     }
+
+            //     $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            //     $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            //     $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            //     // FIXME: Show parse errors!
+
+            //     $fileUploaded = true;
+            //     $resumePath = $attachmentCreator->getNewFilePath();
+            // }
+        }
+
+        if (isset($_FILES['eduDoc12File']) && !empty($_FILES['eduDoc12File']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'eduDoc12File', false, true,'eduDoc12_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['eduDoc12_file']) && !empty($_POST['eduDoc12_file'])){
+            $resumePath = '';
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['eduDoc12_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+        }
+
+        if (isset($_FILES['eduDoc10File']) && !empty($_FILES['eduDoc10File']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'eduDoc10File', false, true,'eduDoc10_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['eduDoc10_file']) && !empty($_POST['eduDoc10_file'])){
+            $resumePath = '';
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['eduDoc10_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+        }
+
+        if (isset($_FILES['addressProofFile']) && !empty($_FILES['addressProofFile']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'addressProofFile', false, true,'addressProof_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['addressProof_file']) && !empty($_POST['addressProof_file'])){
+            $resumePath = '';
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['addressProof_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
         }
 
         $pipelines = new Pipelines($siteID);
@@ -2245,7 +4057,7 @@ class CareersUI extends UserInterface
         $replacementStrings = array(
             $firstName,
             $firstName . ' ' . $lastName,
-            $jobOrderData['ownerFullName'],
+            $recruiterData['userFullName'],
             $jobOrderData['ownerFullName'],
             $jobOrderData['title'],
             $jobOrderData['companyName'],
@@ -2267,21 +4079,21 @@ class CareersUI extends UserInterface
         {
             $careerPortalSettings->sendEmail(
                 $automatedUser['userID'],
-                $jobOrderData['owner_email'],
+                $recruiterData['email'],
                 CAREERS_OWNERAPPLY_SUBJECT,
                 $emailContents
             );
 
 
-            if ($jobOrderData['owner_email'] != $jobOrderData['recruiter_email'])
-            {
-                $careerPortalSettings->sendEmail(
-                    $automatedUser['userID'],
-                    $jobOrderData['recruiter_email'],
-                    CAREERS_OWNERAPPLY_SUBJECT,
-                    $emailContents
-                );
-            }
+            // if ($jobOrderData['owner_email'] != $jobOrderData['recruiter_email'])
+            // {
+            //     $careerPortalSettings->sendEmail(
+            //         $automatedUser['userID'],
+            //         $jobOrderData['recruiter_email'],
+            //         CAREERS_OWNERAPPLY_SUBJECT,
+            //         $emailContents
+            //     );
+            // }
         }
     }
 

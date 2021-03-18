@@ -96,7 +96,7 @@ class Candidates
         $source, $keySkills, $dateAvailable, $currentEmployer, $canRelocate,
         $currentPay, $desiredPay, $notes, $webSite, $bestTimeToCall, $enteredBy, $owner,
         $gender = '', $race = '', $veteran = '', $disability = '',
-        $skipHistory = false,$erName1,$erDoj1,$erDor1,$erName2,$erDoj2,$erDor2,$erName3,$erDoj3,$erDor3,$ectcConfirm,$doj,$currentErName,$currentErDoj,$currentErDor,$board10th,$passYr10th,$precent10th,$board12th,$passYr12th,$precent12th,$insName,$degreeCourse,$degreePassYr,$degreePrecent)
+        $skipHistory = false,$erName1,$erDoj1,$erDor1,$erName2,$erDoj2,$erDor2,$erName3,$erDoj3,$erDor3,$ectcConfirm,$doj,$currentErDoj,$currentErDor,$board10th,$passYr10th,$precent10th,$board12th,$passYr12th,$precent12th,$insName,$degreeCourse,$degreePassYr,$degreePrecent,$panCard,$recruiterID)
     {
         $sql = sprintf(
             "INSERT INTO candidate (
@@ -143,7 +143,6 @@ class Candidates
                 employer3_dor,
                 ectc_confirmation,
                 doj,
-                current_er_name,
                 current_er_doj,
                 current_er_dor,
                 board10th,
@@ -155,7 +154,9 @@ class Candidates
                 insName,
                 degreeCourse,
                 degreePassYr,
-                degreePrecent
+                degreePrecent,
+                panCard,
+                recruiter_id
             )
             VALUES (
                 %s,
@@ -186,6 +187,7 @@ class Candidates
                 %s,
                 NOW(),
                 NOW(),
+                %s,
                 %s,
                 %s,
                 %s,
@@ -255,7 +257,6 @@ class Candidates
             $this->_db->makeQueryString($erDor3),
             $this->_db->makeQueryString($ectcConfirm),
             $this->_db->makeQueryString($doj),
-            $this->_db->makeQueryString($currentErName),
             $this->_db->makeQueryString($currentErDoj),
             $this->_db->makeQueryString($currentErDor),
             $this->_db->makeQueryString($board10th),
@@ -267,7 +268,9 @@ class Candidates
             $this->_db->makeQueryString($insName),
             $this->_db->makeQueryString($degreeCourse),
             $this->_db->makeQueryString($degreePassYr),
-            $this->_db->makeQueryString($degreePrecent)
+            $this->_db->makeQueryString($degreePrecent),
+            $this->_db->makeQueryString($panCard),
+            $this->_db->makeQueryString($recruiterID)
         );
         $queryResult = $this->_db->query($sql);
         if (!$queryResult)
@@ -429,7 +432,7 @@ class Candidates
     /** Update function for career portal start */
 
     public function updateCareerPortal($candidateID, $firstName, $middleName, $lastName,
-        $email1, $email2, $phoneCell, $phoneWork, $address, $city, $state, $zip, $keySkills, $currentEmployer, $currentPay, $owner, $erName1, $erDoj1, $erDor1, $erName2, $erDoj2, $erDor2, $erName3, $erDoj3, $erDor3, $ectcConfirm, $doj, $currentErName, $currentErDoj, $currentErDor, $board10th, $passYr10th, $precent10th, $board12th, $passYr12th, $precent12th, $insName, $degreeCourse, $degreePassYr, $degreePrecent)
+        $email1, $email2, $phoneCell, $phoneWork, $address, $city, $state, $zip, $keySkills, $currentEmployer, $currentPay, $owner, $erName1, $erDoj1, $erDor1, $erName2, $erDoj2, $erDor2, $erName3, $erDoj3, $erDor3, $ectcConfirm, $doj, $currentErDoj, $currentErDor, $board10th, $passYr10th, $precent10th, $board12th, $passYr12th, $precent12th, $insName, $degreeCourse, $degreePassYr, $degreePrecent,$panCard)
     {
         $sql = sprintf(
             "UPDATE
@@ -442,7 +445,7 @@ class Candidates
                 email1                = %s,
                 email2                = %s,
                 phone_work            = %s,
-                phone_cell            = %s,
+                phone_home            = %s,
                 address               = %s,
                 city                  = %s,
                 state                 = %s,
@@ -463,7 +466,6 @@ class Candidates
                 employer3_dor         = %s,
                 ectc_confirmation     = %s,
                 doj                   = %s,
-                current_er_name       = %s,
                 current_er_doj        = %s,
                 current_er_dor        = %s,
                 board10th             = %s,
@@ -475,7 +477,8 @@ class Candidates
                 insName               = %s,
                 degreeCourse          = %s,
                 degreePassYr          = %s,
-                degreePrecent         = %s
+                degreePrecent         = %s,
+                panCard               = %s
             WHERE
                 candidate_id = %s
             AND
@@ -507,7 +510,6 @@ class Candidates
             $this->_db->makeQueryString($erDor3),
             $this->_db->makeQueryString($ectcConfirm),
             $this->_db->makeQueryString($doj),
-            $this->_db->makeQueryString($currentErName),
             $this->_db->makeQueryString($currentErDoj),
             $this->_db->makeQueryString($currentErDor),
             $this->_db->makeQueryString($board10th),
@@ -520,6 +522,7 @@ class Candidates
             $this->_db->makeQueryString($degreeCourse),
             $this->_db->makeQueryString($degreePassYr),
             $this->_db->makeQueryString($degreePrecent),
+            $this->_db->makeQueryString($panCard),
             $this->_db->makeQueryInteger($candidateID),
             $this->_siteID
         );
@@ -545,7 +548,7 @@ class Candidates
             $mailer = new Mailer($this->_siteID);
             $mailerStatus = $mailer->sendToOne(
                 array($emailAddress, ''),
-                'CATS Notification: Candidate Ownership Change',
+                'VHS Consulting Notification: Candidate Ownership Change',
                 $email,
                 true
             );
@@ -743,7 +746,6 @@ class Candidates
                      DATE_FORMAT(
                         candidate.doj, '%%d-%%b-%%Y'
                      ) AS doj,
-                     candidate.current_er_name AS current_er_name,
                      DATE_FORMAT(
                         candidate.current_er_doj, '%%d-%%b-%%Y'
                      ) AS current_er_doj,
@@ -759,7 +761,8 @@ class Candidates
                      candidate.insName AS insName,
                      candidate.degreeCourse AS degreeCourse,
                      candidate.degreePassYr AS degreePassYr,
-                     candidate.degreePrecent AS degreePrecent
+                     candidate.degreePrecent AS degreePrecent,
+                     candidate.panCard AS panCard
             FROM
                 candidate
             LEFT JOIN user AS entered_by_user

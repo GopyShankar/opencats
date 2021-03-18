@@ -466,6 +466,34 @@ class CareerPortalSettings
             true
         );
     }
+
+    public function getJobOrderLink($siteID,$userID){
+        $sql = sprintf(
+            "SELECT
+                joborder_id 
+            FROM
+                joborder
+            WHERE
+                recruiter = %s",
+            $this->_db->makeQueryString($userID),
+            $this->_siteID
+        );
+
+        return $this->_db->getAllAssoc($sql);
+    }
+
+    public function getJobOrderTitle($siteID){
+        $sql = sprintf(
+            "SELECT
+                joborder_id,
+                title 
+            FROM
+                joborder",
+            $this->_siteID
+        );
+
+        return $this->_db->getAllAssoc($sql);
+    }
 }
 
 ?>

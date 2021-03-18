@@ -879,6 +879,29 @@ class JobOrders
             return false;
         }
     }
+
+    public function getRecruiterData($recruiterID){
+        $sql = sprintf(
+            "SELECT 
+                user.*,
+                CONCAT(user.first_name, ' ', user.last_name) AS userFullName
+            FROM
+                user
+            WHERE
+                site_id = %s
+            AND
+                user_id = %s",
+            $this->_siteID,
+            $this->_db->makeQueryInteger($recruiterID)
+        );
+        
+        $rs = $this->_db->getAllAssoc($sql);
+        if($rs)
+        {
+            return $rs[0];
+        }
+    }
+
 }
 
 

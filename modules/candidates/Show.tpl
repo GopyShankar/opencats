@@ -26,7 +26,7 @@ use OpenCATS\UI\CandidateQuickActionMenu;
             <p class="note">Candidate Details</p>
 
             <?php if ($this->data['isAdminHidden'] == 1): ?>
-                <p class="warning">This Candidate is hidden.  Only CATS Administrators can view it or search for it.  To make it visible by the site users, click <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=administrativeHideShow&amp;candidateID=<?php echo($this->candidateID); ?>&amp;state=0" style="font-weight:bold;">Here.</a></p>
+                <p class="warning">This Candidate is hidden.  Only VHS Consulting Administrators can view it or search for it.  To make it visible by the site users, click <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=administrativeHideShow&amp;candidateID=<?php echo($this->candidateID); ?>&amp;state=0" style="font-weight:bold;">Here.</a></p>
             <?php endif; ?>
 
             <table class="detailsOutside">
@@ -77,12 +77,12 @@ use OpenCATS\UI\CandidateQuickActionMenu;
 
                             <tr>
                                 <td class="vertical">Phone:</td>
-                                <td class="data"><?php $this->_($this->data['phoneCell']); ?></td>
+                                <td class="data"><?php $this->_($this->data['phoneWork']); ?></td>
                             </tr>
 
                             <tr>
                                 <td class="vertical">Alternate Phone:</td>
-                                <td class="data"><?php $this->_($this->data['phoneWork']); ?></td>
+                                <td class="data"><?php $this->_($this->data['phoneHome']); ?></td>
                             </tr>
 
 
@@ -114,8 +114,8 @@ use OpenCATS\UI\CandidateQuickActionMenu;
                             </tr>
                             <!-- Custom field Added -->
                             <tr>
-                                <td class="vertical">Current Employer Name :</td>
-                                <td class="data"><?php $this->_($this->data['current_er_name']); ?></td>
+                                <td class="vertical">Current Employer:</td>
+                                <td class="data"><?php $this->_($this->data['currentEmployer']); ?></td>
                             </tr>
                             <tr>
                                 <td class="vertical">Current Employer DOJ :</td>
@@ -188,11 +188,6 @@ use OpenCATS\UI\CandidateQuickActionMenu;
                             <tr>
                                 <td class="vertical">Date Available:</td>
                                 <td class="data"><?php $this->_($this->data['dateAvailable']); ?></td>
-                            </tr>
-
-                            <tr>
-                                <td class="vertical">Current Employer:</td>
-                                <td class="data"><?php $this->_($this->data['currentEmployer']); ?></td>
                             </tr>
 
                             <tr>

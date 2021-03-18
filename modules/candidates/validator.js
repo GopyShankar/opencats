@@ -131,6 +131,46 @@ function checkEmailForm(form)
     return true;
 }
 
+function checkEmailTo(form)
+{
+    var errorMessage = '';
+
+    errorMessage += checkJobOrderValid();
+    errorMessage += checkEmailToAddress();
+
+    if (errorMessage != '')
+    {
+        alert("Form Error:\n" + errorMessage);
+        return false;
+    }
+
+    return true;
+}
+
+function emailFormReset(){
+    document.getElementById('jobID').value = '';
+}
+
+function checkJobOrderValid()
+{
+    var errorMessage = '';
+
+    fieldValue = document.getElementById('jobID').value;
+    fieldLabel = document.getElementById('jobOrderLabel');
+    if (fieldValue == '')
+    {
+        errorMessage = "    - You must select the JD.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else
+    {
+        fieldLabel.style.color = '#000';
+    }
+
+    return errorMessage;
+}
+
 function checkFirstName()
 {
     var errorMessage = '';
@@ -312,4 +352,61 @@ function checkEmailBody()
     }
 
     return errorMessage;
+}
+
+function validateEmail(email) 
+{
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+}
+
+var errorMessage = '';
+function toMailVaidateCheck(fieldValue){
+    errorMessage = '';
+    if(validateEmail(fieldValue)){
+        fieldLabel.style.color = '#000';
+    }else{
+        errorMessage = "    - Please enter the valid email address.\n";
+        fieldLabel.style.color = '#ff0000';
+    }
+    return errorMessage;
+}
+
+function checkEmailToAddress()
+{
+    var errorMessage = '';
+
+    fieldValue = document.getElementById('emailTo').value;
+    fieldLabel = document.getElementById('emailToLabel');
+
+    if (fieldValue == '')
+    {
+        errorMessage = "    - You must enter to-email address in your e-mail.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else
+    {
+        
+        if(fieldValue.endsWith(';')){
+            errorMessage = "    - You have to use comma symbol for between email address1.\n";
+
+            fieldLabel.style.color = '#ff0000';
+        }else{
+            if(fieldValue.search(',') != -1){
+                var res = fieldValue.split(",");
+                for(var i = 0; i <= res.length; i++){
+                    if(res[i]){
+                        errorMessage = toMailVaidateCheck(res[i]);
+                    }
+                }
+            }
+        }
+    }
+
+    return errorMessage;
+}
+
+function getJobData(){
+    document.jobIDForm.submit();
 }

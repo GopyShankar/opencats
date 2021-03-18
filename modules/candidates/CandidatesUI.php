@@ -1148,17 +1148,17 @@ class CandidatesUI extends UserInterface
             );
         }
 
-        $formattedPhoneHome = StringUtility::extractPhoneNumber(
-            $this->getTrimmedInput('phoneHome', $_POST)
-        );
-        if (!empty($formattedPhoneHome))
-        {
-            $phoneHome = $formattedPhoneHome;
-        }
-        else
-        {
+        // $formattedPhoneHome = StringUtility::extractPhoneNumber(
+        //     $this->getTrimmedInput('phoneHome', $_POST)
+        // );
+        // if (!empty($formattedPhoneHome))
+        // {
+        //     $phoneHome = $formattedPhoneHome;
+        // }
+        // else
+        // {
             $phoneHome = $this->getTrimmedInput('phoneHome', $_POST);
-        }
+        // }
 
         $formattedPhoneCell = StringUtility::extractPhoneNumber(
             $this->getTrimmedInput('phoneCell', $_POST)
@@ -1172,17 +1172,17 @@ class CandidatesUI extends UserInterface
             $phoneCell = $this->getTrimmedInput('phoneCell', $_POST);
         }
 
-        $formattedPhoneWork = StringUtility::extractPhoneNumber(
-            $this->getTrimmedInput('phoneWork', $_POST)
-        );
-        if (!empty($formattedPhoneWork))
-        {
-            $phoneWork = $formattedPhoneWork;
-        }
-        else
-        {
+        // $formattedPhoneWork = StringUtility::extractPhoneNumber(
+        //     $this->getTrimmedInput('phoneWork', $_POST)
+        // );
+        // if (!empty($formattedPhoneWork))
+        // {
+        //     $phoneWork = $formattedPhoneWork;
+        // }
+        // else
+        // {
             $phoneWork = $this->getTrimmedInput('phoneWork', $_POST);
-        }
+        // }
 
         $candidateID = $_POST['candidateID'];
         $owner       = $_POST['owner'];

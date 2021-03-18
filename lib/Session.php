@@ -60,6 +60,7 @@ class CATSSession
     private $_firstName = '';
     private $_lastName = '';
     private $_email = '';
+    private $_phone_work = '';
     private $_ip = '';
     private $_userAgent = '';
     private $_userLicenses = 0;
@@ -357,6 +358,10 @@ class CATSSession
     public function getUserrole() //addedbygopy
     {
         return $this->_userrole;
+    }
+
+    public function getPhoneWork(){
+        return $this->_phone_work;
     }
     /**
      * Returns the current user's password. Although this is a bad idea,
@@ -670,6 +675,7 @@ class CATSSession
                 user.site_id AS userSiteID,
                 user.is_demo AS isDemoUser,
                 user.email AS email,
+                user.phone_work AS phone_work,
                 user.categories AS categories,
                 user.pipeline_entries_per_page AS pipelineEntriesPerPage,
                 user.column_preferences as columnPreferences,
@@ -811,6 +817,7 @@ class CATSSession
                 $this->_accountActive          = ($rs['accountActive'] == 0 ? false : true);
                 $this->_accountDeleted         = ($rs['accountDeleted'] == 0 ? false : true);
                 $this->_email                  = $rs['email'];
+                $this->_phone_work             = $rs['phone_work'];
                 $this->_ip                     = $ip;
                 $this->_userAgent              = $userAgent;
                 $this->_timeZoneOffset         = $rs['timeZone'] - OFFSET_GMT;
@@ -938,6 +945,7 @@ class CATSSession
                 user.site_id AS userSiteID,
                 user.is_demo AS isDemoUser,
                 user.email AS email,
+                user.phone_work AS phone_work,
                 user.categories AS categories,
                 site.name AS siteName,
                 site.unix_name AS unixName,
@@ -979,6 +987,7 @@ class CATSSession
         $this->_accountActive   = ($rs['accountActive'] == 0 ? false : true);
         $this->_accountDeleted  = ($rs['accountDeleted'] == 0 ? false : true);
         $this->_email           = $rs['email'];
+        $this->_phone_work      = $rs['phone_work'];
         $this->_timeZone        = $rs['timeZone'];
         $this->_dateDMY         = ($rs['dateFormatDMY'] == 0 ? false : true);
         $this->_isFirstTimeSetup = true;

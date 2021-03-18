@@ -77,7 +77,8 @@ class SettingsUI extends UserInterface
         $mp = array(
             'Administration' => CATSUtility::getIndexName() . '?m=settings&amp;a=administration',
             'My Profile'     => CATSUtility::getIndexName() . '?m=settings',
-            'careerLink' => CATSUtility::getIndexName() . '?m=settings&a=careerLinkView'
+            // 'Career Link' => CATSUtility::getIndexName() . '?m=settings&a=careerLinkView',
+            'Send Mail' => CATSUtility::getIndexName() . '?m=settings&a=sendMail'
         );
 
         $this->_subTabs = $mp;
@@ -875,6 +876,11 @@ class SettingsUI extends UserInterface
             /* Career Link View */
             case 'careerLinkView':
                 $this->careerLinkView();
+                break;
+
+            /* Send Mail to apply candidates*/
+            case 'sendMail':
+                $this->sendMail();
                 break;
 
             /* Main settings page. */
@@ -1763,18 +1769,99 @@ class SettingsUI extends UserInterface
     /*** Career portal link only view start */
     private function careerLinkView()
     {
-        
-        $careerPortalURL = CATSUtility::getAbsoluteURI() . 'careers/';
+        $user_id = $_SESSION['CATS']->getUserID();
+        $careerPortalSettings = new CareerPortalSettings($this->_siteID);
+        $jobOrdersID = $careerPortalSettings->getJobOrderLink($this->_siteID,$user_id);
+
+        // if($_SESSION['CATS']->getUserrole()=='internal_employee'){
+        //     $careerPortalURL = CATSUtility::getAbsoluteURI() . 'careers/index.php?m=careers&p=candidateRegistration&ID='.$jobOrdersID[0]['joborder_id'];
+        // }else{
+            $careerPortalURL = CATSUtility::getAbsoluteURI() . 'careers/index.php?m=careers&p=candidateRegistration&ID=3';    
+        // }
 
         if (!eval(Hooks::get('SETTINGS_CAREER_PORTAL'))) return;
 
         $this->_template->assign('active', $this);
-        $this->_template->assign('subActive', 'careerLink');
+        $this->_template->assign('subActive', 'Career Link');
         $this->_template->assign('careerPortalURL', $careerPortalURL);
         $this->_template->assign('sessionCookie', $_SESSION['CATS']->getCookie());
         $this->_template->display('./modules/settings/CareerLinkView.tpl');
     }
     /*** Career portal link only view end */
+
+    /*** Career portal link send Mail start */
+    private function sendMail()
+    {
+        $user_id = $_SESSION['CATS']->getUserID();
+        $careerPortalSettings = new CareerPortalSettings($this->_siteID);
+        $jobOrdersID = $careerPortalSettings->getJobOrderLink($this->_siteID,$user_id);
+        $jobOrdersTitle = $careerPortalSettings->getJobOrderTitle($this->_siteID);
+        
+        $careerPortalURL = '';
+        $selectedJob = '';
+        $success = false;
+        $success_to = '';
+        if(isset($_POST['postback']) && $_POST['postback'] == 'jobID'){
+            $careerPortalURL = CATSUtility::getAbsoluteURI() . 'careers/index.php?m=careers&p=candidateRegistration&ID='.$_POST['jobID'].'&RID='.$user_id;
+            $selectedJob = $_POST['jobID'];
+            echo "string-->".$selectedJob;
+        }
+        if(isset($_POST['postback']) && $_POST['postback'] == 'postback'){
+            $emailTo = $_POST['emailTo'];
+            $emailSubject = $_POST['emailSubject'];
+            $emailBody = $_POST['emailBody'];
+
+            $tmpDestination = explode(', ', $emailTo);
+            $destination = array();
+            foreach($tmpDestination as $emailDest)
+            {
+                $destination[] = array($emailDest, $emailDest);
+            }
+
+            $mailer = new Mailer(CATS_ADMIN_SITE);
+            
+            $mailerStatus = $mailer->send(
+                array($_SESSION['CATS']->getEmail(), $_SESSION['CATS']->getEmail()),
+                $destination,
+                $emailSubject,
+                $emailBody,
+                true,
+                true
+            );
+            $success = true;
+            $success_to = $emailTo;
+        }
+
+        $sub  = 'ATS Confirmation link';
+        $msg  = '<p>Hi,</p>';
+        $msg .= '<p>Greetings from VHS Consulting India Private Limited!!!</p>';
+        $msg .= '<p>In order to schedule your interview, please <a href='.$careerPortalURL.'>fill the form</a>  upload your latest CV and  documents such as  payslip, relieving letter or proof of resignation, all educational documents.</p>';
+        $msg .= '<p>Further process would be shortlisting, tech interviews, HR and on-boarding.</p>';
+        $msg .= '<p>Wish you good luck.</p>';
+        $msg .= '<p>Looking forward to your earliest response.</p>';
+        $msg .= '<br>';
+        $msg .= 'Regards,';
+        $msg .= '<br>';
+        $msg .= $_SESSION['CATS']->getFullName();
+        $msg .= '<br>';
+        $msg .= $_SESSION['CATS']->getPhoneWork();
+
+        if (!eval(Hooks::get('SETTINGS_CAREER_PORTAL'))) return;
+
+        $this->_template->assign('active', $this);
+        $this->_template->assign('subActive', 'Send Mail');
+        $this->_template->assign('careerPortalURL', $careerPortalURL);
+        $this->_template->assign('bodyMsg', $msg);
+        $this->_template->assign('SubjectMsg', $sub);
+        $this->_template->assign('jobOrdersTitle',$jobOrdersTitle);
+        $this->_template->assign('selectedJob',$selectedJob);
+        $this->_template->assign('selectedJob',$selectedJob);
+        $this->_template->assign('success',$success);
+        $this->_template->assign('success_to',$success_to);
+        $this->_template->assign('sessionCookie', $_SESSION['CATS']->getCookie());
+        $this->_template->display('./modules/settings/SendEmail.tpl');
+    }
+    /*** Career portal link send Mail end */
 
     //FIXME: Document me.
     private function onCareerPortalSettings()

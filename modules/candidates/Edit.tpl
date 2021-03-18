@@ -78,28 +78,19 @@
 
                     <tr>
                         <td class="tdVertical">
-                            <label id="phoneHomeLabel" for="phoneHome">Home Phone:</label>
-                        </td>
-                        <td class="tdData">
-                            <input type="text" class="inputbox" id="phoneHome" name="phoneHome" value="<?php $this->_($this->data['phoneHome']); ?>" style="width: 150px;" />
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="tdVertical">
-                            <label id="phoneCellLabel" for="phoneCell">Cell Phone:</label>
-                        </td>
-                        <td class="tdData">
-                            <input type="text" class="inputbox" id="phoneCell" name="phoneCell" value="<?php $this->_($this->data['phoneCell']); ?>" style="width: 150px;" />
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="tdVertical">
-                            <label id="phoneWorkLabel" for="phoneWork">Work Phone:</label>
+                            <label id="phoneWorkLabel" for="phoneWork">Phone:</label>
                         </td>
                         <td class="tdData">
                             <input type="text" class="inputbox" id="phoneWork" name="phoneWork" value="<?php $this->_($this->data['phoneWork']); ?>" style="width: 150px;" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="phoneHomeLabel" for="phoneHome">Alternate Phone:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" class="inputbox" id="phoneHome" name="phoneHome" value="<?php $this->_($this->data['phoneHome']); ?>" style="width: 150px;" />
                         </td>
                     </tr>
 

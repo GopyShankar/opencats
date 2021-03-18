@@ -928,7 +928,49 @@ class AttachmentCreator
      *                text?
      * @return boolean Was the attachment created successfully?
      */
+
     public function createFromUpload($dataItemType, $dataItemID, $fileField,
+        $isProfileImage, $extractText)
+    {
+        /* Get file upload metadata. */
+        $originalFilename = $_FILES[$fileField]['name'];
+        $tempFilename     = $_FILES[$fileField]['tmp_name'];
+        $contentType      = $_FILES[$fileField]['type'];
+        $fileSize         = $_FILES[$fileField]['size'];
+        $uploadError      = $_FILES[$fileField]['error'];
+
+        /* Recover from magic quotes. Note that tmp_name doesn't appear to
+         * get escaped, and stripslashes() on it breaks on Windows. - Will
+         */
+        if (get_magic_quotes_gpc())
+        {
+            $originalFilename = stripslashes($originalFilename);
+            $contentType      = stripslashes($contentType);
+        }
+
+        /* Did a file upload error occur? */
+        if ($uploadError != UPLOAD_ERR_OK)
+        {
+            $this->_isError = true;
+            $this->_error = FileUtility::getErrorMessage($uploadError);
+            return false;
+        }
+
+        /* This usually indicates an error. */
+        if ($fileSize <= 0)
+        {
+            $this->_isError = true;
+            $this->_error = 'File size is less than 1 byte.';
+            return false;
+        }
+
+        return $this->createGeneric(
+            $dataItemType, $dataItemID, $isProfileImage, $extractText, false,
+            $originalFilename, $tempFilename, $contentType, false, true
+        );
+    }
+    
+    public function createFromUpload_multiple($dataItemType, $dataItemID, $fileField,
         $isProfileImage, $extractText,$fieldName='file')
     {
         $uploadFileName = explode(",",$_POST[$fieldName]);

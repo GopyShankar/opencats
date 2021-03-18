@@ -524,7 +524,26 @@ class FileUtility
      * @param string Optional sub-directory, use blank string for root
      * @param string Full filesystem path to the file or boolean false
      */
+
+
     public static function getUploadFilePath($siteID, $subDirectory, $uploadFileName)
+    {
+        if (($uploadPath = self::getUploadPath($siteID, $subDirectory)) === false)
+        {
+            return false;
+        }
+
+        $filePath = sprintf('%s/%s', $uploadPath, $uploadFileName);
+
+        if (!self::isUploadFileSafe($siteID, $subDirectory, $filePath))
+        {
+            return false;
+        }
+
+        return $filePath;
+    }
+    
+    public static function getUploadFilePathMultiple($siteID, $subDirectory, $uploadFileName)
     {
         if (($uploadPath = self::getUploadPath($siteID, $subDirectory)) === false)
         {
@@ -561,7 +580,54 @@ class FileUtility
      * @param string Index of the $_FILES array (name from the <input> tag)
      * @return string Complete name of the file (not including path)
      */
+
     public static function getUploadFileFromPost($siteID, $subDirectory, $id)
+    {
+        if (isset($_FILES[$id]))
+        {
+            if (!@file_exists($_FILES[$id]['tmp_name']))
+            {
+                // File was removed, accessed from another window, or no longer exists
+                return false;
+            }
+
+            if (!eval(Hooks::get('FILE_UTILITY_SPACE_CHECK'))) return;
+
+            $uploadPath = FileUtility::getUploadPath($siteID, $subDirectory);
+            $newFileName = $_FILES[$id]['name'];
+
+            // Could just while(file_exists) it, but I'm paranoid of infinate loops
+            // Shouldn't have 1000 files of the same name anyway
+            for ($i = 0; @file_exists($uploadPath . '/' . $newFileName) && $i < 1000; $i++)
+            {
+                $mp = explode('.', $newFileName);
+                $fileNameBase = implode('.', array_slice($mp, 0, count($mp)-1));
+                $fileNameExt = $mp[count($mp)-1];
+
+                if (preg_match('/(.*)_Copy([0-9]{1,3})$/', $fileNameBase, $matches))
+                {
+                    // Copy already appending, increase the #
+                    $fileNameBase = sprintf('%s_Copy%d', $matches[1], intval($matches[2]) + 1);
+                }
+                else
+                {
+                    $fileNameBase .= '_Copy1';
+                }
+
+                $newFileName = $fileNameBase . '.' . $fileNameExt;
+            }
+
+            if (@move_uploaded_file($_FILES[$id]['tmp_name'], $uploadPath . '/' . $newFileName) &&
+                @chmod($uploadPath . '/' . $newFileName, 0777))
+            {
+                return $newFileName;
+            }
+        }
+
+        return false;
+    }
+
+    public static function getUploadFileFromPostMultiple($siteID, $subDirectory, $id)
     {
         if (isset($_FILES[$id]))
         {
