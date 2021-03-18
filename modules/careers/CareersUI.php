@@ -571,13 +571,13 @@ class CareersUI extends UserInterface
                     if(isset($_POST['isNew']) && !strcmp($_POST['isNew'], 'no') && $isRegistrationEnabled){
                         if($checkData =='false' && $isRegistrationEnabled){
                             // CATSUtility::transferRelativeURI('m=careers&p=candidateRegistration&ID='.$jobID);
-                            echo '<html><body>Because you have registered before, please complete all the fields to login.If you haven\'t registered before, please select I have not registered on this website<script>setTimeout("document.location.href=\'?m=careers&&p=candidateRegistration&&ID='.$jobID.'\';", 1500);</script></body></html>';
+                            echo '<html><body>Because you have registered before, please complete all the fields to login.If you haven\'t registered before, please select I have not registered on this website<script>setTimeout("document.location.href=\'?m=careers&&p=candidateRegistration&&ID='.$jobID.'&&RID='.$rid.'\';", 1500);</script></body></html>';
                             die();
                         }    
                     }else{
                         if($checkData =='true' && $isRegistrationEnabled){
                             // CATSUtility::transferRelativeURI('m=careers&p=candidateRegistration&ID='.$jobID);
-                            echo '<html><body>Because you have registered before, please complete all the fields to login.If you haven\'t registered before, please select I have not registered on this website<script>setTimeout("document.location.href=\'?m=careers&&p=candidateRegistration&&ID='.$jobID.'\';", 1500);</script></body></html>';
+                            echo '<html><body>Because you have registered before, please complete all the fields to login.If you haven\'t registered before, please select I have not registered on this website<script>setTimeout("document.location.href=\'?m=careers&&p=candidateRegistration&&ID='.$jobID.'&&RID='.$rid.'\';", 1500);</script></body></html>';
                             die();
                         }
                     }
@@ -689,9 +689,9 @@ class CareersUI extends UserInterface
                 }
 
                 // Check if a file has been uploaded, if so populate the contents textarea
-                if (($uploadPreviousEmpFile = FileUtility::getUploadFileFromPostMultiple($siteID, 'careerportaladd', 'previousEmpFile')) !== false)
+                if (($uploadPreviousEmpFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'previousEmpFile')) !== false)
                 {
-                    $uploadPreviousEmpFilePath = FileUtility::getUploadFilePathMultiple($siteID, 'careerportaladd', $uploadPreviousEmpFile);
+                    $uploadPreviousEmpFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadPreviousEmpFile);
                     if ($uploadPreviousEmpFilePath !== false)
                     {
                         $d2t = new DocumentToText();
@@ -777,9 +777,9 @@ class CareersUI extends UserInterface
                     }
                 }
 
-                if (($uploadPreviousEmp2File = FileUtility::getUploadFileFromPostMultiple($siteID, 'careerportaladd', 'previousEmp2File')) !== false)
+                if (($uploadPreviousEmp2File = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'previousEmp2File')) !== false)
                 {
-                    $uploadPreviousEmp2FilePath = FileUtility::getUploadFilePathMultiple($siteID, 'careerportaladd', $uploadPreviousEmp2File);
+                    $uploadPreviousEmp2FilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadPreviousEmp2File);
                     if ($uploadPreviousEmp2FilePath !== false)
                     {
                         $d2t = new DocumentToText();
@@ -865,9 +865,9 @@ class CareersUI extends UserInterface
                     }
                 }
 
-                if (($uploadPreviousEmp3File = FileUtility::getUploadFileFromPostMultiple($siteID, 'careerportaladd', 'previousEmp3File')) !== false)
+                if (($uploadPreviousEmp3File = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'previousEmp3File')) !== false)
                 {
-                    $uploadPreviousEmp3FilePath = FileUtility::getUploadFilePathMultiple($siteID, 'careerportaladd', $uploadPreviousEmp3File);
+                    $uploadPreviousEmp3FilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadPreviousEmp3File);
                     if ($uploadPreviousEmp3FilePath !== false)
                     {
                         $d2t = new DocumentToText();
@@ -1209,39 +1209,17 @@ class CareersUI extends UserInterface
                 $attachmentPayslipHTML = '';
             }
 
-            if(isset($_POST[$id='previousEmp_file'])){
-                foreach (explode(",",$_POST[$id='previousEmp_file']) as $key => $value) {
-                    if(!empty($value)){
-                        array_push($previousEmpFileLocation, $value);
-                    }
-                }
-            }else{
-                $previousEmpFileLocation = isset($_POST[$id='previousEmp_file']) ? $_POST[$id] : '';
-            }
-
             if ($previousEmpFileLocation != '')
             {
-                if(!is_array($previousEmpFileLocation)){
-                    $previousEmpFileLocation = explode(",",$previousEmpFileLocation);
-                }
-                $attachPreviousEmpView = array();
-                foreach ($previousEmpFileLocation as $value) {
-                    $attachmentPreviousEmpHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
-                    . 'padding: 0 3px 0 5px; font-size: 11px;"> '
-                    . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
-                    . 'Attachment: <span style="font-weight: bold;">'.$value.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
-                    .'<input type="hidden" value="previousEmp" id="previousEmpRemove">'
-                    . '</div> ';
-                    array_push($attachPreviousEmpView, $attachmentPreviousEmpHTML);
-                }
-                $attachmentPreviousEmpHTML = implode(" ",$attachPreviousEmpView);
-                $previousEmpFileFullPath = implode(",",$previousEmpFileLocation);
-            }
-            else
-            {
+                $attachmentPreviousEmpHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$previousEmpFileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="previousEmp" id="previousEmpRemove">'
+                . '</div> ';
+            }else{
                 $attachmentPreviousEmpHTML = '';
             }
-
 
             if ($previousEmpOLFileLocation != '')
             {
@@ -1279,36 +1257,15 @@ class CareersUI extends UserInterface
                 $attachmentPreviousEmpRLHTML = '';
             }
 
-            if(isset($_POST[$id='previousEmp2_file'])){
-                foreach (explode(",",$_POST[$id='previousEmp2_file']) as $key => $value) {
-                    if(!empty($value)){
-                        array_push($previousEmp2FileLocation, $value);
-                    }
-                }
-            }else{
-                $previousEmp2FileLocation = isset($_POST[$id='previousEmp2_file']) ? $_POST[$id] : '';
-            }
-
             if ($previousEmp2FileLocation != '')
             {
-                if(!is_array($previousEmp2FileLocation)){
-                    $previousEmp2FileLocation = explode(",",$previousEmp2FileLocation);
-                }
-                $attachPreviousEmp2View = array();
-                foreach ($previousEmp2FileLocation as $value) {
-                    $attachmentPreviousEmp2HTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
-                    . 'padding: 0 3px 0 5px; font-size: 11px;"> '
-                    . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
-                    . 'Attachment: <span style="font-weight: bold;">'.$value.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
-                    .'<input type="hidden" value="previousEmp2" id="previousEmp2Remove">'
-                    . '</div> ';
-                    array_push($attachPreviousEmp2View, $attachmentPreviousEmp2HTML);
-                }
-                $attachmentPreviousEmp2HTML = implode(" ",$attachPreviousEmp2View);
-                $previousEmp2FileFullPath = implode(",",$previousEmp2FileLocation);
-            }
-            else
-            {
+                $attachmentPreviousEmp2HTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$previousEmp2FileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="previousEmp2" id="previousEmp2Remove">'
+                . '</div> ';
+            }else{
                 $attachmentPreviousEmp2HTML = '';
             }
 
@@ -1348,36 +1305,15 @@ class CareersUI extends UserInterface
                 $attachmentPreviousEmp2RLHTML = '';
             }
 
-            if(isset($_POST[$id='previousEmp3_file'])){
-                foreach (explode(",",$_POST[$id='previousEmp3_file']) as $key => $value) {
-                    if(!empty($value)){
-                        array_push($previousEmp3FileLocation, $value);
-                    }
-                }
-            }else{
-                $previousEmp3FileLocation = isset($_POST[$id='previousEmp3_file']) ? $_POST[$id] : '';
-            }
-
             if ($previousEmp3FileLocation != '')
             {
-                if(!is_array($previousEmp3FileLocation)){
-                    $previousEmp3FileLocation = explode(",",$previousEmp3FileLocation);
-                }
-                $attachPreviousEmp3View = array();
-                foreach ($previousEmp3FileLocation as $value) {
-                    $attachmentPreviousEmp3HTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
-                    . 'padding: 0 3px 0 5px; font-size: 11px;"> '
-                    . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
-                    . 'Attachment: <span style="font-weight: bold;">'.$value.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
-                    .'<input type="hidden" value="previousEmp3" id="previousEmp3Remove">'
-                    . '</div> ';
-                    array_push($attachPreviousEmp3View, $attachmentPreviousEmp3HTML);
-                }
-                $attachmentPreviousEmp3HTML = implode(" ",$attachPreviousEmp3View);
-                $previousEmp3FileFullPath = implode(",",$previousEmp3FileLocation);
-            }
-            else
-            {
+                $attachmentPreviousEmp3HTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
+                . 'padding: 0 3px 0 5px; font-size: 11px;"> '
+                . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
+                . 'Attachment: <span style="font-weight: bold;">'.$previousEmp3FileLocation.'</span> <span style="font-size: 11px;float: right;"><a href="javascript:void(0);" onclick="removeDocFiles(this);">(Remove)</a></span>'
+                .'<input type="hidden" value="previousEmp3" id="previousEmp3Remove">'
+                . '</div> ';
+            }else{
                 $attachmentPreviousEmp3HTML = '';
             }
 
@@ -1612,8 +1548,8 @@ class CareersUI extends UserInterface
                 . $attachmentPayslipHTML,$template['Content']);
 
             $template['Content'] = str_replace('<input-previousEmpUploadPreview>',
-                 '<input type="hidden" id="previousEmp_file" name="previousEmp_file" value="' . $previousEmpFileFullPath . '" /> '
-                . '<input type="file" id="previousEmpFile" name="previousEmpFile[]" class="inputBoxFile" size="30" onchange="previousEmpLoadCheck();" multiple/> '
+                 '<input type="hidden" id="previousEmp_file" name="previousEmp_file" value="' . $previousEmpFileLocation . '" /> '
+                . '<input type="file" id="previousEmpFile" name="previousEmpFile" class="inputBoxFile" size="30" onchange="previousEmpLoadCheck();"/> '
                 . '<input type="button" id="previousEmpLoad" name="previousEmpLoad" value="Upload" onclick="previousEmpLoadFile();" disabled /><br /> '
                 . $attachmentPreviousEmpHTML,$template['Content']);
 
@@ -1636,8 +1572,8 @@ class CareersUI extends UserInterface
                 . $attachmentPreviousEmpRLHTML,$template['Content']);
 
             $template['Content'] = str_replace('<input-previousEmp2UploadPreview>',
-                 '<input type="hidden" id="previousEmp2_file" name="previousEmp2_file" value="' . $previousEmp2FileFullPath . '" /> '
-                . '<input type="file" id="previousEmp2File" name="previousEmp2File[]" class="inputBoxFile" size="30" onchange="previousEmp2LoadCheck();" multiple/> '
+                 '<input type="hidden" id="previousEmp2_file" name="previousEmp2_file" value="' . $previousEmp2FileLocation . '" /> '
+                . '<input type="file" id="previousEmp2File" name="previousEmp2File" class="inputBoxFile" size="30" onchange="previousEmp2LoadCheck();" /> '
                 . '<input type="button" id="previousEmp2Load" name="previousEmp2Load" value="Upload" onclick="previousEmp2LoadFile();" disabled /><br /> '
                 . $attachmentPreviousEmp2HTML,$template['Content']);
 
@@ -1661,8 +1597,8 @@ class CareersUI extends UserInterface
 
 
             $template['Content'] = str_replace('<input-previousEmp3UploadPreview>',
-                 '<input type="hidden" id="previousEmp3_file" name="previousEmp3_file" value="' . $previousEmp3FileFullPath . '" /> '
-                . '<input type="file" id="previousEmp3File" name="previousEmp3File[]" class="inputBoxFile" size="30" onchange="previousEmp3LoadCheck();" multiple/> '
+                 '<input type="hidden" id="previousEmp3_file" name="previousEmp3_file" value="' . $previousEmp3FileLocation . '" /> '
+                . '<input type="file" id="previousEmp3File" name="previousEmp3File" class="inputBoxFile" size="30" onchange="previousEmp3LoadCheck();"/> '
                 . '<input type="button" id="previousEmp3Load" name="previousEmp3Load" value="Upload" onclick="previousEmp3LoadFile();" disabled /><br /> '
                 . $attachmentPreviousEmp3HTML,$template['Content']);
 
@@ -1929,7 +1865,7 @@ class CareersUI extends UserInterface
             // If candidate registration is enabled, ask them if they would like to log in first
             if ($isRegistrationEnabled && !$isRegistered)
             {
-                $template['Content'] = str_replace('<a-applyToJob', '<a href="'.CATSUtility::getIndexName().'?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'&p=candidateRegistration&ID='.$jobID.'"', $template['Content']);
+                $template['Content'] = str_replace('<a-applyToJob', '<a href="'.CATSUtility::getIndexName().'?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'&p=candidateRegistration&ID='.$jobID.'&RID='.$rid.'"', $template['Content']);
             }
             else
             {
@@ -3166,12 +3102,65 @@ class CareersUI extends UserInterface
             }
         }
 
-        /* Upload resume (no questionnaire) */
-        if (isset($_FILES['previousEmpFile']) && !empty($_FILES['previousEmpFile']['name'][0]))
+        if (isset($_FILES['relievingProofFile']) && !empty($_FILES['relievingProofFile']['name']))
         {
             $attachmentCreator = new AttachmentCreator($siteID);
 
-            $attachmentCreator->createFromUpload_multiple(
+            $attachmentCreator->createFromUpload(
+                DATA_ITEM_CANDIDATE, $candidateID, 'relievingProofFile', false, true,'relievingProof_file'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                return;
+            }
+
+            $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+            $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+            $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+            // FIXME: Show parse errors!
+
+            $fileUploaded = true;
+            $resumePath = $attachmentCreator->getNewFilePath();
+        }else if (isset($_POST['relievingProof_file']) && !empty($_POST['relievingProof_file'])){
+            $resumePath = '';
+
+            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['relievingProof_file']);
+
+            if ($newFilePath !== false)
+            {
+                $attachmentCreator = new AttachmentCreator($siteID);
+                $attachmentCreator->createFromFile(
+                    DATA_ITEM_CANDIDATE, $candidateID, $newFilePath, false, '', true, true
+                );
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    return;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+
+                // FIXME: Show parse errors!
+
+                $fileUploaded = true;
+                $resumePath = $attachmentCreator->getNewFilePath();
+            }
+        }
+
+        /* Upload resume (no questionnaire) */
+        if (isset($_FILES['previousEmpFile']) && !empty($_FILES['previousEmpFile']['name']))
+        {
+            $attachmentCreator = new AttachmentCreator($siteID);
+
+            $attachmentCreator->createFromUpload(
                 DATA_ITEM_CANDIDATE, $candidateID, 'previousEmpFile', false, true,'previousEmp_file'
             );
 
@@ -3310,23 +3299,23 @@ class CareersUI extends UserInterface
             }
         }
 
-        if (isset($_FILES['previousEmpFile']) && !empty($_FILES['previousEmp2File']['name'][0]))
+        if (isset($_FILES['previousEmpFile']) && !empty($_FILES['previousEmp2File']['name']))
         {
             $attachmentCreator = new AttachmentCreator($siteID);
 
-            $attachmentCreator->createFromUpload_multiple(
+            $attachmentCreator->createFromUpload(
                 DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2File', false, true,'previousEmp2_file'
             );
 
-            $attachmentCreator->createFromUpload_multiple(
+            $attachmentCreator->createFromUpload(
                 DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2OLFile', false, true,'previousEmp2OL_file'
             );
 
-            $attachmentCreator->createFromUpload_multiple(
+            $attachmentCreator->createFromUpload(
                 DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2ELFile', false, true,'previousEmp2EL_file'
             );
 
-            $attachmentCreator->createFromUpload_multiple(
+            $attachmentCreator->createFromUpload(
                 DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp2RLFile', false, true,'previousEmp2RL_file'
             );
 
@@ -3453,23 +3442,23 @@ class CareersUI extends UserInterface
             }
         }
 
-        if (isset($_FILES['previousEmpFile']) && !empty($_FILES['previousEmp3File']['name'][0]))
+        if (isset($_FILES['previousEmpFile']) && !empty($_FILES['previousEmp3File']['name']))
         {
             $attachmentCreator = new AttachmentCreator($siteID);
 
-            $attachmentCreator->createFromUpload_multiple(
+            $attachmentCreator->createFromUpload(
                 DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3File', false, true,'previousEmp3_file'
             );
 
-            $attachmentCreator->createFromUpload_multiple(
+            $attachmentCreator->createFromUpload(
                 DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3OLFile', false, true,'previousEmp3OL_file'
             );
 
-            $attachmentCreator->createFromUpload_multiple(
+            $attachmentCreator->createFromUpload(
                 DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3ELFile', false, true,'previousEmp3EL_file'
             );
 
-            $attachmentCreator->createFromUpload_multiple(
+            $attachmentCreator->createFromUpload(
                 DATA_ITEM_CANDIDATE, $candidateID, 'previousEmp3RLFile', false, true,'previousEmp3RL_file'
             );
 
