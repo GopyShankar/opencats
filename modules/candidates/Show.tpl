@@ -272,12 +272,33 @@ use OpenCATS\UI\CandidateQuickActionMenu;
                                 <td class="data"><?php $this->_($this->data['precent10th']); ?></td>
                             </tr>
                             <tr>
-                                <td class="vertical">ECTC Confirmation:</td>
+                                <td class="vertical">Expected CTC:</td>
                                 <td class="data"><?php $this->_($this->data['ectc_confirmation']); ?></td>
                             </tr>
                             <tr>
-                                <td class="vertical">EDOJ:</td>
+                                <td class="vertical">Expected DOJ:</td>
                                 <td class="data"><?php $this->_($this->data['doj']); ?></td>
+                            </tr>
+
+                            <tr>
+                                <td class="vertical">Total Experience:</td>
+                                <td class="data"><?php $this->_($this->data['totalExp']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Relevant Experience:</td>
+                                <td class="data"><?php $this->_($this->data['relevantExp']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Current City:</td>
+                                <td class="data"><?php $this->_($this->data['currentCity']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Preferred City:</td>
+                                <td class="data"><?php $this->_($this->data['preferredCity']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Recruiter:</td>
+                                <td class="data"><?php $this->_($this->data['recruiterEmail']); ?></td>
                             </tr>
 
                             <!-- Custom field Added End-->

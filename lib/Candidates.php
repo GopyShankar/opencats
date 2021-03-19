@@ -786,7 +786,8 @@ class Candidates
                      candidate.totalExp AS totalExp,
                      candidate.relevantExp AS relevantExp,
                      candidate.currentCity AS currentCity,
-                     candidate.preferredCity AS preferredCity
+                     candidate.preferredCity AS preferredCity,
+                     (SELECT email FROM user WHERE user_id = candidate.recruiter_id) AS recruiterEmail
             FROM
                 candidate
             LEFT JOIN user AS entered_by_user
@@ -1502,7 +1503,43 @@ class CandidatesDataGrid extends DataGrid
                                      'pagerWidth'   => 210,
                                      'filter'         => 'candidate.key_skills'),
 
-            'Recent Status' => array('select'  => '(
+            'Contact Number' =>    array('select'  => 'candidate.phone_work AS phone_work',
+                                     'pagerRender' => 'return substr(trim($rsData[\'phone_work\']), 0, 30) . (strlen(trim($rsData[\'phone_work\'])) > 30 ? \'...\' : \'\');',
+                                     'sortableColumn'    => 'phone_work',
+                                     'pagerWidth'   => 90,
+                                     'filter'         => 'candidate.phone_work'),
+
+            'Total Exp' =>    array('select'  => 'candidate.totalExp AS totalExp',
+                                     'pagerRender' => 'return substr(trim($rsData[\'totalExp\']), 0, 30) . (strlen(trim($rsData[\'totalExp\'])) > 30 ? \'...\' : \'\');',
+                                     'sortableColumn'    => 'totalExp',
+                                     'pagerWidth'   => 50,
+                                     'filter'         => 'candidate.totalExp'),
+
+            'Rel Exp' =>    array('select'  => 'candidate.relevantExp AS relevantExp',
+                                     'pagerRender' => 'return substr(trim($rsData[\'relevantExp\']), 0, 30) . (strlen(trim($rsData[\'relevantExp\'])) > 30 ? \'...\' : \'\');',
+                                     'sortableColumn'    => 'relevantExp',
+                                     'pagerWidth'   => 50,
+                                     'filter'         => 'candidate.relevantExp'),
+
+            'Current City' =>    array('select'  => 'candidate.currentCity AS currentCity',
+                                     'pagerRender' => 'return substr(trim($rsData[\'currentCity\']), 0, 30) . (strlen(trim($rsData[\'currentCity\'])) > 30 ? \'...\' : \'\');',
+                                     'sortableColumn'    => 'currentCity',
+                                     'pagerWidth'   => 120,
+                                     'filter'         => 'candidate.currentCity'),
+
+            'Preferred City' =>    array('select'  => 'candidate.preferredCity AS preferredCity',
+                                     'pagerRender' => 'return substr(trim($rsData[\'preferredCity\']), 0, 30) . (strlen(trim($rsData[\'preferredCity\'])) > 30 ? \'...\' : \'\');',
+                                     'sortableColumn'    => 'preferredCity',
+                                     'pagerWidth'   => 120,
+                                     'filter'         => 'candidate.preferredCity'),
+
+            'Recruiter' => array('select' => '(SELECT email FROM user WHERE user_id = candidate.recruiter_id) AS recruiterEmail',
+                                     'pagerRender' => 'return substr(trim($rsData[\'recruiterEmail\']), 0, 30) . (strlen(trim($rsData[\'recruiterEmail\'])) > 30 ? \'...\' : \'\');',
+                                     'sortableColumn'    => 'recruiterEmail',
+                                     'pagerWidth'   => 215,
+                                     'filter'         => 'candidate.recruiter_id' ),
+
+            'Status' => array('select'  => '(
                                                     SELECT
                                                         CONCAT(
                                                             \'<a href="'.CATSUtility::getIndexName().'?m=joborders&amp;a=show&amp;jobOrderID=\',
