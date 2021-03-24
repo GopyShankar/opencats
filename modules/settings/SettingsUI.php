@@ -1804,7 +1804,6 @@ class SettingsUI extends UserInterface
         if(isset($_POST['postback']) && $_POST['postback'] == 'jobID'){
             $careerPortalURL = CATSUtility::getAbsoluteURI() . 'careers/index.php?m=careers&p=candidateRegistration&ID='.$_POST['jobID'].'&RID='.$user_id;
             $selectedJob = $_POST['jobID'];
-            echo "string-->".$selectedJob;
         }
         if(isset($_POST['postback']) && $_POST['postback'] == 'postback'){
             $emailTo = $_POST['emailTo'];

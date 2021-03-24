@@ -1174,7 +1174,7 @@ class CareersUI extends UserInterface
             $jobID = intval(isset($_GET['ID']) ? $_GET['ID'] : $_POST['ID']);
 
             $jobOrderData = $jobOrders->get($jobID);
-            if (!isset($jobOrderData['public']) || $jobOrderData['public'] == 0)
+            if (!isset($jobOrderData))
             {
                 // FIXME: Generate valid XHTML error pages. Create an error/fatal method!
                 echo '<html><body>This position is no longer available.  Please wait while we direct you to the job list...<script>setTimeout("document.location.href=\'?m=careers&&p=showAll\';", 1500);</script></body></html>';
@@ -1795,7 +1795,7 @@ class CareersUI extends UserInterface
                 $this->onApplyToJobOrder($siteID, $candidateID);
 
                 $jobOrderData = $jobOrders->get($jobID);
-                if (!isset($jobOrderData['public']) || $jobOrderData['public'] == 0)
+                if (!isset($jobOrderData))
                 {
                     // FIXME: Generate valid XHTML error pages. Create an error/fatal method!
                     echo '<html><body>This position is no longer available.  Please wait while we direct you to the job list...<script>setTimeout("document.location.href=\'?m=careers&&p=showAll\';", 1500);</script></body></html>';
@@ -1855,7 +1855,7 @@ class CareersUI extends UserInterface
             $jobID = $jobID * 1;
 
             $jobOrderData = $jobOrders->get($jobID);
-            if (!isset($jobOrderData['public']) || $jobOrderData['public'] == 0)
+            if (!isset($jobOrderData))
             {
                 echo '<html><body>This position is no longer available.  Please wait while we direct you to the job list...<script>setTimeout("document.location.href=\'?m=careers&&p=showAll\';", 1500);</script></body></html>';
                 die ();
@@ -2785,7 +2785,7 @@ class CareersUI extends UserInterface
         $recruiterID = $_POST['RID'];
 
         $jobOrderData = $jobOrders->get($jobOrderID);
-        if (!isset($jobOrderData['public']) || $jobOrderData['public'] == 0)
+        if (!isset($jobOrderData))
         {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'The specified job order could not be found.');
             return;
@@ -3015,7 +3015,7 @@ class CareersUI extends UserInterface
                 '',
                 $bestTimeToCall,
                 $automatedUser['userID'],
-                $automatedUser['userID'],
+                $recruiterID,
                 $gender,
                 $race,
                 $veteran,

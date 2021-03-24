@@ -1263,7 +1263,8 @@ class JobOrdersDataGrid extends DataGrid
         if($_SESSION['CATS']->getUserrole()=='admin' || $_SESSION['CATS']->getUserrole()=='super_admin'){
             $roleJoin = '';
         }else{
-            $roleJoin = 'joborder.owner = '.$user_id.' AND';
+            // $roleJoin = 'joborder.owner = '.$user_id.' AND';
+            $roleJoin = '';
         }
         
 

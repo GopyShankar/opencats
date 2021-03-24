@@ -1758,8 +1758,15 @@ class CandidatesDataGrid extends DataGrid
     public function getSQL($selectSQL, $joinSQL, $whereSQL, $havingSQL, $orderSQL, $limitSQL, $distinct = '')
     {
         $user_id = $_SESSION['CATS']->getUserID();
-        if($_SESSION['CATS']->getUserrole()=='admin' || $_SESSION['CATS']->getUserrole()=='super_admin'){
+        if($_SESSION['CATS']->getUserrole()=='admin' || $_SESSION['CATS']->getUserrole()=='super_admin' || $_SESSION['CATS']->getUserrole()=='account_manager'){
             $roleJoin = '';
+        }else if($_SESSION['CATS']->getUserrole()=='team_lead'){
+            $data = $this->getUserRoleData($user_id);
+            if(!empty($data)){
+                $roleJoin = 'candidate.owner IN ('.$user_id.','.$data[0]['role_assigned'].') AND';
+            }else{
+                $roleJoin = 'candidate.owner = '.$user_id.' AND';
+            }
         }else{
             $roleJoin = 'candidate.owner = '.$user_id.' AND';
         }
@@ -1824,6 +1831,21 @@ class CandidatesDataGrid extends DataGrid
         );
 
         return $sql;
+    }
+
+    public function getUserRoleData($userID){
+        $sql = sprintf(
+            "SELECT
+                role_assigned
+            FROM
+                user_role_tl
+            WHERE
+                user_id = %s",
+            $this->_db->makeQueryString($userID),
+            $this->_siteID
+        );
+
+        return $this->_db->getAllAssoc($sql);
     }
 }
 

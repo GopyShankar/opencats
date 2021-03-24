@@ -323,7 +323,7 @@ class Mailer
                 $this->_mailer->Mailer = 'smtp';
                 $this->_mailer->Host   = MAIL_SMTP_HOST;
                 $this->_mailer->Port   = MAIL_SMTP_PORT;
-                $this->_mailer->SMTPSecure  = MAIL_SMTP_SECURE;
+                // $this->_mailer->SMTPSecure  = MAIL_SMTP_SECURE;
                 if (!MAIL_SMTP_SECURE)
                 {
                     $this->_mailer->SMTPAutoTLS = false;
