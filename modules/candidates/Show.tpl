@@ -44,6 +44,10 @@ use OpenCATS\UI\CandidateQuickActionMenu;
                     <?php endif; ?>
                         <table class="detailsInside" height="100%">
                             <tr>
+                                <td class="vertical">PAN Card:</td>
+                                <td class="data"><?php $this->_($this->data['panCard']); ?></td>
+                            </tr>
+                            <tr>
                                 <td class="vertical">Name:</td>
                                 <td class="data">
                                     <span style="font-weight: bold;" class="<?php echo($this->data['titleClass']); ?>">

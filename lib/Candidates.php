@@ -1762,7 +1762,7 @@ class CandidatesDataGrid extends DataGrid
             $roleJoin = '';
         }else if($_SESSION['CATS']->getUserrole()=='team_lead'){
             $data = $this->getUserRoleData($user_id);
-            if(!empty($data)){
+            if(!empty($data) && !empty($data[0]['role_assigned'])){
                 $roleJoin = 'candidate.owner IN ('.$user_id.','.$data[0]['role_assigned'].') AND';
             }else{
                 $roleJoin = 'candidate.owner = '.$user_id.' AND';
