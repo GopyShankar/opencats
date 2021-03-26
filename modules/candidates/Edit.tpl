@@ -1,5 +1,16 @@
 <?php /* $Id: Edit.tpl 3695 2007-11-26 22:01:04Z brian $ */ ?>
-<?php TemplateUtility::printHeader('Candidates', array('modules/candidates/validator.js', 'js/sweetTitles.js', 'js/listEditor.js', 'js/doubleListEditor.js')); ?>
+<link href='js/datepicker/jquery-ui.css' rel='stylesheet'>
+<style type="text/css">
+    input.date_picker {
+        background-image: url("images/calendar.gif");
+        background-position: right center;
+        background-repeat: no-repeat;
+    }
+    td.tdVerticalNew {
+        width: 160px !important 
+    }
+</style>
+<?php TemplateUtility::printHeader('Candidates', array('modules/candidates/validator.js', 'js/sweetTitles.js', 'js/listEditor.js', 'js/doubleListEditor.js','js/datepicker/jquery.min.js','js/datepicker/jquery-ui.min.js')); ?>
 <?php TemplateUtility::printHeaderBlock(); ?>
 <?php TemplateUtility::printTabs($this->active); ?>
     <div id="main">
@@ -32,6 +43,15 @@
                         </td>
                     </tr>
                     
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="panCardLabel" for="panCard">Pan Card:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="2" name="panCard" id="panCard" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['panCard']); ?>" />
+                        </td>
+                    </tr>
+
                     <tr>
                         <td class="tdVertical">
                             <label id="firstNameLabel" for="firstName">First Name:</label>
@@ -94,14 +114,14 @@
                         </td>
                     </tr>
 
-                    <tr>
+                    <!-- <tr>
                         <td class="tdVertical">
                             <label id="webSiteLabel" for="webSite">Web Site:</label>
                         </td>
                         <td class="tdData">
-                            <input type="text" class="inputbox" id="webSite" name="webSite" value="<?php $this->_($this->data['webSite']); ?>" style="width: 150px" />
+                            <input type="text" class="inputbox" id="webSite" name="webSite" value="<?php //$this->_($this->data['webSite']); ?>" style="width: 150px" />
                         </td>
-                    </tr>
+                    </tr> -->
 
                     <tr>
                         <td class="tdVertical">
@@ -216,6 +236,168 @@
                         </td>
                     </tr>
                 </table>
+
+                <p class="note<?php if ($this->isModal): ?>Unsized<?php endif; ?>" style="margin-top: 5px;">Current Employer Details</p>
+                <table class="editTable">
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="current_employer_name" for="currentEmployer">Current Employer Name:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="currentEmployer" id="currentEmployer" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['currentEmployer']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="current_employer_doj" for="currentErDoj">Current Employer DOJ:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="currentErDoj" id="currentErDoj" class="inputbox date_picker" style="width: 150px" value="<?php $this->_($this->data['current_er_doj']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="current_employer_dor" for="currentErDor">Current Employer DOR/LWD:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="currentErDor" id="currentErDor" class="inputbox date_picker" style="width: 150px" value="<?php $this->_($this->data['current_er_dor']); ?>" />
+                        </td>
+                    </tr>
+                </table>
+
+                <p class="note<?php if ($this->isModal): ?>Unsized<?php endif; ?>" style="margin-top: 5px;">Previous Employer Details</p>
+                <table class="editTable">
+                    <p>Previous Employer 1</p>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_name" for="erName1">Employer1 Name:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="erName1" id="erName1" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['employer1_name']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_doj" for="erDoj1">Employer1 DOJ:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="erDoj1" id="erDoj1" class="inputbox date_picker" style="width: 150px" value="<?php $this->_($this->data['employer1_doj']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_dor" for="erDor1">Employer1 DOR/LWD:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="erDor1" id="erDor1" class="inputbox date_picker" style="width: 150px" value="<?php $this->_($this->data['employer1_dor']); ?>" />
+                        </td>
+                    </tr>
+                </table>
+                <table class="editTable">
+                    <p>Previous Employer 2</p>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer2_name" for="erName2">Employer2 Name:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="erName2" id="erName2" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['employer2_name']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_doj" for="erDoj2">Employer2 DOJ:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="erDoj2" id="erDoj2" class="inputbox date_picker" style="width: 150px" value="<?php $this->_($this->data['employer2_doj']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_dor" for="erDor2">Employer2 DOR/LWD:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="erDor2" id="erDor2" class="inputbox date_picker" style="width: 150px" value="<?php $this->_($this->data['employer2_dor']); ?>" />
+                        </td>
+                    </tr>
+                </table>
+                <table class="editTable">
+                    <p>Previous Employer 3</p>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_name" for="erName3">Employer3 Name:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="erName3" id="erName3" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['employer3_name']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_doj" for="erDoj3">Employer3 DOJ:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="erDoj3" id="erDoj3" class="inputbox date_picker" style="width: 150px" value="<?php $this->_($this->data['employer3_doj']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_dor" for="erDor3">Employer3 DOR/LWD:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="erDor3" id="erDor3" class="inputbox date_picker" style="width: 150px" value="<?php $this->_($this->data['employer3_dor']); ?>" />
+                        </td>
+                    </tr>
+                </table>
+
+                <p class="note<?php if ($this->isModal): ?>Unsized<?php endif; ?>" style="margin-top: 5px;">Education Details</p>
+                <table class="editTable">
+                    <p>Degree Deatils</p>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="insNameLabel" for="insName">University/Institute:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="insName" id="insName" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['insName']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="degreeCourseLabel" for="degreeCourse">Course:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="degreeCourse" id="degreeCourse" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['degreeCourse']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="degreePassYrLabel" for="degreePassYr">Year Of Passing:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="degreePassYr" id="degreePassYr" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['degreePassYr']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="degreePrecentLabel" for="degreePrecent">Percentage:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="degreePrecent" id="degreePrecent" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['degreePrecent']); ?>" />
+                        </td>
+                    </tr>
+                </table>
+                <table class="editTable">
+                    <p>12th Deatils</p>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="board12thLabel" for="board12th">Board:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="board12th" id="board12th" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['board12th']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="passYr12thLabel" for="passYr12th">Year Of Passing:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="passYr12th" id="passYr12th" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['passYr12th']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="precent12thLabel" for="precent12th">Percentage:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="precent12th" id="precent12th" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['precent12th']); ?>" />
+                        </td>
+                    </tr>
+                </table>
+                <table class="editTable">
+                    <p>10th Deatils</p>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="board10thLabel" for="board10th">Board:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="board10th" id="board10th" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['board10th']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="passYr10thLabel" for="passYr10th">Year Of Passing:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="passYr10th" id="passYr10th" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['passYr10th']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="precent10thLabel" for="precent10th">Percentage:</label></td>
+                        <td class="tdData">
+                            <input type="text" name="precent10th" id="precent10th" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['precent10th']); ?>" />
+                        </td>
+                    </tr>
+                </table>
+
+
+
+
                
                 <?php if($this->EEOSettingsRS['enabled'] == 1): ?>
                     <?php if(!$this->EEOSettingsRS['canSeeEEOInfo']): ?>
@@ -333,14 +515,14 @@
                         </td>
                     </tr>
 
-                    <tr>
+                    <!-- <tr>
                         <td class="tdVertical">
                             <label id="currentEmployerLabel" for="currentEmployer">Current Employer:</label>
                         </td>
                         <td class="tdData">
-                            <input type="text" class="inputbox" id="currentEmployer" name="currentEmployer" value="<?php $this->_($this->data['currentEmployer']); ?>" style="width: 150px;" />
+                            <input type="text" class="inputbox" id="currentEmployer" name="currentEmployer" value="<?php //$this->_($this->data['currentEmployer']); ?>" style="width: 150px;" />
                         </td>
-                    </tr>
+                    </tr> -->
 
                     <tr>
                         <td class="tdVertical">
@@ -353,10 +535,64 @@
 
                     <tr>
                         <td class="tdVertical">
+                            <label id="ectcConfirmLabel" for="ectcConfirm">Expected CTC:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="ectcConfirm" id="ectcConfirm" class="inputbox" style="width: 150px" value="<?php $this->_($this->preassignedFields['ectcConfirm']); ?>" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
                             <label id="desiredPayLabel" for="currentEmployer">Desired Pay:</label>
                         </td>
                         <td class="tdData">
                             <input type="text" name="desiredPay" id="desiredPay" value="<?php $this->_($this->data['desiredPay']); ?>" class="inputbox" style="width: 150px" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="dojLabel" for="doj">Expected DOJ:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="doj" id="doj" class="inputbox date_picker" style="width: 150px" value="<?php $this->_($this->data['doj']); ?>" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="totalExpLabel" for="totalExp">Total Experience:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="totalExp" id="totalExp" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['totalExp']); ?>" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="relevantExpLabel" for="relevantExp">Relevant Experience:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="relevantExp" id="relevantExp" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['relevantExp']); ?>" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="currentCityLabel" for="currentCity">Current City:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="currentCity" id="currentCity" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['currentCity']); ?>" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="preferredCityLabel" for="preferredCity">Preferred City:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="preferredCity" id="preferredCity" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['preferredCity']); ?>" />
                         </td>
                     </tr>
 
@@ -384,7 +620,17 @@
             </form>
 
             <script type="text/javascript">
-                document.editCandidateForm.firstName.focus();
+                document.editCandidateForm.panCard.focus();
+            </script>
+            <script> 
+            $(document).ready(function() { 
+
+                $(function() { 
+                    $( ".date_picker" ).datepicker({
+                        dateFormat: 'dd-M-yy',
+                    }); 
+                }); 
+            }) 
             </script>
         </div>
     </div>

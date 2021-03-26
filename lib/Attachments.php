@@ -971,7 +971,7 @@ class AttachmentCreator
     }
     
     public function createFromUpload_multiple($dataItemType, $dataItemID, $fileField,
-        $isProfileImage, $extractText,$fieldName='file')
+        $isProfileImage, $extractText,$fieldName='file',$subDirectory)
     {
         $uploadFileName = explode(",",$_POST[$fieldName]);
 
@@ -1025,7 +1025,7 @@ class AttachmentCreator
                     /* Get file upload metadata. */
                     $originalFilename = $uploadFileName[$key];
                     // $tempFilename     = $uploadFileFullPath[$key];
-                    $tempFilename     = 'upload/careerportaladd/'.$uploadFileName[$key];
+                    $tempFilename     = 'upload/'.$subDirectory.'/'.$uploadFileName[$key];
                     $contentType      = mime_content_type($tempFilename);
                     $fileSize         = filesize($tempFilename);
                     $uploadError      = $_FILES[$fileField]['error'][$key];

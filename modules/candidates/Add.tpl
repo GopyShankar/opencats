@@ -1,8 +1,19 @@
 <?php /* $Id: Add.tpl 3746 2007-11-28 20:28:21Z andrew $ */ ?>
+<link href='js/datepicker/jquery-ui.css' rel='stylesheet'>
+<style type="text/css">
+    input.date_picker {
+        background-image: url("images/calendar.gif");
+        background-position: right center;
+        background-repeat: no-repeat;
+    }
+    td.tdVerticalNew {
+        width: 160px !important 
+    }
+</style>
 <?php if ($this->isModal): ?>
-    <?php TemplateUtility::printModalHeader('Candidates', array('modules/candidates/validator.js', 'js/addressParser.js', 'js/listEditor.js',  'js/candidate.js', 'js/candidateParser.js'), 'Add New Candidate to This Job Order Pipeline'); ?>
+    <?php TemplateUtility::printModalHeader('Candidates', array('modules/candidates/validator.js', 'js/addressParser.js', 'js/listEditor.js',  'js/candidate.js', 'js/candidateParser.js','js/datepicker/jquery.min.js','js/datepicker/jquery-ui.min.js'), 'Add New Candidate to This Job Order Pipeline'); ?>
 <?php else: ?>
-    <?php TemplateUtility::printHeader('Candidates', array('modules/candidates/validator.js', 'js/addressParser.js', 'js/listEditor.js',  'js/candidate.js', 'js/candidateParser.js')); ?>
+    <?php TemplateUtility::printHeader('Candidates', array('modules/candidates/validator.js', 'js/addressParser.js', 'js/listEditor.js',  'js/candidate.js', 'js/candidateParser.js','js/datepicker/jquery.min.js','js/datepicker/jquery-ui.min.js')); ?>
     <?php TemplateUtility::printHeaderBlock(); ?>
     <?php TemplateUtility::printTabs($this->active, $this->subActive); ?>
 
@@ -48,6 +59,7 @@
                     <input type="hidden" name="jobOrderID" id="jobOrderID" value="<?php echo($this->jobOrderID); ?>" />
                 <?php endif; ?>
                 <input type="hidden" name="postback" id="postback" value="postback" />
+                <input type="hidden" name="documentTempFilePath" id="documentTempFilePath" value="<?php $this->_($this->preassignedFields['documentTempFilePath']) ?>" />
 
                 <table class="editTable">
                     <?php if ($this->isParsingEnabled): ?>
@@ -58,7 +70,7 @@
                         <td class="tdVertical">
                             <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                 <tr>
-                                    <td align="left"><img src="images/parser/import.gif" border="0" /></td>
+                                    <td align="left"><h2>Upload your documents</h2></td>
                                     <td align="right">
                                         &nbsp;
                                     </td>
@@ -67,6 +79,14 @@
                         </td>
                     </tr>
                     <?php endif; ?>
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="panCardLabel" for="panCard">Pan Card:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="2" name="panCard" id="panCard" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['panCard'])) $this->_($this->preassignedFields['panCard']); ?>" />&nbsp;*
+                        </td>
+                    </tr>
                     <tr>
                         <td class="tdVertical">
                             <label id="firstNameLabel" for="firstName">First Name:</label>
@@ -85,35 +105,37 @@
                                         <td valign="middle" align="right" colspan="2">
                                             <img src="images/parser/arrow.gif" border="0" />
                                             <input type="hidden" name="MAX_FILE_SIZE" VALUE="10000000" />
-                                            <input type="file" id="documentFile" name="documentFile" onchange="documentFileChange();" size="<?php if ($this->isModal): ?>20<?php else: ?>40<?php endif; ?>" />
+                                            <input type="file" id="documentFile" name="documentFile[]" onchange="documentFileChange();" size="<?php if ($this->isModal): ?>20<?php else: ?>40<?php endif; ?>" multiple/>
                                             <input type="button" id="documentLoad" value="Upload" onclick="loadDocumentFileContents();" disabled />
                                             &nbsp;
                                         </td>
                                     </tr>
                                     <tr>
                                         <td valign="top" align="left" colspan="2">
-                                            <?php if (isset($this->preassignedFields['documentTempFile']) && ($tempFile = $this->preassignedFields['documentTempFile']) != ''): ?>
+                                            <?php if (isset($this->preassignedFields['documentTempFile']) && ($tempFile = $this->preassignedFields['documentTempFile']) != ''): $tempFile = explode(",",$this->preassignedFields['documentTempFile'])?>
                                             <div id="showAttachmentDetails" style="height: 20px; background-color: #e0e0e0; width: 500px; margin: 1px 0 5px 0; padding: 0 3px 0 5px;">
                                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                                    <?php foreach ($tempFile as $key => $value) { ?>
                                                     <tr>
                                                         <td align="left" valign="top" nowrap="nowrap" style="font-size: 11px;">
                                                             <img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" />
-                                                            Attachment: <span style="font-weight: bold;"><?php echo $tempFile; ?></span>
+                                                            Attachment: <span style="font-weight: bold;"><?php echo $value; ?></span>
                                                         </td>
                                                         <td align="right" valign="top" nowrap="nowrap" style="font-size: 11px;">
                                                             <a href="javascript:void(0);" onclick="removeDocumentFile();">(remove)</a>
                                                         </td>
                                                     </tr>
+                                                    <?php } ?>
                                                 </table>
                                             </div>
                                             <?php endif; ?>
-                                            <textarea class="inputbox" tabindex="90" name="documentText" id="documentText" rows="5" cols="40" onmousemove="documentCheck();" onchange="documentCheck();" onmousedown="documentCheck();" onkeypress="documentCheck();" style="width: <?php if ($this->isModal): ?>320<?php else: ?>500<?php endif; ?>px; height: 210px; padding: 3px;"><?php echo $this->contents; ?></textarea>
+                                            <!-- <textarea class="inputbox" tabindex="90" name="documentText" id="documentText" rows="5" cols="40" onmousemove="documentCheck();" onchange="documentCheck();" onmousedown="documentCheck();" onkeypress="documentCheck();" style="width: <?php //if ($this->isModal): ?>320<?php //else: ?>500<?php //endif; ?>px; height: 210px; padding: 3px;"><?php //echo $this->contents; ?></textarea>
                                             <br/>
                                             <div style="color: #666666; text-align: center;">
                                             (<b>hint:</b> you may also paste the resume contents)
                                             <br /><br />
-                                            Need to upload multiple resumes? <a href="<?php echo CATSUtility::getIndexName(); ?>?m=import&a=massImport">Click here!</a>
-                                            </div>
+                                            Need to upload multiple resumes? <a href="<?php //echo CATSUtility::getIndexName(); ?>?m=import&a=massImport">Click here!</a>
+                                            </div> -->
                                         </td>
                                     </tr>
                                 </table>
@@ -173,18 +195,18 @@
                         </td>
                     </tr>
 
-                    <tr>
+                    <!-- <tr>
                         <td class="tdVertical">
                             <label id="webSiteLabel" for="webSite">Web Site:</label>
                         </td>
                         <td class="tdData">
-                            <input type="text" tabindex="5" name="webSite" id="webSite" class="inputbox" style="width: 150px" value="<?php if (isset($this->preassignedFields['webSite'])) $this->_($this->preassignedFields['webSite']); ?>" />
+                            <input type="text" tabindex="5" name="webSite" id="webSite" class="inputbox" style="width: 150px" value="<?php //if (isset($this->preassignedFields['webSite'])) $this->_($this->preassignedFields['webSite']); ?>" />
                         </td>
-                    </tr>
+                    </tr> -->
 
                     <tr>
                         <td class="tdVertical">
-                            <label id="phoneHomeLabel" for="phoneHome">Home Phone:</label>
+                            <label id="phoneHomeLabel" for="phoneHome">Phone:</label>
                         </td>
                         <td class="tdData">
                             <input type="text" tabindex="6" name="phoneHome" id="phoneHome" class="inputbox" style="width: 150px;" value="<?php if (isset($this->preassignedFields['phoneHome'])) $this->_($this->preassignedFields['phoneHome']); ?>" onchange="checkPhoneAlreadyInSystem(this.value);"  />
@@ -196,23 +218,23 @@
                                     <img id="transfer" src="images/parser/transfer<?php echo ($this->contents != '' ? '' : '_grey'); ?>.gif" <?php echo ($this->contents != '' ? 'style="cursor: pointer;"' : ''); ?> border="0" alt="Import Resume" onclick="parseDocumentFileContents();" />
                                 <?php endif; ?>
                             <?php else: ?>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="arrowButton" tabindex="91" align="middle" type="button" value="&lt;--" class="arrowbutton" onclick="AddressParser_parse('addressBlock', 'person', 'addressParserIndicator', 'arrowButton'); document.addCandidateForm.firstName.focus();" />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="arrowButton" tabindex="91" align="middle" type="button" value="&lt;--" class="arrowbutton" onclick="AddressParser_parse('addressBlock', 'person', 'addressParserIndicator', 'arrowButton'); document.addCandidateForm.panCard.focus();" />
                             <?php endif; ?>
                         </td>
                     </tr>
 
-                    <tr>
+                    <!-- <tr>
                         <td class="tdVertical">
                             <label id="phoneCellLabel" for="phoneCell">Cell Phone:</label>
                         </td>
                         <td class="tdData">
-                            <input type="text" tabindex="7" name="phoneCell" id="phoneCell" class="inputbox" style="width: 150px;" value="<?php if (isset($this->preassignedFields['phoneCell'])) $this->_($this->preassignedFields['phoneCell']); ?>" onchange="checkPhoneAlreadyInSystem(this.value);" />
+                            <input type="text" tabindex="7" name="phoneCell" id="phoneCell" class="inputbox" style="width: 150px;" value="<?php //if (isset($this->preassignedFields['phoneCell'])) $this->_($this->preassignedFields['phoneCell']); ?>" onchange="checkPhoneAlreadyInSystem(this.value);" />
                         </td>
-                    </tr>
+                    </tr> -->
 
                     <tr>
                         <td class="tdVertical">
-                            <label id="phoneWorkLabel" for="phoneWork">Work Phone:</label>
+                            <label id="phoneWorkLabel" for="phoneWork">Alternate Phone:</label>
                         </td>
                         <td class="tdData">
                             <input type="text" tabindex="8" name="phoneWork" id="phoneWork" class="inputbox" style="width: 150px" value="<?php if (isset($this->preassignedFields['phoneWork'])) $this->_($this->preassignedFields['phoneWork']); ?>" onchange="checkPhoneAlreadyInSystem(this.value);" />
@@ -269,6 +291,167 @@
 
                     <?php $tabIndex = 15; ?>
                 </table>
+
+                <p class="note<?php if ($this->isModal): ?>Unsized<?php endif; ?>" style="margin-top: 5px;">Current Employer Details</p>
+                <table class="editTable">
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="current_employer_name" for="currentEmployer">Current Employer Name:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="currentEmployer" id="currentEmployer" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['currentEmployer'])) $this->_($this->preassignedFields['currentEmployer']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="current_employer_doj" for="currentErDoj">Current Employer DOJ:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="currentErDoj" id="currentErDoj" class="inputbox date_picker" style="width: 150px" value="<?php if(isset($this->preassignedFields['currentErDoj'])) $this->_($this->preassignedFields['currentErDoj']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="current_employer_dor" for="currentErDor">Current Employer DOR/LWD:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="currentErDor" id="currentErDor" class="inputbox date_picker" style="width: 150px" value="<?php if(isset($this->preassignedFields['currentErDor'])) $this->_($this->preassignedFields['currentErDor']); ?>" />
+                        </td>
+                    </tr>
+                </table>
+
+                <p class="note<?php if ($this->isModal): ?>Unsized<?php endif; ?>" style="margin-top: 5px;">Previous Employer Details</p>
+                <table class="editTable">
+                    <p>Previous Employer 1</p>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_name" for="erName1">Employer1 Name:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="erName1" id="erName1" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['erName1'])) $this->_($this->preassignedFields['erName1']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_doj" for="erDoj1">Employer1 DOJ:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="erDoj1" id="erDoj1" class="inputbox date_picker" style="width: 150px" value="<?php if(isset($this->preassignedFields['erDoj1'])) $this->_($this->preassignedFields['erDoj1']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_dor" for="erDor1">Employer1 DOR/LWD:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="erDor1" id="erDor1" class="inputbox date_picker" style="width: 150px" value="<?php if(isset($this->preassignedFields['erDor1'])) $this->_($this->preassignedFields['erDor1']); ?>" />
+                        </td>
+                    </tr>
+                </table>
+                <table class="editTable">
+                    <p>Previous Employer 2</p>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer2_name" for="erName2">Employer2 Name:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="erName2" id="erName2" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['erName2'])) $this->_($this->preassignedFields['erName2']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_doj" for="erDoj2">Employer2 DOJ:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="erDoj2" id="erDoj2" class="inputbox date_picker" style="width: 150px" value="<?php if(isset($this->preassignedFields['erDoj2'])) $this->_($this->preassignedFields['erDoj2']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_dor" for="erDor2">Employer2 DOR/LWD:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="erDor2" id="erDor2" class="inputbox date_picker" style="width: 150px" value="<?php if(isset($this->preassignedFields['erDor2'])) $this->_($this->preassignedFields['erDor2']); ?>" />
+                        </td>
+                    </tr>
+                </table>
+                <table class="editTable">
+                    <p>Previous Employer 3</p>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_name" for="erName3">Employer3 Name:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="erName3" id="erName3" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['erName3'])) $this->_($this->preassignedFields['erName3']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_doj" for="erDoj3">Employer3 DOJ:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="erDoj3" id="erDoj3" class="inputbox date_picker" style="width: 150px" value="<?php if(isset($this->preassignedFields['erDoj3'])) $this->_($this->preassignedFields['erDoj3']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="previous_employer1_dor" for="erDor3">Employer3 DOR/LWD:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="erDor3" id="erDor3" class="inputbox date_picker" style="width: 150px" value="<?php if(isset($this->preassignedFields['erDor3'])) $this->_($this->preassignedFields['erDor3']); ?>" />
+                        </td>
+                    </tr>
+                </table>
+
+                <p class="note<?php if ($this->isModal): ?>Unsized<?php endif; ?>" style="margin-top: 5px;">Education Details</p>
+                <table class="editTable">
+                    <p>Degree Deatils</p>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="insNameLabel" for="insName">University/Institute:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="insName" id="insName" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['insName'])) $this->_($this->preassignedFields['insName']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="degreeCourseLabel" for="degreeCourse">Course:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="degreeCourse" id="degreeCourse" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['degreeCourse'])) $this->_($this->preassignedFields['degreeCourse']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="degreePassYrLabel" for="degreePassYr">Year Of Passing:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="degreePassYr" id="degreePassYr" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['degreePassYr'])) $this->_($this->preassignedFields['degreePassYr']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="degreePrecentLabel" for="degreePrecent">Percentage:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="degreePrecent" id="degreePrecent" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['degreePrecent'])) $this->_($this->preassignedFields['degreePrecent']); ?>" />
+                        </td>
+                    </tr>
+                </table>
+                <table class="editTable">
+                    <p>12th Deatils</p>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="board12thLabel" for="board12th">Board:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="board12th" id="board12th" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['board12th'])) $this->_($this->preassignedFields['board12th']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="passYr12thLabel" for="passYr12th">Year Of Passing:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="passYr12th" id="passYr12th" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['passYr12th'])) $this->_($this->preassignedFields['passYr12th']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="precent12thLabel" for="precent12th">Percentage:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="precent12th" id="precent12th" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['precent12th'])) $this->_($this->preassignedFields['precent12th']); ?>" />
+                        </td>
+                    </tr>
+                </table>
+                <table class="editTable">
+                    <p>10th Deatils</p>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="board10thLabel" for="board10th">Board:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="board10th" id="board10th" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['board10th'])) $this->_($this->preassignedFields['board10th']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="passYr10thLabel" for="passYr10th">Year Of Passing:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="passYr10th" id="passYr10th" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['passYr10th'])) $this->_($this->preassignedFields['passYr10th']); ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdVertical tdVerticalNew"><label id="precent10thLabel" for="precent10th">Percentage:</label></td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="precent10th" id="precent10th" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['precent10th'])) $this->_($this->preassignedFields['precent10th']); ?>" />
+                        </td>
+                    </tr>
+                </table>
+
+
+
 
                 <?php if (!$this->isParsingEnabled || $this->associatedAttachment != 0): ?>
                 <p class="note<?php if ($this->isModal): ?>Unsized<?php endif; ?>" style="margin-top: 5px;">Resume</p>
@@ -423,14 +606,14 @@
                         </td>
                     </tr>
 
-                    <tr>
+                    <!-- <tr>
                         <td class="tdVertical">
                             <label id="currentEmployerLabel" for="currentEmployer">Current Employer:</label>
                         </td>
                         <td class="tdData">
-                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="currentEmployer" id="currentEmployer" class="inputbox" style="width: 150px" value="<?php if (isset($this->preassignedFields['currentEmployer'])) $this->_($this->preassignedFields['currentEmployer']); ?>" />
+                            <input type="text" tabindex="<?php //echo($tabIndex++); ?>" name="currentEmployer" id="currentEmployer" class="inputbox" style="width: 150px" value="<?php //if (isset($this->preassignedFields['currentEmployer'])) $this->_($this->preassignedFields['currentEmployer']); ?>" />
                         </td>
-                    </tr>
+                    </tr> -->
 
                     <tr>
                         <td class="tdVertical">
@@ -443,12 +626,69 @@
 
                     <tr>
                         <td class="tdVertical">
+                            <label id="ectcConfirmLabel" for="ectcConfirm">Expected CTC:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="ectcConfirm" id="ectcConfirm" class="inputbox" style="width: 150px" value="<?php if (isset($this->preassignedFields['ectcConfirm'])) $this->_($this->preassignedFields['ectcConfirm']); ?>" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
                             <label id="desiredPayLabel" for="currentEmployer">Desired Pay:</label>
                         </td>
                         <td class="tdData">
                             <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="desiredPay" id="desiredPay" class="inputbox" style="width: 150px" value="<?php if (isset($this->preassignedFields['desiredPay'])) $this->_($this->preassignedFields['desiredPay']); ?>" />
                         </td>
                     </tr>
+
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="dojLabel" for="doj">Expected DOJ:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="doj" id="doj" class="inputbox date_picker" style="width: 150px" value="<?php if (isset($this->preassignedFields['doj'])) $this->_($this->preassignedFields['doj']); ?>" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="totalExpLabel" for="totalExp">Total Experience:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="totalExp" id="totalExp" class="inputbox" style="width: 150px" value="<?php if (isset($this->preassignedFields['totalExp'])) $this->_($this->preassignedFields['totalExp']); ?>" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="relevantExpLabel" for="relevantExp">Relevant Experience:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="relevantExp" id="relevantExp" class="inputbox" style="width: 150px" value="<?php if (isset($this->preassignedFields['relevantExp'])) $this->_($this->preassignedFields['relevantExp']); ?>" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="currentCityLabel" for="currentCity">Current City:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="currentCity" id="currentCity" class="inputbox" style="width: 150px" value="<?php if (isset($this->preassignedFields['currentCity'])) $this->_($this->preassignedFields['currentCity']); ?>" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="preferredCityLabel" for="preferredCity">Preferred City:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="preferredCity" id="preferredCity" class="inputbox" style="width: 150px" value="<?php if (isset($this->preassignedFields['preferredCity'])) $this->_($this->preassignedFields['preferredCity']); ?>" />
+                        </td>
+                    </tr>
+
+
 
                     <tr>
                         <td class="tdVertical">
@@ -503,7 +743,7 @@
             </form>
 
 <script type="text/javascript">
-    document.addCandidateForm.firstName.focus();
+    document.addCandidateForm.panCard.focus();
     <?php if(isset($this->preassignedFields['email']) || isset($this->preassignedFields['email1'])): ?>
         checkEmailAlreadyInSystem(urlDecode("<?php if(isset($this->preassignedFields['email'])) echo(urlencode($this->preassignedFields['email'])); else if(isset($this->preassignedFields['email1'])) echo(urlencode($this->preassignedFields['email1'])); ?>"));
     <?php endif; ?>
@@ -519,6 +759,17 @@
     <?php if(isset($this->preassignedFields['phoneHome']) || isset($this->preassignedFields['phoneHome'])): ?>
         checkEmailAlreadyInSystem(urlDecode("<?php if(isset($this->preassignedFields['phoneHome'])) echo(urlencode($this->preassignedFields['phoneHome'])); else if(isset($this->preassignedFields['phoneHome'])) echo(urlencode($this->preassignedFields['phoneHome'])); ?>"));
     <?php endif; ?>
+</script>
+
+<script> 
+    $(document).ready(function() { 
+    
+        $(function() { 
+            $( ".date_picker" ).datepicker({
+                dateFormat: 'dd-M-yy',
+            }); 
+        }); 
+    }) 
 </script>
 
 <?php if ($this->isModal): ?>

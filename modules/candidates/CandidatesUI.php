@@ -878,8 +878,48 @@ class CandidatesUI extends UserInterface
                 'veteran'         => $this->getTrimmedInput('veteran', $_POST),
                 'disability'      => $this->getTrimmedInput('disability', $_POST),
                 'documentTempFile'=> $this->getTrimmedInput('documentTempFile', $_POST),
-                'isFromParser'    => true
+                'isFromParser'    => true,
+                'erName1'         => $this->getTrimmedInput('erName1', $_POST),
+                'erDoj1'          => $this->getTrimmedInput('erDoj1', $_POST),
+                'erDor1'          => $this->getTrimmedInput('erDor1', $_POST),
+                'erName2'         => $this->getTrimmedInput('erName2', $_POST),
+                'erDoj2'          => $this->getTrimmedInput('erDoj2', $_POST),
+                'erDor2'          => $this->getTrimmedInput('erDor2', $_POST),
+                'erName3'         => $this->getTrimmedInput('erName3', $_POST),
+                'erDoj3'          => $this->getTrimmedInput('erDoj3', $_POST),
+                'erDor3'          => $this->getTrimmedInput('erDor3', $_POST),
+                'ectcConfirm'     => $this->getTrimmedInput('ectcConfirm', $_POST),
+                'doj'             => $this->getTrimmedInput('doj', $_POST),
+                'currentErDoj'    => $this->getTrimmedInput('currentErDoj', $_POST),
+                'currentErDor'    => $this->getTrimmedInput('currentErDor', $_POST),
+                'board10th'       => $this->getTrimmedInput('board10th', $_POST),
+                'passYr10th'      => $this->getTrimmedInput('passYr10th', $_POST),
+                'precent10th'     => $this->getTrimmedInput('precent10th', $_POST),
+                'board12th'       => $this->getTrimmedInput('board12th', $_POST),
+                'passYr12th'      => $this->getTrimmedInput('passYr12th', $_POST),
+                'precent12th'     => $this->getTrimmedInput('precent12th', $_POST),
+                'insName'         => $this->getTrimmedInput('insName', $_POST),
+                'degreeCourse'    => $this->getTrimmedInput('degreeCourse', $_POST),
+                'degreePassYr'    => $this->getTrimmedInput('degreePassYr', $_POST),
+                'degreePrecent'   => $this->getTrimmedInput('degreePrecent', $_POST),
+                'panCard'         => $this->getTrimmedInput('panCard', $_POST),
+                'totalExp'        => $this->getTrimmedInput('totalExp', $_POST),
+                'relevantExp'     => $this->getTrimmedInput('relevantExp', $_POST),
+                'currentCity'     => $this->getTrimmedInput('currentCity', $_POST),
+                'preferredCity'   => $this->getTrimmedInput('preferredCity', $_POST),
+                'documentTempFilePath' => $this->getTrimmedInput('documentTempFilePath', $_POST)
             );
+
+            
+            $newFileName = array();
+            if(!empty($fields['documentTempFile'])){
+                foreach (explode(",",$fields['documentTempFile']) as $key => $value) {
+                    if(!empty($value)){
+                        array_push($newFileName, $value);
+                    }
+                }
+            }
+
 
             /**
              * User is loading a resume from a document. Convert it to a string and paste the contents
@@ -888,20 +928,28 @@ class CandidatesUI extends UserInterface
             if (isset($_POST['loadDocument']) && $_POST['loadDocument'] == 'true')
             {
                 // Get the upload file from the post data
-                $newFileName = FileUtility::getUploadFileFromPost(
+                $newFile = FileUtility::getUploadFileFromPostMultiple(
                     $this->_siteID, // The site ID
                     'addcandidate', // Sub-directory of the site's upload folder
                     'documentFile'  // The DOM "name" from the <input> element
                 );
+                
+                foreach ($newFile as $key => $value) {
+                    array_push($newFileName, $value);    
+                }
+
+                $newFileNameLocationPath = implode(",",$newFileName);
 
                 if ($newFileName !== false)
                 {
                     // Get the relative path to the file (to perform operations on)
-                    $newFilePath = FileUtility::getUploadFilePath(
+                    $newFilePath = FileUtility::getUploadFilePathMultiple(
                         $this->_siteID, // The site ID
                         'addcandidate', // The sub-directory
                         $newFileName
                     );
+
+                    $pathLocation = FileUtility::getUploadPath($this->_siteID, 'addcandidate');
 
                     $documentToText = new DocumentToText();
                     $doctype = $documentToText->getDocumentType($newFilePath);
@@ -924,10 +972,11 @@ class CandidatesUI extends UserInterface
                     }
 
                     // Save the short (un-pathed) name
-                    $fields['documentTempFile'] = $newFileName;
+                    $fields['documentTempFile'] = $newFileNameLocationPath;
+                    $fields['documentTempFilePath'] = $pathLocation;
 
                     if (isset($_COOKIE['CATS_SP_TEMP_FILE']) && ($oldFile = $_COOKIE['CATS_SP_TEMP_FILE']) != '' &&
-                        strcasecmp($oldFile, $newFileName))
+                        strcasecmp($oldFile, $newFileNameLocationPath))
                     {
                         // Get the safe, old file they uploaded and didn't use (if exists) and delete
                         $oldFilePath = FileUtility::getUploadFilePath($this->_siteID, 'addcandidate', $oldFile);
@@ -939,7 +988,7 @@ class CandidatesUI extends UserInterface
                     }
 
                     // Prevent users from creating more than 1 temp file for single parsing (sp)
-                    setcookie('CATS_SP_TEMP_FILE', $newFileName, time() + (60*60*24*7));
+                    setcookie('CATS_SP_TEMP_FILE', $newFileNameLocationPath, time() + (60*60*24*7));
                 }
 
                 if (isset($_POST['parseDocument']) && $_POST['parseDocument'] == 'true' && $contents != '')
@@ -1276,6 +1325,67 @@ class CandidatesUI extends UserInterface
         $veteran         = $this->getTrimmedInput('veteran', $_POST);
         $disability      = $this->getTrimmedInput('disability', $_POST);
 
+        $erName1        = $this->getTrimmedInput('erName1', $_POST);
+        $erDoj1         = $this->getTrimmedInput('erDoj1', $_POST);
+        $erDor1         = $this->getTrimmedInput('erDor1', $_POST);
+        $erName2        = $this->getTrimmedInput('erName2', $_POST);
+        $erDoj2         = $this->getTrimmedInput('erDoj2', $_POST);
+        $erDor2         = $this->getTrimmedInput('erDor2', $_POST);
+        $erName3        = $this->getTrimmedInput('erName3', $_POST);
+        $erDoj3         = $this->getTrimmedInput('erDoj3', $_POST);
+        $erDor3         = $this->getTrimmedInput('erDor3', $_POST);
+        $ectcConfirm    = $this->getTrimmedInput('ectcConfirm', $_POST);
+        $doj            = $this->getTrimmedInput('doj', $_POST);
+
+        
+        $currentErDoj   = $this->getTrimmedInput('currentErDoj', $_POST);
+        $currentErDor   = $this->getTrimmedInput('currentErDor', $_POST);
+        $board10th      = $this->getTrimmedInput('board10th', $_POST);
+        $passYr10th     = $this->getTrimmedInput('passYr10th', $_POST);
+        $precent10th    = $this->getTrimmedInput('precent10th', $_POST);
+        $board12th      = $this->getTrimmedInput('board12th', $_POST);
+        $passYr12th     = $this->getTrimmedInput('passYr12th', $_POST);
+        $precent12th    = $this->getTrimmedInput('precent12th', $_POST);
+        $insName        = $this->getTrimmedInput('insName', $_POST);
+        $degreeCourse   = $this->getTrimmedInput('degreeCourse', $_POST);
+        $degreePassYr   = $this->getTrimmedInput('degreePassYr', $_POST);
+        $degreePrecent  = $this->getTrimmedInput('degreePrecent', $_POST);
+        
+        $panCard        = $this->getTrimmedInput('panCard', $_POST);
+        $totalExp       = $this->getTrimmedInput('totalExp', $_POST);
+        $relevantExp    = $this->getTrimmedInput('relevantExp', $_POST);
+        $currentCity    = $this->getTrimmedInput('currentCity', $_POST);
+        $preferredCity  = $this->getTrimmedInput('preferredCity', $_POST);
+
+
+        if(!empty($erDoj1)){
+            $erDoj1 = date_format(date_create($erDoj1),"Y-m-d");
+        }
+        if(!empty($erDor1)){
+            $erDor1 = date_format(date_create($erDor1),"Y-m-d");
+        }
+        if(!empty($erDoj2)){
+            $erDoj2 = date_format(date_create($erDoj2),"Y-m-d");
+        }
+        if(!empty($erDor2)){
+            $erDor2 = date_format(date_create($erDor2),"Y-m-d");
+        }
+        if(!empty($erDoj3)){
+            $erDoj3 = date_format(date_create($erDoj3),"Y-m-d");
+        }
+        if(!empty($erDor3)){
+            $erDor3 = date_format(date_create($erDor3),"Y-m-d");
+        }
+        if(!empty($doj)){
+            $doj = date_format(date_create($doj),"Y-m-d");
+        }
+        if(!empty($currentErDoj)){
+            $currentErDoj = date_format(date_create($currentErDoj),"Y-m-d");
+        }
+        if(!empty($currentErDor)){
+            $currentErDor = date_format(date_create($currentErDor),"Y-m-d");
+        }
+
         /* Candidate source list editor. */
         $sourceCSV = $this->getTrimmedInput('sourceCSV', $_POST);
 
@@ -1320,7 +1430,35 @@ class CandidatesUI extends UserInterface
             $gender,
             $race,
             $veteran,
-            $disability
+            $disability,
+            $erName1,
+            $erDoj1,
+            $erDor1,
+            $erName2,
+            $erDoj2,
+            $erDor2,
+            $erName3,
+            $erDoj3,
+            $erDor3,
+            $ectcConfirm,
+            $doj,
+            $currentErDoj,
+            $currentErDor,
+            $board10th,
+            $passYr10th,
+            $precent10th,
+            $board12th,
+            $passYr12th,
+            $precent12th,
+            $insName,
+            $degreeCourse,
+            $degreePassYr,
+            $degreePrecent,
+            $panCard,
+            $totalExp,
+            $relevantExp,
+            $currentCity,
+            $preferredCity
         );
         if (!$updateSuccess)
         {
@@ -2490,41 +2628,44 @@ class CandidatesUI extends UserInterface
             );
         }
 
-        $formattedPhoneHome = StringUtility::extractPhoneNumber(
-            $this->getTrimmedInput('phoneHome', $_POST)
-        );
-        if (!empty($formattedPhoneHome))
-        {
-            $phoneHome = $formattedPhoneHome;
-        }
-        else
-        {
-            $phoneHome = $this->getTrimmedInput('phoneHome', $_POST);
-        }
+        // $formattedPhoneHome = StringUtility::extractPhoneNumber(
+        //     $this->getTrimmedInput('phoneHome', $_POST)
+        // );
+        // if (!empty($formattedPhoneHome))
+        // {
+        //     $phoneHome = $formattedPhoneHome;
+        // }
+        // else
+        // {
+        //     $phoneHome = $this->getTrimmedInput('phoneHome', $_POST);
+        // }
 
-        $formattedPhoneCell = StringUtility::extractPhoneNumber(
-            $this->getTrimmedInput('phoneCell', $_POST)
-        );
-        if (!empty($formattedPhoneCell))
-        {
-            $phoneCell = $formattedPhoneCell;
-        }
-        else
-        {
-            $phoneCell = $this->getTrimmedInput('phoneCell', $_POST);
-        }
+        // $formattedPhoneCell = StringUtility::extractPhoneNumber(
+        //     $this->getTrimmedInput('phoneCell', $_POST)
+        // );
+        // if (!empty($formattedPhoneCell))
+        // {
+        //     $phoneCell = $formattedPhoneCell;
+        // }
+        // else
+        // {
+        //     $phoneCell = $this->getTrimmedInput('phoneCell', $_POST);
+        // }
 
-        $formattedPhoneWork = StringUtility::extractPhoneNumber(
-            $this->getTrimmedInput('phoneWork', $_POST)
-        );
-        if (!empty($formattedPhoneWork))
-        {
-            $phoneWork = $formattedPhoneWork;
-        }
-        else
-        {
-            $phoneWork = $this->getTrimmedInput('phoneWork', $_POST);
-        }
+        // $formattedPhoneWork = StringUtility::extractPhoneNumber(
+        //     $this->getTrimmedInput('phoneWork', $_POST)
+        // );
+        // if (!empty($formattedPhoneWork))
+        // {
+        //     $phoneWork = $formattedPhoneWork;
+        // }
+        // else
+        // {
+        //     $phoneWork = $this->getTrimmedInput('phoneWork', $_POST);
+        // }
+
+        $phoneHome = $this->getTrimmedInput('phoneHome', $_POST);
+        $phoneWork = $this->getTrimmedInput('phoneWork', $_POST);
 
         /* Can Relocate */
         $canRelocate = $this->isChecked('canRelocate', $_POST);
@@ -2550,6 +2691,67 @@ class CandidatesUI extends UserInterface
         $race            = $this->getTrimmedInput('race', $_POST);
         $veteran         = $this->getTrimmedInput('veteran', $_POST);
         $disability      = $this->getTrimmedInput('disability', $_POST);
+
+        $erName1        = $this->getTrimmedInput('erName1', $_POST);
+        $erDoj1         = $this->getTrimmedInput('erDoj1', $_POST);
+        $erDor1         = $this->getTrimmedInput('erDor1', $_POST);
+        $erName2        = $this->getTrimmedInput('erName2', $_POST);
+        $erDoj2         = $this->getTrimmedInput('erDoj2', $_POST);
+        $erDor2         = $this->getTrimmedInput('erDor2', $_POST);
+        $erName3        = $this->getTrimmedInput('erName3', $_POST);
+        $erDoj3         = $this->getTrimmedInput('erDoj3', $_POST);
+        $erDor3         = $this->getTrimmedInput('erDor3', $_POST);
+        $ectcConfirm    = $this->getTrimmedInput('ectcConfirm', $_POST);
+        $doj            = $this->getTrimmedInput('doj', $_POST);
+
+        
+        $currentErDoj   = $this->getTrimmedInput('currentErDoj', $_POST);
+        $currentErDor   = $this->getTrimmedInput('currentErDor', $_POST);
+        $board10th      = $this->getTrimmedInput('board10th', $_POST);
+        $passYr10th     = $this->getTrimmedInput('passYr10th', $_POST);
+        $precent10th    = $this->getTrimmedInput('precent10th', $_POST);
+        $board12th      = $this->getTrimmedInput('board12th', $_POST);
+        $passYr12th     = $this->getTrimmedInput('passYr12th', $_POST);
+        $precent12th    = $this->getTrimmedInput('precent12th', $_POST);
+        $insName        = $this->getTrimmedInput('insName', $_POST);
+        $degreeCourse   = $this->getTrimmedInput('degreeCourse', $_POST);
+        $degreePassYr   = $this->getTrimmedInput('degreePassYr', $_POST);
+        $degreePrecent  = $this->getTrimmedInput('degreePrecent', $_POST);
+        
+        $panCard        = $this->getTrimmedInput('panCard', $_POST);
+        $totalExp       = $this->getTrimmedInput('totalExp', $_POST);
+        $relevantExp    = $this->getTrimmedInput('relevantExp', $_POST);
+        $currentCity    = $this->getTrimmedInput('currentCity', $_POST);
+        $preferredCity  = $this->getTrimmedInput('preferredCity', $_POST);
+
+
+        if(!empty($erDoj1)){
+            $erDoj1 = date_format(date_create($erDoj1),"Y-m-d");
+        }
+        if(!empty($erDor1)){
+            $erDor1 = date_format(date_create($erDor1),"Y-m-d");
+        }
+        if(!empty($erDoj2)){
+            $erDoj2 = date_format(date_create($erDoj2),"Y-m-d");
+        }
+        if(!empty($erDor2)){
+            $erDor2 = date_format(date_create($erDor2),"Y-m-d");
+        }
+        if(!empty($erDoj3)){
+            $erDoj3 = date_format(date_create($erDoj3),"Y-m-d");
+        }
+        if(!empty($erDor3)){
+            $erDor3 = date_format(date_create($erDor3),"Y-m-d");
+        }
+        if(!empty($doj)){
+            $doj = date_format(date_create($doj),"Y-m-d");
+        }
+        if(!empty($currentErDoj)){
+            $currentErDoj = date_format(date_create($currentErDoj),"Y-m-d");
+        }
+        if(!empty($currentErDor)){
+            $currentErDor = date_format(date_create($currentErDor),"Y-m-d");
+        }
 
         /* Candidate source list editor. */
         $sourceCSV = $this->getTrimmedInput('sourceCSV', $_POST);
@@ -2598,13 +2800,44 @@ class CandidatesUI extends UserInterface
             $gender,
             $race,
             $veteran,
-            $disability
+            $disability,
+            false,
+            $erName1,
+            $erDoj1,
+            $erDor1,
+            $erName2,
+            $erDoj2,
+            $erDor2,
+            $erName3,
+            $erDoj3,
+            $erDor3,
+            $ectcConfirm,
+            $doj,
+            $currentErDoj,
+            $currentErDor,
+            $board10th,
+            $passYr10th,
+            $precent10th,
+            $board12th,
+            $passYr12th,
+            $precent12th,
+            $insName,
+            $degreeCourse,
+            $degreePassYr,
+            $degreePrecent,
+            $panCard,
+            $this->_userID,
+            $totalExp,
+            $relevantExp,
+            $currentCity,
+            $preferredCity
         );
-
+        
         if ($candidateID <= 0)
         {
             return $candidateID;
         }
+
 
         /* Update extra fields. */
         $candidates->extraFields->setValuesOnEdit($candidateID);
@@ -2627,13 +2860,14 @@ class CandidatesUI extends UserInterface
 
         /* Attach a resume if the user uploaded one. (http POST) */
         /* NOTE: This function cannot be called if parsing is enabled */
-        else if (isset($_FILES['file']) && !empty($_FILES['file']['name']))
+        else if (isset($_FILES['documentFile']) && !empty($_FILES['documentFile']['name'][0]))
         {
+            
             if (!eval(Hooks::get('CANDIDATE_ON_CREATE_ATTACHMENT_PRE'))) return;
 
             $attachmentCreator = new AttachmentCreator($this->_siteID);
-            $attachmentCreator->createFromUpload(
-                DATA_ITEM_CANDIDATE, $candidateID, 'file', false, true
+            $attachmentCreator->createFromUpload_multiple(
+                DATA_ITEM_CANDIDATE, $candidateID, 'documentFile', false, true,'documentFile','addcandidate'
             );
 
             if ($attachmentCreator->isError())
@@ -2665,6 +2899,29 @@ class CandidatesUI extends UserInterface
          */
         else if (LicenseUtility::isParsingEnabled())
         {
+
+            if (!eval(Hooks::get('CANDIDATE_ON_CREATE_ATTACHMENT_PRE'))) return;
+
+            $attachmentCreator = new AttachmentCreator($this->_siteID);
+            $attachmentCreator->createFromUpload_multiple(
+                DATA_ITEM_CANDIDATE, $candidateID, 'documentFile', false, true,'documentTempFile','addcandidate'
+            );
+
+            if ($attachmentCreator->isError())
+            {
+                CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+            }
+
+
+            if ($attachmentCreator->duplicatesOccurred())
+            {
+                $this->listByView(
+                    'This attachment has already been added to this candidate.'
+                );
+                return;
+            }
+
+
             /**
              * Description: User clicks "browse" and selects a resume file. User doesn't click
              * upload. The resume file is STILL uploaded.
@@ -2674,11 +2931,11 @@ class CandidatesUI extends UserInterface
              * box over what's already uploaded method to avoid losing resumes on candidate
              * additions.
              */
-            $newFile = FileUtility::getUploadFileFromPost($this->_siteID, 'addcandidate', 'documentFile');
+            $newFile = FileUtility::getUploadFileFromPostMultiple($this->_siteID, 'addcandidate', 'documentFile');
 
             if ($newFile !== false)
             {
-                $newFilePath = FileUtility::getUploadFilePath($this->_siteID, 'addcandidate', $newFile);
+                $newFilePath = FileUtility::getUploadFilePathMultiple($this->_siteID, 'addcandidate', $newFile);
 
                 $tempFile = $newFile;
                 $tempFullPath = $newFilePath;
@@ -2694,7 +2951,7 @@ class CandidatesUI extends UserInterface
                 {
                     $tempFile = $_POST['documentTempFile'];
                     // Get the path of the file they uploaded already to attach
-                    $tempFullPath = FileUtility::getUploadFilePath(
+                    $tempFullPath = FileUtility::getUploadFilePathMultiple(
                         $this->_siteID,   // ID of the containing site
                         'addcandidate',   // Sub-directory in their storage
                         $tempFile         // Name of the file (not pathed)

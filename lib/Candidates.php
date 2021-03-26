@@ -189,8 +189,8 @@ class Candidates
                 0,
                 %s,
                 %s,
-                NOW(),
-                NOW(),
+                %s,
+                %s,
                 %s,
                 %s,
                 %s,
@@ -250,6 +250,8 @@ class Candidates
             $this->_db->makeQueryInteger($enteredBy),
             $this->_db->makeQueryInteger($owner),
             $this->_siteID,
+            $this->_db->makeQueryString(CURRENT_TIME),
+            $this->_db->makeQueryString(CURRENT_TIME),
             $this->_db->makeQueryInteger($race),
             $this->_db->makeQueryInteger($veteran),
             $this->_db->makeQueryString($disability),
@@ -338,7 +340,7 @@ class Candidates
         $city, $state, $zip, $source, $keySkills, $dateAvailable,
         $currentEmployer, $canRelocate, $currentPay, $desiredPay,
         $notes, $webSite, $bestTimeToCall, $owner, $isHot, $email, $emailAddress,
-        $gender = '', $race = '', $veteran = '', $disability = '',$erName1,$erDoj1,$erDor1)
+        $gender = '', $race = '', $veteran = '', $disability = '',$erName1,$erDoj1,$erDor1,$erName2, $erDoj2, $erDor2, $erName3, $erDoj3, $erDor3, $ectcConfirm, $doj, $currentErDoj, $currentErDor, $board10th, $passYr10th, $precent10th, $board12th, $passYr12th, $precent12th, $insName, $degreeCourse, $degreePassYr, $degreePrecent,$panCard,$totalExp,$relevantExp,$currentCity,$preferredCity   )
     {
         $sql = sprintf(
             "UPDATE
@@ -369,11 +371,39 @@ class Candidates
                 web_site              = %s,
                 best_time_to_call     = %s,
                 owner                 = %s,
-                date_modified         = NOW(),
+                date_modified         = %s,
                 eeo_ethnic_type_id    = %s,
                 eeo_veteran_type_id   = %s,
                 eeo_disability_status = %s,
-                eeo_gender            = %s
+                eeo_gender            = %s,
+                employer1_name        = %s,
+                employer1_doj         = %s,
+                employer1_dor         = %s,
+                employer2_name        = %s,
+                employer2_doj         = %s,
+                employer2_dor         = %s,
+                employer3_name        = %s,
+                employer3_doj         = %s,
+                employer3_dor         = %s,
+                ectc_confirmation     = %s,
+                doj                   = %s,
+                current_er_doj        = %s,
+                current_er_dor        = %s,
+                board10th             = %s,
+                passYr10th            = %s,
+                precent10th           = %s,
+                board12th             = %s,
+                passYr12th            = %s,
+                precent12th           = %s,
+                insName               = %s,
+                degreeCourse          = %s,
+                degreePassYr          = %s,
+                degreePrecent         = %s,
+                panCard               = %s,
+                totalExp              = %s,
+                relevantExp           = %s,
+                currentCity           = %s,
+                preferredCity         = %s
             WHERE
                 candidate_id = %s
             AND
@@ -403,10 +433,39 @@ class Candidates
             $this->_db->makeQueryString($webSite),
             $this->_db->makeQueryString($bestTimeToCall),
             $this->_db->makeQueryInteger($owner),
+            $this->_db->makeQueryString(CURRENT_TIME),
             $this->_db->makeQueryInteger($race),
             $this->_db->makeQueryInteger($veteran),
             $this->_db->makeQueryString($disability),
             $this->_db->makeQueryString($gender),
+            $this->_db->makeQueryString($erName1),
+            $this->_db->makeQueryString($erDoj1),
+            $this->_db->makeQueryString($erDor1),
+            $this->_db->makeQueryString($erName2),
+            $this->_db->makeQueryString($erDoj2),
+            $this->_db->makeQueryString($erDor2),
+            $this->_db->makeQueryString($erName3),
+            $this->_db->makeQueryString($erDoj3),
+            $this->_db->makeQueryString($erDor3),
+            $this->_db->makeQueryString($ectcConfirm),
+            $this->_db->makeQueryString($doj),
+            $this->_db->makeQueryString($currentErDoj),
+            $this->_db->makeQueryString($currentErDor),
+            $this->_db->makeQueryString($board10th),
+            $this->_db->makeQueryString($passYr10th),
+            $this->_db->makeQueryString($precent10th),
+            $this->_db->makeQueryString($board12th),
+            $this->_db->makeQueryString($passYr12th),
+            $this->_db->makeQueryString($precent12th),
+            $this->_db->makeQueryString($insName),
+            $this->_db->makeQueryString($degreeCourse),
+            $this->_db->makeQueryString($degreePassYr),
+            $this->_db->makeQueryString($degreePrecent),
+            $this->_db->makeQueryString($panCard),
+            $this->_db->makeQueryString($totalExp),
+            $this->_db->makeQueryString($relevantExp),
+            $this->_db->makeQueryString($currentCity),
+            $this->_db->makeQueryString($preferredCity),
             $this->_db->makeQueryInteger($candidateID),
             $this->_siteID
         );
@@ -466,7 +525,7 @@ class Candidates
                 current_employer      = %s,
                 current_pay           = %s,
                 owner                 = %s,
-                date_modified         = NOW(),
+                date_modified         = %s,
                 employer1_name        = %s,
                 employer1_doj         = %s,
                 employer1_dor         = %s,
@@ -515,6 +574,7 @@ class Candidates
             $this->_db->makeQueryString($currentEmployer),
             $this->_db->makeQueryString($currentPay),
             $this->_db->makeQueryInteger($owner),
+            $this->_db->makeQueryString(CURRENT_TIME),
             $this->_db->makeQueryString($erName1),
             $this->_db->makeQueryString($erDoj1),
             $this->_db->makeQueryString($erDor1),
@@ -860,7 +920,53 @@ class Candidates
                 candidate.is_admin_hidden AS isAdminHidden,
                 DATE_FORMAT(
                     candidate.date_available, '%%m-%%d-%%y'
-                ) AS dateAvailable
+                ) AS dateAvailable,
+                candidate.employer1_name AS employer1_name,
+                DATE_FORMAT(
+                    candidate.employer1_doj, '%%d-%%b-%%Y'
+                ) AS employer1_doj,
+                DATE_FORMAT(
+                    candidate.employer1_dor, '%%d-%%b-%%Y'
+                ) AS employer1_dor,
+                candidate.employer2_name AS employer2_name,
+                DATE_FORMAT(
+                    candidate.employer2_doj, '%%d-%%b-%%Y'
+                ) AS employer2_doj,
+                DATE_FORMAT(
+                    candidate.employer2_dor, '%%d-%%b-%%Y'
+                ) AS employer2_dor,
+                candidate.employer3_name AS employer3_name,
+                DATE_FORMAT(
+                    candidate.employer3_doj, '%%d-%%b-%%Y'
+                ) AS employer3_doj,
+                DATE_FORMAT(
+                    candidate.employer3_dor, '%%d-%%b-%%Y'
+                ) AS employer3_dor,
+                candidate.ectc_confirmation AS ectc_confirmation,
+                DATE_FORMAT(
+                    candidate.doj, '%%d-%%b-%%Y'
+                ) AS doj,
+                DATE_FORMAT(
+                    candidate.current_er_doj, '%%d-%%b-%%Y'
+                ) AS current_er_doj,
+                DATE_FORMAT(
+                    candidate.current_er_dor, '%%d-%%b-%%Y'
+                ) AS current_er_dor,
+                candidate.board10th AS board10th,
+                candidate.passYr10th AS passYr10th,
+                candidate.precent10th AS precent10th,
+                candidate.board12th AS board12th,
+                candidate.passYr12th AS passYr12th,
+                candidate.precent12th AS precent12th,
+                candidate.insName AS insName,
+                candidate.degreeCourse AS degreeCourse,
+                candidate.degreePassYr AS degreePassYr,
+                candidate.degreePrecent AS degreePrecent,
+                candidate.panCard AS panCard,
+                candidate.totalExp AS totalExp,
+                candidate.relevantExp AS relevantExp,
+                candidate.currentCity AS currentCity,
+                candidate.preferredCity AS preferredCity
             FROM
                 candidate
             WHERE
@@ -1185,11 +1291,12 @@ class Candidates
             "UPDATE
                 candidate
             SET
-                date_modified = NOW()
+                date_modified = %s
             WHERE
                 candidate_id = %s
             AND
                 site_id = %s",
+            $this->_db->makeQueryString(CURRENT_TIME),
             $this->_db->makeQueryInteger($candidateID),
             $this->_siteID
         );
@@ -1262,10 +1369,11 @@ class Candidates
                          VALUES (
                             %s,
                             %s,
-                            NOW()
+                            %s
                          )",
                          $this->_db->makeQueryString($update[0]),
-                         $this->_siteID
+                         $this->_siteID,
+                         $this->_db->makeQueryString(CURRENT_TIME)
                     );
                     $this->_db->query($sql);
 
