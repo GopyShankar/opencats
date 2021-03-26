@@ -135,8 +135,8 @@ class Contacts
                 %s,
                 %s,
                 %s,
-                NOW(),
-                NOW()
+                %s,
+                %s
             )",
             $this->_db->makeQueryInteger($companyID),
             $this->_db->makeQueryString($firstName),
@@ -157,7 +157,9 @@ class Contacts
             $this->_db->makeQueryString($notes),
             $this->_db->makeQueryInteger($enteredBy),
             $this->_db->makeQueryInteger($owner),
-            $this->_siteID
+            $this->_siteID,
+            $this->_db->makeQueryString(CURRENT_TIME),
+            $this->_db->makeQueryString(CURRENT_TIME)
         );
 
         $queryResult = $this->_db->query($sql);
@@ -234,7 +236,7 @@ class Contacts
                 contact.left_company  = %s,
                 contact.notes         = %s,
                 contact.owner         = %s,
-                contact.date_modified = NOW()
+                contact.date_modified = %s
             WHERE
                 contact.contact_id = %s
             AND
@@ -258,6 +260,7 @@ class Contacts
             ($leftCompany ? '1' : '0'),
             $this->_db->makeQueryString($notes),
             $this->_db->makeQueryInteger($owner),
+            $this->_db->makeQueryString(CURRENT_TIME),
             $this->_db->makeQueryInteger($contactID),
             $this->_siteID
         );
@@ -314,7 +317,7 @@ class Contacts
                 city          = %s,
                 state         = %s,
                 zip           = %s,
-                date_modified = NOW()
+                date_modified = %s
             WHERE
                 left_company != 1
             AND
@@ -325,6 +328,7 @@ class Contacts
             $this->_db->makeQueryString($city),
             $this->_db->makeQueryString($state),
             $this->_db->makeQueryString($zip),
+            $this->_db->makeQueryString(CURRENT_TIME),
             $this->_db->makeQueryInteger($companyID),
             $this->_siteID
         );
@@ -642,11 +646,12 @@ class Contacts
             "UPDATE
                 contact
             SET
-                date_modified = NOW()
+                date_modified = %s
             WHERE
                 contact_id = %s
             AND
                 site_id = %s",
+            $this->_db->makeQueryString(CURRENT_TIME),
             $this->_db->makeQueryInteger($contactID),
             $this->_siteID
         );

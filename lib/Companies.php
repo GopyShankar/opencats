@@ -154,7 +154,7 @@ class Companies
                 notes            = %s,
                 billing_contact  = %s,
                 owner            = %s,
-                date_modified    = NOW()
+                date_modified    = %s
             WHERE
                 company_id = %s
             AND
@@ -173,6 +173,7 @@ class Companies
             $this->_db->makeQueryString($notes),
             $this->_db->makeQueryInteger($billingContact),
             $this->_db->makeQueryInteger($owner),
+            $this->_db->makeQueryString(CURRENT_TIME),
             $this->_db->makeQueryInteger($companyID),
             $this->_siteID
         );
@@ -420,9 +421,10 @@ class Companies
                 company
              SET
                 default_company = 1,
-                date_modified  = NOW()
+                date_modified  = %s
             WHERE
                 company_id = %s",
+            $this->_db->makeQueryString(CURRENT_TIME),
             $this->_db->makeQueryInteger($companyID)
         );
 
@@ -641,11 +643,12 @@ class Companies
                             %s,
                             %s,
                             %s,
-                            NOW()
+                            %s
                          )",
                          $this->_db->makeQueryString($update[0]),
                          $this->_db->makeQueryInteger($companyID),
-                         $this->_siteID
+                         $this->_siteID,
+                         $this->_db->makeQueryString(CURRENT_TIME)
                     );
                     $this->_db->query($sql);
 

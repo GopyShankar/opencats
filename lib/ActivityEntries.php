@@ -106,8 +106,8 @@ class ActivityEntries
                 %s,
                 %s,
                 %s,
-                NOW(),
-                NOW()
+                %s,
+                %s
             )",
             $this->_db->makeQueryInteger($dataItemID),
             $this->_db->makeQueryInteger($dataItemType),
@@ -115,7 +115,9 @@ class ActivityEntries
             $this->_db->makeQueryInteger($enteredBy),
             $this->_db->makeQueryInteger($activityType),
             $this->_db->makeQueryString($activityNotes),
-            $this->_siteID
+            $this->_siteID,
+            $this->_db->makeQueryString(CURRENT_TIME),
+            $this->_db->makeQueryString(CURRENT_TIME)
         );
 
         $queryResult = $this->_db->query($sql);
@@ -210,7 +212,7 @@ class ActivityEntries
                 type          = %s,
                 notes         = %s,
                 joborder_id   = %s,
-                date_modified = NOW()
+                date_modified = %s
             WHERE
                 activity_id = %s
             AND
@@ -218,6 +220,7 @@ class ActivityEntries
             $this->_db->makeQueryInteger($activityType),
             $this->_db->makeQueryString($activityNotes),
             $this->_db->makeQueryInteger($newJobOrderID),
+            $this->_db->makeQueryString(CURRENT_TIME),
             $this->_db->makeQueryInteger($activityID),
             $this->_siteID
         );
@@ -230,13 +233,14 @@ class ActivityEntries
                     activity
                 SET
                     date_created  = DATE_SUB(%s, INTERVAL %s HOUR),
-                    date_modified = NOW()
+                    date_modified = %s
                 WHERE
                     activity_id = %s
                 AND
                     site_id = %s",
                 $this->_db->makeQueryString($date),
                 $this->_db->makeQueryInteger($timezoneOffset),
+                $this->_db->makeQueryString(CURRENT_TIME),
                 $this->_db->makeQueryInteger($activityID),
                 $this->_siteID
             );
