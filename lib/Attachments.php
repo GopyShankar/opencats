@@ -1067,6 +1067,66 @@ class AttachmentCreator
 
     }
 
+    public function createFromUpload_multipleFiles($dataItemType, $dataItemID, $fileField,
+        $isProfileImage, $extractText,$fieldName='file',$subDirectory)
+    {
+        foreach ($_FILES[$fileField]['name'] as $key => $value) {
+            
+            if(!empty($_FILES[$fileField]['name'][$key])){
+
+                /* Get file upload metadata. */
+                $originalFilename = $_FILES[$fileField]['name'][$key];
+                $tempFilename     = $_FILES[$fileField]['tmp_name'][$key];
+                $contentType      = $_FILES[$fileField]['type'][$key];
+                $fileSize         = $_FILES[$fileField]['size'][$key];
+                $uploadError      = $_FILES[$fileField]['error'][$key];
+
+                echo "Name->".$originalFilename;
+                echo "<br>";
+                echo "Type->".$contentType;
+                echo "<br>";
+                echo "Temp->".$tempFilename;
+                echo "<br>";
+                echo "Error->".$uploadError;
+                echo "<br>";
+
+
+
+                /* Recover from magic quotes. Note that tmp_name doesn't appear to
+                 * get escaped, and stripslashes() on it breaks on Windows. - Will
+                 */
+                if (get_magic_quotes_gpc())
+                {
+                    $originalFilename = stripslashes($originalFilename);
+                    $contentType      = stripslashes($contentType);
+                }
+
+                /* Did a file upload error occur? */
+                if ($uploadError != UPLOAD_ERR_OK)
+                {
+                    $this->_isError = true;
+                    $this->_error = FileUtility::getErrorMessage($uploadError);
+                    return false;
+                }
+
+                /* This usually indicates an error. */
+                if ($fileSize <= 0)
+                {
+                    $this->_isError = true;
+                    $this->_error = 'File size is less than 1 byte.';
+                    return false;
+                }
+
+                $this->createGeneric(
+                    $dataItemType, $dataItemID, $isProfileImage, $extractText, false,
+                    $originalFilename, $tempFilename, $contentType, false, true
+                );
+
+            }
+
+        }
+    }
+
     /**
      * Creates an attachment to the specified data item from a file that
      * currently exists on the system where CATS is located. This will

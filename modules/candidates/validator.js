@@ -147,8 +147,43 @@ function checkEmailTo(form)
     return true;
 }
 
+function checkCandidate(form)
+{
+    var errorMessage = '';
+
+    errorMessage += checkCandidateValid();
+
+    if (errorMessage != '')
+    {
+        alert("Form Error:\n" + errorMessage);
+        return false;
+    }
+
+    return true;
+}
+
 function emailFormReset(){
     document.getElementById('jobID').value = '';
+}
+
+function checkCandidateValid()
+{
+    var errorMessage = '';
+
+    fieldValue = document.getElementById('candidateID').value;
+    fieldLabel = document.getElementById('candidateLabel');
+    if (fieldValue == '')
+    {
+        errorMessage = "    - You must select the candidate.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else
+    {
+        fieldLabel.style.color = '#000';
+    }
+
+    return errorMessage;
 }
 
 function checkJobOrderValid()
@@ -409,4 +444,8 @@ function checkEmailToAddress()
 
 function getJobData(){
     document.jobIDForm.submit();
+}
+
+function getCandidatesData(){
+    document.candidateForm.submit();
 }

@@ -59,9 +59,11 @@ class CareersUI extends UserInterface
     public function handleRequest()
     {
         $action = $this->getAction();
-
         switch ($action)
         {
+            case 'bgcDocs':
+                $this->bgcDocsPage();
+                break;
             default:
                 $this->careersPage();
                 break;
@@ -4667,6 +4669,97 @@ class CareersUI extends UserInterface
         }
 
         return $status;
+    }
+
+    private function bgcDocsPage(){
+        $p = $_GET['p'];
+        $candidate_id = unserialize($p);
+        $site = new Site(-1);
+        $siteID = $site->getFirstSiteID();
+        $msg = false;
+        if(isset($_POST['bgcSubmit']) && $_POST['bgcSubmit'] == 'Submit'){
+            
+            $status = $this->bgcDocsUpload($candidate_id);
+            if($status){
+                $msg = true;
+            }
+        }
+
+        $this->_template->assign('displayMsg', $msg);
+
+        $this->_template->display('./modules/careers/bgcDocs.tpl');   
+    }
+
+    private function bgcDocsUpload($candidate_id){
+        echo "ID->".$candidate_id;
+        echo "<pre>";
+        print_r($_POST);
+        print_r($_FILES);
+        echo "</pre>";
+        $site = new Site(-1);
+        $siteID = $site->getFirstSiteID();
+        $attachmentCreator = new AttachmentCreator($siteID);
+
+        $returnVal = true;
+        
+        $listFiles = array('bgc','address_proof','panCard','ba_deputation_letter','ba_offer_letter','aadhar_proof','photo','gPC','pgPC','pgCert','gap_affidavit','acc_verify');
+        $arrayListFiles = array('gAllSem','pgAllSem','preEmpPayslip','preEmpOL','preEmpEL','preEmpRL');
+        foreach ($listFiles as $key => $value) {
+            // echo 'value->'.$value.'<br>';
+            // echo "<pre>";
+            // print_r($_FILES[$value]);
+            // echo "</pre>";
+            if (isset($_FILES[$value]) && !empty($_FILES[$value]['name']))
+            {
+                $attachmentCreator->createFromUpload(
+                    DATA_ITEM_CANDIDATE, 61, $value, false, true,$value
+                );
+
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    $returnVal = false;
+                    return $returnVal;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+                $returnVal = true;
+            }
+        }
+        foreach ($arrayListFiles as $key => $value) {
+            echo 'arrayValue->'.$value.'<br>';
+            if (isset($_FILES[$value]) && !empty($_FILES[$value]['name'][0]))
+            {
+
+                echo 'arrayValue1->'.$value.'<br>';
+
+                $attachmentCreator->createFromUpload_multipleFiles(
+                    DATA_ITEM_CANDIDATE, 61, $value, false, true,$value
+                );
+
+                echo "<pre>";
+                print_r($attachmentCreator);
+                echo "</pre>";
+
+                if ($attachmentCreator->isError())
+                {
+                    CommonErrors::fatal(COMMONERROR_FILEERROR, $this, $attachmentCreator->getError());
+                    $returnVal = false;
+                    return $returnVal;
+                }
+
+                $duplicatesOccurred = $attachmentCreator->duplicatesOccurred();
+
+                $isTextExtractionError = $attachmentCreator->isTextExtractionError();
+                $textExtractionErrorMessage = $attachmentCreator->getTextExtractionError();
+                $returnVal = true;
+            }
+        }
+        return $returnVal;
     }
 }
 

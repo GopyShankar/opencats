@@ -494,6 +494,20 @@ class CareerPortalSettings
 
         return $this->_db->getAllAssoc($sql);
     }
+
+    public function getCandidatesData(){
+        $sql = sprintf(
+            "SELECT
+                candidate.candidate_id AS candidateID,
+                candidate.last_name AS lastName,
+                candidate.first_name AS firstName
+            FROM
+                candidate",
+            $this->_siteID
+        );
+
+        return $this->_db->getAllAssoc($sql);
+    }
 }
 
 ?>
