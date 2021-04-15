@@ -4703,7 +4703,7 @@ class CareersUI extends UserInterface
         $returnVal = true;
         
         $listFiles = array('bgc','address_proof','panCard','ba_deputation_letter','ba_offer_letter','aadhar_proof','photo','gPC','pgPC','pgCert','gap_affidavit','acc_verify');
-        $arrayListFiles = array('gAllSem','pgAllSem','preEmpPayslip','preEmpOL','preEmpEL','preEmpRL');
+        $arrayListFiles = array('gAllSem','pgAllSem','preEmpPayslip','preEmpOL','preEmpEL','preEmpRL','preEmpBankState');
         foreach ($listFiles as $key => $value) {
             // echo 'value->'.$value.'<br>';
             // echo "<pre>";
@@ -4731,19 +4731,12 @@ class CareersUI extends UserInterface
             }
         }
         foreach ($arrayListFiles as $key => $value) {
-            echo 'arrayValue->'.$value.'<br>';
             if (isset($_FILES[$value]) && !empty($_FILES[$value]['name'][0]))
             {
-
-                echo 'arrayValue1->'.$value.'<br>';
 
                 $attachmentCreator->createFromUpload_multipleFiles(
                     DATA_ITEM_CANDIDATE, 61, $value, false, true,$value
                 );
-
-                echo "<pre>";
-                print_r($attachmentCreator);
-                echo "</pre>";
 
                 if ($attachmentCreator->isError())
                 {
