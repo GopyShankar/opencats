@@ -1,7 +1,7 @@
 <?php /* $Id: Search.tpl 1948 2007-02-23 09:49:27Z will $ */ ?>
 <?php TemplateUtility::printHeader('Activities', array('js/highlightrows.js', 'modules/activity/validator.js', 'js/sweetTitles.js')); ?>
 <?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php TemplateUtility::printTabs($this->active, $this->subActive); ?>
     <div id="main">
         <?php TemplateUtility::printQuickSearch(); ?>
         <div id="contents">

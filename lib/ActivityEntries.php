@@ -552,6 +552,62 @@ class ActivityEntries
 
         $dataItem->updateModified($dataItemID);
     }
+
+    public function addMail($mail, $notes, $enteredBy)
+    {
+        $sql = sprintf(
+            "INSERT INTO activity_mail (
+                mail_address,
+                site_id,
+                entered_by,
+                date_created,
+                type,
+                notes,
+                date_modified
+            )
+            VALUES (
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s
+            )",
+            $this->_db->makeQueryString($mail),
+            $this->_siteID,
+            $this->_db->makeQueryInteger($enteredBy),
+            $this->_db->makeQueryString(CURRENT_TIME),
+            $this->_db->makeQueryInteger(200),
+            $this->_db->makeQueryString($notes),
+            $this->_db->makeQueryString(CURRENT_TIME)
+        );
+
+        $queryResult = $this->_db->query($sql);
+        if (!$queryResult)
+        {
+            return -1;
+        }
+
+        $activityEntryID = $this->_db->getLastInsertID();
+
+        return $activityEntryID;
+    }
+
+    public function getMailCount()
+    {
+        $sql = sprintf(
+            "SELECT
+                COUNT(*) AS totalActivities
+            FROM
+                activity_mail
+            WHERE
+                activity_mail.site_id = %s",
+            $this->_siteID
+        );
+
+        return $this->_db->getColumn($sql, 0, 0);
+    }
 }
 
 ?>

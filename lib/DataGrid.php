@@ -240,7 +240,7 @@ class DataGrid
      * @param integer dataGrid miscalaneous ID
      * @return object data grid
      */
-    public static function get($indentifier, $parameters, $misc = 0)
+    public static function get($indentifier, $parameters, $misc = 0,$page=null)
     {
         /* This deals with loading a datagrid that was selected by use of the action / export box. */
         if (isset($_REQUEST['dynamicArgument' . md5($indentifier)]))
@@ -271,13 +271,23 @@ class DataGrid
         {
             $misc = unserialize($indentifierParts[2]);
         }
+        
+        if($page == 'Email'){
+            if (!file_exists(sprintf('modules/%s/dataGridMails.php', $module)))
+            {
+                trigger_error('No datagrid named: '.$indentifier);
+            }
 
-        if (!file_exists(sprintf('modules/%s/dataGrids.php', $module)))
-        {
-            trigger_error('No datagrid named: '.$indentifier);
+            include_once (sprintf('modules/%s/dataGridMails.php', $module));
+        }else{
+            if (!file_exists(sprintf('modules/%s/dataGrids.php', $module)))
+            {
+                trigger_error('No datagrid named: '.$indentifier);
+            }
+
+            include_once (sprintf('modules/%s/dataGrids.php', $module));
         }
 
-        include_once (sprintf('modules/%s/dataGrids.php', $module));
 
         $dg = new $class($_SESSION['CATS']->getSiteID(), $parameters, $misc);
 
@@ -503,7 +513,7 @@ class DataGrid
          //}
 
          /* Set some properties and get column preferences. */
-         $this->buildColumns();
+         $this->buildColumns($instanceName);
 
          //If a column is being sorted, it MUST be visible.
          $sortByVisible = false;
@@ -904,7 +914,7 @@ class DataGrid
      *
      * @return void
      */
-    protected function buildColumns()
+    protected function buildColumns($instanceName)
     {
         /* Get the current preferences from SESSION. */
         if (!isset($this->ignoreSavedColumnLayouts) || $this->ignoreSavedColumnLayouts == false)
@@ -916,17 +926,30 @@ class DataGrid
             $this->_currentColumns = array();
         }
 
-        /* Do we need to reset the columns?  This has to be first. */
-        if ($this->_currentColumns == array() || (isset($this->_parameters['resetColumns']) && $this->_parameters['resetColumns'] == true))
-        {
+        if($instanceName == 'activity:ActivityDataGrid'){
             $this->_currentColumns = $this->_defaultColumns;
             $this->saveColumns();
 
             if (isset($this->_parameters['resetColumns']))
             {
                 unset ($this->_parameters['resetColumns']);
-            }
+            }    
+        }else{
+            /* Do we need to reset the columns?  This has to be first. */
+            if ($this->_currentColumns == array() || (isset($this->_parameters['resetColumns']) && $this->_parameters['resetColumns'] == true))
+            {
+                $this->_currentColumns = $this->_defaultColumns;
+                $this->saveColumns();
+
+                if (isset($this->_parameters['resetColumns']))
+                {
+                    unset ($this->_parameters['resetColumns']);
+                }
+            }    
         }
+        
+
+        
 
         /* Do we need to remove a column? */
         if (isset($this->_parameters['removeColumn']))
