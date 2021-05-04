@@ -147,6 +147,104 @@ function checkEmailTo(form)
     return true;
 }
 
+function checkOfferLetterForm(){
+    var errorMessage = '';
+
+    errorMessage += checkCandidateValid();
+    errorMessage += checkDOJValid();
+    errorMessage += checkDesignationValid();
+    errorMessage += checkAnnualValid();
+    errorMessage += checkvalidDateValid();
+
+    if (errorMessage != '')
+    {
+        alert("Form Error:\n" + errorMessage);
+        return false;
+    }
+
+    return true;
+}
+
+function checkDOJValid()
+{
+    var errorMessage = '';
+
+    fieldValue = document.getElementById('doj').value;
+    fieldLabel = document.getElementById('dojLabel');
+    if (fieldValue == '')
+    {
+        errorMessage = "    - You must enter the DOJ.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else
+    {
+        fieldLabel.style.color = '#000';
+    }
+
+    return errorMessage;
+}
+
+function checkDesignationValid()
+{
+    var errorMessage = '';
+
+    fieldValue = document.getElementById('designation').value;
+    fieldLabel = document.getElementById('designationLabel');
+    if (fieldValue == '')
+    {
+        errorMessage = "    - You must enter the designation.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else
+    {
+        fieldLabel.style.color = '#000';
+    }
+
+    return errorMessage;
+}
+
+function checkAnnualValid()
+{
+    var errorMessage = '';
+
+    fieldValue = document.getElementById('annual').value;
+    fieldLabel = document.getElementById('annualLabel');
+    if (fieldValue == '')
+    {
+        errorMessage = "    - You must enter the annual.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else
+    {
+        fieldLabel.style.color = '#000';
+    }
+
+    return errorMessage;
+}
+
+function checkvalidDateValid()
+{
+    var errorMessage = '';
+
+    fieldValue = document.getElementById('validDate').value;
+    fieldLabel = document.getElementById('validDateLabel');
+    if (fieldValue == '')
+    {
+        errorMessage = "    - You must enter the validDate.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else
+    {
+        fieldLabel.style.color = '#000';
+    }
+
+    return errorMessage;
+}
+
 function checkCandidate(form)
 {
     var errorMessage = '';

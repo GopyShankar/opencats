@@ -79,7 +79,7 @@
                                         <?php foreach($this->candidatesData as $Data): ?>
                                             <option value="<?php echo $Data['candidateID'] ?>" 
                                                     <?php if(isset($this->selectedData) && $this->selectedData == $Data['candidateID']) echo('selected'); ?> >
-                                                    <?php echo $Data['firstName'] .' '.$Data['lastName'];?>
+                                                    <?php echo $Data['email'];?>
                                             </option>
                                         <?php endforeach; ?>
                                         </select>&nbsp;
@@ -89,6 +89,7 @@
                         </form>
                         <form name="emailForm" id="emailForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=sendMailBGC" method="post" onsubmit="return checkCandidate(document.emailForm);" autocomplete="off" enctype="multipart/form-data">
                         <input type="hidden" name="postback" id="postback" value="postback" />
+                        <input type="hidden" name="emailTo" id="emailTo" value="<?php $this->_($this->selectedDataEmail); ?>" />
                         <table>
                             <tr>
                                 <td class="tdVertical" style="text-align: right;">

@@ -637,7 +637,210 @@ class Candidates
         return true;
     }
 
+    public function updateBGCCandidates($candidateID,$doj,$emailAddress,$email){
+        $sql = sprintf(
+            "UPDATE
+                candidate
+            SET
+                doj = %s,
+                date_modified = %s
+            WHERE
+                candidate_id = %s
+            ",
+            $this->_db->makeQueryString($doj),
+            $this->_db->makeQueryString(CURRENT_TIME),
+            $this->_db->makeQueryInteger($candidateID)
+        );
+
+        $preHistory = $this->get($candidateID);
+        $queryResult = $this->_db->query($sql);
+        $postHistory = $this->get($candidateID);
+
+        $history = new History($this->_siteID);
+        $history->storeHistoryChanges(
+            DATA_ITEM_CANDIDATE, $candidateID, $preHistory, $postHistory
+        );
+
+        if (!$queryResult)
+        {
+            return false;
+        }
+
+        if (!empty($emailAddress))
+        {
+            /* Send e-mail notification. */
+            //FIXME: Make subject configurable.
+            $mailer = new Mailer($this->_siteID);
+            $mailerStatus = $mailer->sendToOne(
+                array($emailAddress, ''),
+                'VHS Consulting Notification: Candidate BGC Docs Update',
+                $email,
+                true
+            );
+        }
+
+        return true;
+    }
+
     /** Update function for career portal end */
+
+    /** add/update the offer letter pdf generate start */
+
+    public function offerLetter($candidateID,$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$refNo){
+        
+
+        $getData = $this->checkOfferLetterData($candidateID);
+        
+        if(empty($getData)){
+            $sql1 = sprintf(
+                "INSERT INTO offerLetter (
+                    candidate_id,
+                    name,
+                    doj,
+                    email,
+                    designation,
+                    annual,
+                    validDate,
+                    pdfPath,
+                    insuranceYN,
+                    refNo,
+                    date_created,
+                    date_modified,
+                    entered_by,
+                    modified_by
+                )
+                VALUES(
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s
+                )",
+                $this->_db->makeQueryInteger($candidateID),
+                $this->_db->makeQueryString($fullName),
+                $this->_db->makeQueryString($doj),
+                $this->_db->makeQueryString($email),
+                $this->_db->makeQueryString($designation),
+                $this->_db->makeQueryString($annual),
+                $this->_db->makeQueryString($validDate),
+                $this->_db->makeQueryString($pdfPath),
+                $this->_db->makeQueryString($insuranceYN),
+                $this->_db->makeQueryString($refNo),
+                $this->_db->makeQueryString(CURRENT_TIME),
+                $this->_db->makeQueryString(CURRENT_TIME),
+                $this->_db->makeQueryString($user_id),
+                $this->_db->makeQueryString($user_id)
+            );
+        }else{
+            $sql1 = sprintf(
+                "UPDATE
+                    offerLetter
+                SET
+                    doj = %s,
+                    email = %s,
+                    designation = %s,
+                    annual = %s,
+                    validDate = %s,
+                    pdfPath = %s,
+                    insuranceYN = %s,
+                    date_modified = %s,
+                    modified_by = %s
+                WHERE
+                    candidate_id = %s
+                ",
+                $this->_db->makeQueryString($doj),
+                $this->_db->makeQueryString($email),
+                $this->_db->makeQueryString($designation),
+                $this->_db->makeQueryString($annual),
+                $this->_db->makeQueryString($validDate),
+                $this->_db->makeQueryString($pdfPath),
+                $this->_db->makeQueryString($insuranceYN),
+                $this->_db->makeQueryString(CURRENT_TIME),
+                $this->_db->makeQueryString($user_id),
+                $this->_db->makeQueryInteger($candidateID)
+            );
+        }
+
+        $queryResult = $this->_db->query($sql1);
+
+        return $this->checkOfferLetterData($candidateID);
+
+    }
+
+    public function checkOfferLetterData($candidateID){
+        $sql = sprintf(
+            "SELECT
+                offerletter.candidate_id AS candidateID,
+                offerletter.name AS name,
+                DATE_FORMAT(
+                offerletter.doj, '%%d-%%M-%%y'
+                ) AS doj,
+                offerletter.email AS email,
+                offerletter.designation AS designation,
+                offerletter.annual AS annual,
+                DATE_FORMAT(
+                offerletter.validDate, '%%d-%%M-%%y'
+                ) AS validDate,
+                offerletter.pdfPath AS pdfPath,
+                offerletter.insuranceYN AS insuranceYN
+            FROM
+                offerLetter
+            WHERE
+                candidate_id = %s
+            ",
+            $this->_db->makeQueryInteger($candidateID)
+        );
+
+        return $this->_db->getAssoc($sql);
+    }
+
+    public function offerLetterRefNo($candidateID){
+        $getData = $this->checkOfferLetterRefNo($candidateID);
+
+        if(empty($getData)){
+            $sql1 = sprintf(
+                "INSERT INTO offerletter_refno (
+                    candidate_id,
+                    created_date
+                )VALUES(
+                    %s,
+                    %s
+                )
+                ",
+                $this->_db->makeQueryInteger($candidateID),
+                $this->_db->makeQueryString(CURRENT_TIME)
+            );
+            $queryResult = $this->_db->query($sql1);
+        }
+
+        return $this->checkOfferLetterRefNo($candidateID);
+    }
+
+    public function checkOfferLetterRefNo($candidateID){
+        $sql = sprintf(
+            "SELECT
+                offerletter_refno.id AS refNo,
+                offerletter_refno.candidate_id AS candidateID
+            FROM
+                offerletter_refno
+            WHERE
+                offerletter_refno.candidate_id = %s
+            ",
+            $this->_db->makeQueryInteger($candidateID)
+        );
+        return $this->_db->getAssoc($sql);
+    }
+
+    /** add/update the offer letter pdf generate end */ 
 
     /**
      * Removes a candidate and all associated records from the system.

@@ -70,12 +70,20 @@
                 background-color: #ffdddd;
                 border-left: 6px solid #f44336;
             }
+            input.date_picker {
+                background-image: url("../images/calendar.gif");
+                background-position: right center;
+                background-repeat: no-repeat;
+            }
         </style>
         <script type="text/javascript" src="assets/jquery.min.js"></script>
         <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
         <script type="text/javascript" src="assets/bootstrap.min.js"></script>
         <script type="text/javascript" src="assets/jquery.validate.min.js"></script>
         <script type="text/javascript" src="assets/additional-methods.min.js"></script>
+        <link href='../js/datepicker/jquery-ui.css' rel='stylesheet'>
+        <script src="../js/datepicker/jquery.min.js"></script>
+        <script src="../js/datepicker/jquery-ui.min.js"></script>
     </head>
     <body>
         <div class="container">
@@ -140,6 +148,15 @@
                                         <tr>
                                             <th scope="row">1</th>
                                             <td>
+                                                <label class="control-label">DOJ</label>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="doj" id="doj" class="doj date_picker">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">2</th>
+                                            <td>
                                                 <label class="control-label">BGC Form</label>
                                             </td>
                                             <td>
@@ -147,7 +164,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th scope="row">2</th>
+                                            <th scope="row">3</th>
                                             <td>
                                                 <label class="control-label">Address Proof</label>
                                             </td>
@@ -156,7 +173,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th scope="row">3</th>
+                                            <th scope="row">4</th>
                                             <td>
                                                 <label class="control-label">PAN Card</label>
                                             </td>
@@ -165,7 +182,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th scope="row">4</th>
+                                            <th scope="row">5</th>
                                             <td>
                                                 <label class="control-label">BA Vendor Deputation Letter</label>
                                             </td>
@@ -174,7 +191,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th scope="row">5</th>
+                                            <th scope="row">6</th>
                                             <td>
                                                 <label class="control-label">BA Vendor Offer Letter</label>
                                             </td>
@@ -183,7 +200,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th scope="row">6</th>
+                                            <th scope="row">7</th>
                                             <td>
                                                 <label class="control-label">Aadhar proof</label>
                                             </td>
@@ -192,7 +209,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th scope="row">7</th>
+                                            <th scope="row">8</th>
                                             <td>
                                                 <label class="control-label">Passport size photo</label>
                                             </td>
@@ -420,9 +437,16 @@
 
             $(document).ready(function(){
 
+                $( ".date_picker" ).datepicker({
+                    dateFormat: 'dd-M-yy',
+                });
+
                 $("#docsInfo").validate({
                     ignore: [':disabled,:hidden'],
                     rules: {
+                        doj: {
+                            required:true,
+                        },
                         bgc: {
                             required:true,
                         },
@@ -475,6 +499,9 @@
                         }
                     },
                     messages: {
+                        doj: {
+                            required: "Please enter the DOJ"
+                        },
                         bgc: {
                             required: "Please upload your filled BGC Form"
                         },

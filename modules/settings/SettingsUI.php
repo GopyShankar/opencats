@@ -47,6 +47,8 @@ include_once('./lib/CommonErrors.php');
 include_once('./lib/Import.php');
 include_once('./lib/Questionnaire.php');
 include_once('./lib/Tags.php');
+include_once('./lib/ActivityEntries.php');
+include_once('./vendor/autoload.php');
 eval(Hooks::get('XML_FEED_SUBMISSION_SETTINGS_HEADERS'));
 
 /* Users.php is included by index.php already. */
@@ -79,7 +81,8 @@ class SettingsUI extends UserInterface
             'My Profile'     => CATSUtility::getIndexName() . '?m=settings',
             // 'Career Link' => CATSUtility::getIndexName() . '?m=settings&a=careerLinkView',
             'Send Mail' => CATSUtility::getIndexName() . '?m=settings&a=sendMail',
-            'send Mail BGC' => CATSUtility::getIndexName() . '?m=settings&a=sendMailBGC'
+            'send Mail BGC' => CATSUtility::getIndexName() . '?m=settings&a=sendMailBGC',
+            'Offer Letter' => CATSUtility::getIndexName() . '?m=settings&a=offerLetter'
         );
 
         $this->_subTabs = $mp;
@@ -886,6 +889,14 @@ class SettingsUI extends UserInterface
 
             case 'sendMailBGC':
                 $this->sendMailBGC();
+                break;
+
+            case 'offerLetter':
+                if($_SESSION['CATS']->getUserrole() == 'hr' || $_SESSION['CATS']->getUserrole()=='admin' || $_SESSION['CATS']->getUserrole()=='super_admin'){
+                    $this->offerLetter();
+                }else{
+                    CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                }
                 break;
 
             /* Main settings page. */
@@ -1834,6 +1845,15 @@ class SettingsUI extends UserInterface
             );
             $success = true;
             $success_to = $emailTo;
+            $activityNote = 'Candidate CareerPortal Link sent';
+            $activityEntries = new ActivityEntries($this->_siteID);
+
+            /* Add the activity note. */
+            $activityID = $activityEntries->addMail(
+                $emailTo,
+                $activityNote,
+                $user_id
+            );
         }
 
         $sub  = 'ATS Confirmation link';
@@ -1881,8 +1901,29 @@ class SettingsUI extends UserInterface
         $success = false;
         $success_to = '';
         if(isset($_POST['postback']) && $_POST['postback'] == 'candidateID'){
-            $careerPortalURL = CATSUtility::getAbsoluteURI() . 'careers/index.php?m=careers&a=bgcDocs&p='.serialize($_POST['candidateID']);
+            // Store the cipher method
+            $ciphering = "AES-128-CTR";
+            // Use OpenSSl Encryption method
+            $iv_length = openssl_cipher_iv_length($ciphering);
+            $options = 0;
+              
+            // Non-NULL Initialization Vector for encryption
+            $encryption_iv = '1234567891011121';
+              
+            // Store the encryption key
+            $encryption_key = "vhs_ats";
+              
+            // Use openssl_encrypt() function to encrypt the data
+            $encryption = openssl_encrypt($_POST['candidateID'], $ciphering,$encryption_key, $options, $encryption_iv);
+
+            $key1 = array('/','+');
+            $key2 = array('(',')');
+            $value1 = str_replace($key1, $key2, $encryption);
+
+            $careerPortalURL = CATSUtility::getAbsoluteURI() . 'careers/index.php?m=careers&a=bgcDocs&p='.$value1;
             $selectedData = $_POST['candidateID'];
+            $candidateDetails = $careerPortalSettings->getCandidatesDetails($_POST['candidateID']);
+            $selectedDataEmail = $candidateDetails[0]['email'];
         }
         if(isset($_POST['postback']) && $_POST['postback'] == 'postback'){
             $emailTo = $_POST['emailTo'];
@@ -1908,12 +1949,21 @@ class SettingsUI extends UserInterface
             );
             $success = true;
             $success_to = $emailTo;
+            $activityNote = 'Candidate BGC Docs Upload Link sent';
+            $activityEntries = new ActivityEntries($this->_siteID);
+
+            /* Add the activity note. */
+            $activityID = $activityEntries->addMail(
+                $emailTo,
+                $activityNote,
+                $user_id
+            );
         }
 
         $sub  = 'ATS BGC link';
         $msg  = '<p>Hi,</p>';
         $msg .= '<p>Greetings from VHS Consulting India Private Limited!!!</p>';
-        $msg .= '<p>In order to schedule your interview, please <a href='.$careerPortalURL.'>fill the form</a>  upload your latest CV and  documents such as  payslip, relieving letter or proof of resignation, all educational documents.</p>';
+        $msg .= '<p>In order to BGC verification, please <a href='.$careerPortalURL.'>fill the BGC form</a>  upload your bgc documents such as  payslip, relieving letter or proof of resignation, all educational documents.</p>';
         $msg .= '<p>Further process would be shortlisting, tech interviews, HR and on-boarding.</p>';
         $msg .= '<p>Wish you good luck.</p>';
         $msg .= '<p>Looking forward to your earliest response.</p>';
@@ -1933,12 +1983,432 @@ class SettingsUI extends UserInterface
         $this->_template->assign('SubjectMsg', $sub);
         $this->_template->assign('candidatesData',$candidatesData);
         $this->_template->assign('selectedData',$selectedData);
+        $this->_template->assign('selectedDataEmail',$selectedDataEmail);
         $this->_template->assign('success',$success);
         $this->_template->assign('success_to',$success_to);
         $this->_template->assign('sessionCookie', $_SESSION['CATS']->getCookie());
         $this->_template->display('./modules/settings/SendEmailBGC.tpl');
     }
     /*** BGC link send Mail end */
+
+    /*** HR Role Offer Letter Generate and send start ***/
+    private function offerLetter(){
+        $user_id = $_SESSION['CATS']->getUserID();
+        $careerPortalSettings = new CareerPortalSettings($this->_siteID);
+        $candidatesData = $careerPortalSettings->getCandidatesData();
+        
+        $careerPortalURL = '';
+        $selectedJob = '';
+        $success = false;
+        $success_to = '';
+
+        $fullName = '';
+        $pdfPath = '';
+        $offerLetterData = array();
+        $candidates = new Candidates($this->_siteID);
+        $refNo        = ATS_REF_NO_PRE;
+        $sendMailFlag = 'N';
+        if(isset($_POST['postback']) && $_POST['postback'] == 'candidateID'){
+
+            $selectedData = $_POST['candidateID'];
+            $candidateDetails = $careerPortalSettings->getCandidatesDetails($selectedData);
+            $offerData = $careerPortalSettings->getOfferLetterDetails($selectedData);
+            $offerLetterData = $offerData[0];
+            $pdfPath = $offerLetterData['pdfPath'];
+
+            if(!empty($pdfPath)){
+                $sendMailFlag = 'Y';
+            }
+            
+            $fullName = $candidateDetails[0]['firstName'].' '.$candidateDetails[0]['lastName'];
+
+        }
+        if(isset($_POST['postback']) && $_POST['postback'] == 'postback'){
+            
+            $refNoData = $candidates->offerLetterRefNo($_POST['candidateID']);
+            $refNo        = ATS_REF_NO_PRE.$refNoData['refNo'];
+
+            $candidateDetails = $careerPortalSettings->getCandidatesDetails($_POST['candidateID']);
+            $fname = $candidateDetails[0]['firstName'];
+            $fullName = $candidateDetails[0]['firstName'].' '.$candidateDetails[0]['lastName'];
+            $address = $candidateDetails[0]['address'].',<br>';
+            $address .= $candidateDetails[0]['city'].',<br>';
+            $address .= $candidateDetails[0]['state'].'-'.$candidateDetails[0]['zip'];
+            $email = $candidateDetails[0]['email'];
+
+            $doj          = date_format(date_create($_POST['doj']),'Y-m-d');
+            $designation  = $_POST['designation'];
+            $annual       = $_POST['annual'];
+            $validDate    = date_format(date_create($_POST['validDate']),'Y-m-d');
+
+            
+
+            $pdfPath =  $this->maillAttach($fullName,$address,$_POST,$fname,$refNo);
+            $insuranceYN = 'N';
+            if(isset($_POST['insuranceYN'])){
+                $insuranceYN = 'Y';    
+            }
+
+            
+            $offerLetterData = $candidates->offerLetter($_POST['candidateID'],$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$refNo);
+            $selectedData = $offerLetterData['candidateID'];
+            $sendMailFlag = 'Y';
+            
+        }
+
+        if(isset($_POST['postback']) && $_POST['postback'] == 'sendMail'){
+
+            $offerData = $careerPortalSettings->getOfferLetterDetails($_POST['candidateID']);
+            $offerLetterData = $offerData[0];
+            $pdfPath = $offerLetterData['pdfPath'];
+
+            $candidateDetails = $careerPortalSettings->getCandidatesDetails($_POST['candidateID']);
+
+            $emailTo = $email = $candidateDetails[0]['email'];
+            $emailSubject = $_POST['emailSubject'];
+            $emailBody = $_POST['emailBody'];
+
+            $tmpDestination = explode(', ', $emailTo);
+            $destination = array();
+            foreach($tmpDestination as $emailDest)
+            {
+                $destination[] = array($emailDest, $emailDest);
+            }
+
+            $mailer = new Mailer(CATS_ADMIN_SITE);
+
+            $mailerStatus = $mailer->sendAttach(
+                array($_SESSION['CATS']->getEmail(), $_SESSION['CATS']->getEmail()),
+                $destination,
+                $emailSubject,
+                $emailBody,
+                true,
+                true,
+                $pdfPath
+            );
+
+            $success = true;
+            $success_to = $emailTo;
+        }
+
+        $sub  = 'Offer Letter';
+        $msg  = '<p>Hi '.$fullName.',</p>';
+        $msg .= '<p>Greetings from VHS Consulting India Private Limited!!!</p>';
+        $msg .= '<p>Please find the attachment.</p>';
+        $msg .= '<p>Wish you good luck.</p>';
+        $msg .= '<p>Looking forward to your earliest response.</p>';
+        $msg .= '<br>';
+        $msg .= 'Regards,';
+        $msg .= '<br>';
+        $msg .= $_SESSION['CATS']->getFullName();
+        $msg .= '<br>';
+        $msg .= $_SESSION['CATS']->getPhoneWork();
+
+        if (!eval(Hooks::get('SETTINGS_CAREER_PORTAL'))) return;
+
+        $this->_template->assign('active', $this);
+        $this->_template->assign('subActive', 'Offer Letter');
+        $this->_template->assign('careerPortalURL', $careerPortalURL);
+        $this->_template->assign('bodyMsg', $msg);
+        $this->_template->assign('SubjectMsg', $sub);
+        $this->_template->assign('candidatesData',$candidatesData);
+        $this->_template->assign('selectedData',$selectedData);
+        $this->_template->assign('success',$success);
+        $this->_template->assign('success_to',$success_to);
+        $this->_template->assign('pdfPath',$pdfPath);
+        $this->_template->assign('offerLetterData',$offerLetterData);
+        $this->_template->assign('sessionCookie', $_SESSION['CATS']->getCookie());
+        $this->_template->assign('sendMailFlag',$sendMailFlag);
+        $this->_template->display('./modules/settings/OfferLetter.tpl');
+    }
+
+    private function maillAttach($fullName,$address,$val,$fname,$refNo){
+        // echo sys_get_temp_dir();
+        // $mpdf = new \Mpdf\Mpdf();
+        // $mpdf->WriteHTML('<h1>Hello world!</h1>');
+        // $mpdf->Output();
+        
+        $currDate     = date('d/m/Y');
+        $doj          = date_format(date_create($val['doj']),'d/m/Y');
+        $designation  = $val['designation'];
+        $annual       = $val['annual'];
+        $annualLetter = $this->getIndianCurrency($annual);
+        $validDate    = date_format(date_create($val['validDate']),'d/m/Y');
+
+        $displayYN = 'display:none';
+        if(isset($val['insuranceYN']) && $val['insuranceYN'] == 'Y'){
+            $displayYN = '';    
+        }
+
+        
+        // $annual =200000;
+
+        // salary calculation
+
+        $ctcPM = $annual/12;
+        $basicPM = round($this->percentageCalcu(50,$ctcPM),0); 
+        $basicPA = $basicPM*12;
+        $hraPM = round($this->percentageCalcu(20,$ctcPM),0);
+        $hraPA = $hraPM*12;
+
+        if($basicPM > 21000){
+            $statutoryPM = 0.00;
+            $statutoryPA = 0.00;
+        }else{
+            $statutoryPM = round($this->percentageCalcu(8.33,$basicPM),0);
+            $statutoryPA = $statutoryPM*12;
+        }
+
+        // initial calculation start 
+        $specialPM = round($ctcPM-$basicPM-$hraPM-$statutoryPM,2);
+        $specialPA = round($specialPM*12,0);
+
+        $grossPayPM = $basicPM+$hraPM+$statutoryPM+$specialPM;
+        $grossPayPA = round($grossPayPM*12,0);
+
+        $epf = $basicPM+$specialPM;
+
+        if($epf>=15000){
+            $epfPM = 1950;
+            $epfPA = 1950*12;
+        }else{
+            $epfPM = round($this->percentageCalcu(13,$epf));
+            $epfPA = $epfPM*12;
+        }
+
+        if($grossPayPM<=21000){
+            $esicPM = round($this->percentageCalcu(3.25,$grossPayPM));
+            $esicPA = $esicPM*12;
+        }else{
+            $esicPM = 0.00;
+            $esicPA = 0.00;
+        }
+
+        $gratuityPM = round($this->percentageCalcu(4.81,$basicPM),0);
+        $gratuityPA = $gratuityPM*12;
+
+        // initial calculation end
+
+        // first step calculation start
+
+        $specialPM = round($ctcPM-$basicPM-$hraPM-$statutoryPM-$epfPM-$esicPM-$gratuityPM,2);
+        $specialPA = round($specialPM*12,0);
+
+        $grossPayPM = $basicPM+$hraPM+$statutoryPM+$specialPM;
+        $grossPayPA = round($grossPayPM*12,0);
+
+        $epf = $basicPM+$specialPM;
+
+        if($epf>=15000){
+            $epfPM = 1950;
+            $epfPA = 1950*12;
+        }else{
+            $epfPM = round($this->percentageCalcu(13,$epf));
+            $epfPA = $epfPM*12;
+        }
+
+        if($grossPayPM<=21000){
+            $esicPM = round($this->percentageCalcu(3.25,$grossPayPM));
+            $esicPA = $esicPM*12;
+        }else{
+            $esicPM = 0.00;
+            $esicPA = 0.00;
+        }
+        // first step calculation end
+
+        $insurancePM = 0;
+        $insurancePA = 0;
+        $totalLabel = 'Total Cost to Company:(A+B+C)';
+        if(isset($val['insuranceYN']) && $val['insuranceYN'] == 'Y'){
+            $insurancePM = 317;
+            $insurancePA = $insurancePM*12;
+            $totalLabel = 'Total Cost to Company:(A+B+C)';
+        }
+
+        // second step calculation start
+
+        $specialPM = round($ctcPM-$basicPM-$hraPM-$statutoryPM-$epfPM-$esicPM-$gratuityPM-$insurancePM,2);
+        $specialPA = round($specialPM*12,0);
+
+        $grossPayPM = $basicPM+$hraPM+$statutoryPM+$specialPM;;
+        $grossPayPA = round($grossPayPM*12,0);
+
+        $epf = $basicPM+$specialPM;
+
+        if($epf>=15000){
+            $epfPM = 1950;
+            $epfPA = 1950*12;
+        }else{
+            $epfPM = round($this->percentageCalcu(13,$epf));
+            $epfPA = $epfPM*12;
+        }
+
+        if($grossPayPM<=21000){
+            $esicPM = round($this->percentageCalcu(3.25,$grossPayPM));
+            $esicPA = $esicPM*12;
+        }else{
+            $esicPM = 0.00;
+            $esicPA = 0.00;
+        }
+        // second step calculation end
+
+        //Sub Total Retirals Benefits
+
+        $retiralsBenefitsPM = $epfPM+$esicPM+$gratuityPM;
+        $retiralsBenefitsPA = $retiralsBenefitsPM*12;
+
+        //Grand Total
+
+        $totalPM = round($grossPayPM+$retiralsBenefitsPM+$insurancePM);
+        $totalPA = round($grossPayPA+$retiralsBenefitsPA+$insurancePA);
+
+
+
+        $str = file_get_contents("./modules/settings/templates/offer.php");
+        // $str = file_get_contents("./modules/settings/templates/VHS_Offer_Letter _Template.docx");
+        $str=str_replace('XXref_noXX', $refNo,$str);
+        $str=str_replace('XXcurr_dateXX', $currDate,$str);
+        $str=str_replace('XXjoinDateXX', $doj,$str);
+        $str=str_replace('XXnameXX', $fullName,$str);
+        $str=str_replace('XXaddressXX', $address,$str);
+        $str=str_replace('XXdesignationXX', $designation,$str);
+        $str=str_replace('XXannualIntXX', $annual,$str);
+        $str=str_replace('XXannualVarXX', $annualLetter,$str);
+        $str=str_replace('XXvalidDateXX', $validDate,$str);
+
+        $str=str_replace('XXbasicPerMonthXX', $basicPM,$str);
+        $str=str_replace('XXbasicPerYearXX', $basicPA,$str);
+        $str=str_replace('XXhraPerMonthXX', $hraPM,$str);
+        $str=str_replace('XXhraPerYearXX', $hraPA,$str);
+        $str=str_replace('XXstatutoryPerMonthXX', $statutoryPM,$str);
+        $str=str_replace('XXstatutoryPerYearXX', $statutoryPA,$str);
+        $str=str_replace('XXspecialPerMonthXX', $specialPM,$str);
+        $str=str_replace('XXspecialPerYearXX', $specialPA,$str);
+        $str=str_replace('XXgrossPayPMxx', $grossPayPM,$str);
+        $str=str_replace('XXgrossPayPAxx', $grossPayPA,$str);
+        $str=str_replace('XXempPFPerMonthXX', $epfPM,$str);
+        $str=str_replace('XXempPFPerYearXX', $epfPA,$str);
+        $str=str_replace('XXempESICPerMonthXX', $esicPM,$str);
+        $str=str_replace('XXempESICPerYearXX', $esicPA,$str);
+        $str=str_replace('XXempGratuityPerMonthXX', $gratuityPM,$str);
+        $str=str_replace('XXempGratuityPerYearXX', $gratuityPA,$str);
+        $str=str_replace('XXretiralsBenefitsPMXX', $retiralsBenefitsPM,$str);
+        $str=str_replace('XXretiralsBenefitsPAXX', $retiralsBenefitsPA,$str);
+        $str=str_replace('XXinsurancePMXX', $insurancePM,$str);
+        $str=str_replace('XXinsurancePAXX', $insurancePA,$str);
+        $str=str_replace('XXgrandTotalPMXX', $totalPM,$str);
+        $str=str_replace('XXgrandTotalPAXX', $totalPA,$str);
+        $str=str_replace('XXdisplayYNXX', $displayYN, $str);
+        $str=str_replace('XXtotalLabelXX', $totalLabel, $str);
+        // echo $str;exit();
+        // file_put_contents('./modules/settings/templates/offer.php', $str);
+        // $conthtml = file_get_contents("./modules/settings/templates/offer.php");
+        // echo $conthtml;
+        // exit();
+
+
+
+        $mpdfConfig = array(
+            // 'mode' => 'utf-8', 
+            // 'format' => 'A4',
+            'margin_header' => 10,     // 30mm not pixel
+            'margin_footer' => -1,     // 10mm
+            'orientation' => 'P',
+            'setAutoTopMargin' => 'stretch'    
+        );
+        $pdfFile = $fname."_OfferLetter.pdf";
+        $subDirectory = 'generateOfferLetter';
+        $uploadPath = FileUtility::getUploadPath($siteID, $subDirectory);
+
+        $pdf = new \Mpdf\Mpdf($mpdfConfig);
+        // Define the Header/Footer before writing anything so they appear on the first page
+        $pdf->SetHTMLHeader('<div style="text-align: right;height: 63px"><img src="/images/temp/logo.png" border="0" alt="VHS Consulting Applicant Tracking System" height="63" width="210"></div>');
+        $pdf->SetHTMLFooter(
+            '<hr/><table width="100%">
+                <tr>
+                    <td align="center">
+                        <h4><strong>VHS Consulting India Pvt Ltd</strong></h4><br>
+                        3rd Floor, “Bikaner Signature Towers”, 18 & 18/1, Richmond Road, Bangalore – 560 025. Tel: 080-22117699<br>
+                        www.vhsconsulting.net
+                    </td>
+                </tr>
+            </table>'
+        );
+
+        $pdf->AddPage();
+        $pdf->useActiveForms = true;
+        $pdf->WriteHTML($str);
+        $pagenumber = $pdf->PageNo();
+        sys_get_temp_dir();
+        $ret1=$pdf->Output($uploadPath."/".$pdfFile,"F"); 
+        $siteID = $this->_siteID;
+        //echo "uploadPath->".$uploadPath.'<br>';
+        //echo "path->".sys_get_temp_dir()."/".$pdfFile;
+
+        $emailTo = 'karthik@vhsconsulting.net';
+        $tmpDestination = explode(', ', $emailTo);
+        $destination = array();
+        foreach($tmpDestination as $emailDest)
+        {
+            $destination[] = array($emailDest, $emailDest);
+        }
+
+        $emailBody = 'Please Find the Attachment for the Offer Letter';
+        $emailSubject = 'Offer Letter';
+        $path = $uploadPath."/".$pdfFile;
+        return $path; 
+        // $mailer = new Mailer(CATS_ADMIN_SITE);
+            
+        // $mailerStatus = $mailer->sendAttach(
+        //     array($_SESSION['CATS']->getEmail(), $_SESSION['CATS']->getEmail()),
+        //     $destination,
+        //     $emailSubject,
+        //     $emailBody,
+        //     true,
+        //     true,
+        //     $path
+        // );
+
+        // echo "mail status->".$mailerStatus;
+    }
+
+    private function percentageCalcu($percentage,$total){
+        return ($percentage / 100) * $total;
+    }
+
+    private function getIndianCurrency($number)
+    {
+        $decimal = round($number - ($no = floor($number)), 2) * 100;
+        $hundred = null;
+        $digits_length = strlen($no);
+        $i = 0;
+        $str = array();
+        $words = array(0 => '', 1 => 'one', 2 => 'two',
+            3 => 'three', 4 => 'four', 5 => 'five', 6 => 'six',
+            7 => 'seven', 8 => 'eight', 9 => 'nine',
+            10 => 'ten', 11 => 'eleven', 12 => 'twelve',
+            13 => 'thirteen', 14 => 'fourteen', 15 => 'fifteen',
+            16 => 'sixteen', 17 => 'seventeen', 18 => 'eighteen',
+            19 => 'nineteen', 20 => 'twenty', 30 => 'thirty',
+            40 => 'forty', 50 => 'fifty', 60 => 'sixty',
+            70 => 'seventy', 80 => 'eighty', 90 => 'ninety');
+        $digits = array('', 'hundred','thousand','lakh', 'crore');
+        while( $i < $digits_length ) {
+            $divider = ($i == 2) ? 10 : 100;
+            $number = floor($no % $divider);
+            $no = floor($no / $divider);
+            $i += $divider == 10 ? 1 : 2;
+            if ($number) {
+                $plural = (($counter = count($str)) && $number > 9) ? 's' : null;
+                $hundred = ($counter == 1 && $str[0]) ? ' and ' : null;
+                $str [] = ($number < 21) ? $words[$number].' '. $digits[$counter]. $plural.' '.$hundred:$words[floor($number / 10) * 10].' '.$words[$number % 10]. ' '.$digits[$counter].$plural.' '.$hundred;
+            } else $str[] = null;
+        }
+        $Rupees = implode('', array_reverse($str));
+        $paise = ($decimal > 0) ? "." . ($words[$decimal / 10] . " " . $words[$decimal % 10]) . ' Paise' : '';
+        return $Rupees;
+    }
+    /*** HR Role Offer Letter Generate and send end ***/
 
     //FIXME: Document me.
     private function onCareerPortalSettings()

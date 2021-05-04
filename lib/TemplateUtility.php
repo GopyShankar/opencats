@@ -766,6 +766,14 @@ class TemplateUtility
                             echo '<li><a href="', $link, '" style="'.$style.'">', $subTabText, '</a></li>', "\n";
                         }
                     }
+                    else if (strpos($link, 'a=offerLetter') !== false)
+                    {
+                        /* offer letter subtab. */
+                        if ($_SESSION['CATS']->getUserrole() == 'hr' || $_SESSION['CATS']->getUserrole() =='admin' || $_SESSION['CATS']->getUserrole() =='super_admin')
+                        {
+                            echo '<li><a href="', $link, '" style="'.$style.'">', $subTabText, '</a></li>', "\n";
+                        }
+                    }
                     else if (strpos($link, 'a=customizeEEOReport') !== false)
                     {
                         /* EEO Report subtab.  Shouldn't be visible if EEO tracking is disabled. */

@@ -4673,7 +4673,27 @@ class CareersUI extends UserInterface
 
     private function bgcDocsPage(){
         $p = $_GET['p'];
-        $candidate_id = unserialize($p);
+
+        $key1 = array('/','+');
+        $key2 = array('(',')');
+        $replaceValue = str_replace($key2, $key1, $p);
+
+        // Store the cipher method
+        $ciphering = "AES-128-CTR";
+        // Use OpenSSl Encryption method
+        $iv_length = openssl_cipher_iv_length($ciphering);
+        $options = 0;
+          
+        // Non-NULL Initialization Vector for decryption
+        $decryption_iv = '1234567891011121';
+          
+        // Store the decryption key
+        $decryption_key = "vhs_ats";
+          
+        // Use openssl_decrypt() function to decrypt the data
+        $decryption=openssl_decrypt ($replaceValue, $ciphering, $decryption_key, $options, $decryption_iv);
+
+        $candidate_id = $decryption;
         $site = new Site(-1);
         $siteID = $site->getFirstSiteID();
         $msg = false;
@@ -4691,14 +4711,35 @@ class CareersUI extends UserInterface
     }
 
     private function bgcDocsUpload($candidate_id){
-        echo "ID->".$candidate_id;
-        echo "<pre>";
-        print_r($_POST);
-        print_r($_FILES);
-        echo "</pre>";
+        
         $site = new Site(-1);
         $siteID = $site->getFirstSiteID();
         $attachmentCreator = new AttachmentCreator($siteID);
+        $careerPortalSettings = new CareerPortalSettings($siteID);
+        $candidates = new Candidates($siteID);
+        $candidate = $candidates->get($candidate_id);
+        $checkCandidate = $careerPortalSettings->checkExistingCandidates($candidate_id);
+
+        $owner = $candidate['owner']; 
+        $users = new Users($siteID);
+        $ownerDetails = $users->get($owner);
+
+        $emailAddress = $ownerDetails['email'];
+        $email = $candidate['email1'];
+
+        // exit();
+        if($checkCandidate == 0){
+            return true;
+        }
+        
+        $doj = $this->getTrimmedInput('doj', $_POST);
+        if(!empty($doj)){
+            $doj = date_format(date_create($doj),"Y-m-d");
+        }
+        
+        if($candidate['candidateID'] == $candidate_id){
+            $updateCandidate = $candidates->updateBGCCandidates($candidate_id,$doj,$emailAddress,$email);    
+        }
 
         $returnVal = true;
         

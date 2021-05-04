@@ -291,4 +291,7 @@ $badFileExtensions = array(
     'py'
 );
 
+/* Offer letter ref no prefix */
+define('ATS_REF_NO_PRE', 'VHS/HR/OL/21-22/');
+
 ?>

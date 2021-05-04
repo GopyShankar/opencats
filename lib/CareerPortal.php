@@ -500,7 +500,8 @@ class CareerPortalSettings
             "SELECT
                 candidate.candidate_id AS candidateID,
                 candidate.last_name AS lastName,
-                candidate.first_name AS firstName
+                candidate.first_name AS firstName,
+                candidate.email1 AS email
             FROM
                 candidate",
             $this->_siteID
@@ -508,6 +509,71 @@ class CareerPortalSettings
 
         return $this->_db->getAllAssoc($sql);
     }
+
+    public function getCandidatesDetails($candidate_id){
+        $sql = sprintf(
+            "SELECT
+                candidate.candidate_id AS candidateID,
+                candidate.last_name AS lastName,
+                candidate.first_name AS firstName,
+                candidate.address AS address,
+                candidate.city AS city,
+                candidate.state AS state,
+                candidate.zip AS zip,
+                candidate.email1 AS email
+            FROM
+                candidate
+            WHERE
+                candidate.candidate_id = %s",
+            $this->_db->makeQueryString($candidate_id),
+            $this->_siteID
+        );
+
+        return $this->_db->getAllAssoc($sql);
+    }
+
+    public function getOfferLetterDetails($candidate_id){
+        $sql = sprintf(
+            "SELECT
+                offerletter.candidate_id AS candidateID,
+                offerletter.name AS name,
+                DATE_FORMAT(
+                offerletter.doj, '%%d-%%M-%%y'
+                ) AS doj,
+                offerletter.email AS email,
+                offerletter.designation AS designation,
+                offerletter.annual AS annual,
+                DATE_FORMAT(
+                offerletter.validDate, '%%d-%%M-%%y'
+                ) AS validDate,
+                offerletter.pdfPath AS pdfPath,
+                offerletter.insuranceYN AS insuranceYN
+            FROM
+                offerletter
+            WHERE
+                offerletter.candidate_id = %s",
+            $this->_db->makeQueryString($candidate_id),
+            $this->_siteID
+        );
+
+        return $this->_db->getAllAssoc($sql);
+    }
+
+    public function checkExistingCandidates($candidate_id){
+        $sql = sprintf(
+            "SELECT
+                count(*) AS count
+            FROM
+                candidate
+            WHERE
+                candidate.candidate_id = %s",
+            $this->_db->makeQueryString($candidate_id),
+            $this->_siteID
+        );
+
+        return $this->_db->getAllAssoc($sql);
+    }
+
 }
 
 ?>
