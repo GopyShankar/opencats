@@ -76,14 +76,15 @@
                 background-repeat: no-repeat;
             }
         </style>
-        <script type="text/javascript" src="assets/jquery.min.js"></script>
+        <link href='../js/datepicker/jquery-ui.css' rel='stylesheet'>
+        <script src="../js/datepicker/jquery.min.js"></script>
+        <script src="../js/datepicker/jquery-ui.min.js"></script>
+        <!-- <script type="text/javascript" src="assets/jquery.min.js"></script> -->
         <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
         <script type="text/javascript" src="assets/bootstrap.min.js"></script>
         <script type="text/javascript" src="assets/jquery.validate.min.js"></script>
         <script type="text/javascript" src="assets/additional-methods.min.js"></script>
-        <link href='../js/datepicker/jquery-ui.css' rel='stylesheet'>
-        <script src="../js/datepicker/jquery.min.js"></script>
-        <script src="../js/datepicker/jquery-ui.min.js"></script>
+        
     </head>
     <body>
         <div class="container">
