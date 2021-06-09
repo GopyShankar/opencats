@@ -185,7 +185,7 @@
                                         <tr>
                                             <th scope="row">5</th>
                                             <td>
-                                                <label class="control-label">BA Vendor Deputation Letter</label>
+                                                <label>BA Vendor Deputation Letter</label>
                                             </td>
                                             <td>
                                                 <input type="file" name="ba_deputation_letter" id="ba_deputation_letter" class="ba_deputation_letter">
@@ -194,7 +194,7 @@
                                         <tr>
                                             <th scope="row">6</th>
                                             <td>
-                                                <label class="control-label">BA Vendor Offer Letter</label>
+                                                <label>BA Vendor Offer Letter</label>
                                             </td>
                                             <td>
                                                 <input type="file" name="ba_offer_letter" id="ba_offer_letter" class="ba_offer_letter">
@@ -457,12 +457,6 @@
                         panCard: {
                             required:true,
                         },
-                        ba_deputation_letter: {
-                            required:true,
-                        },
-                        ba_offer_letter: {
-                            required:true,
-                        },
                         aadhar_proof: {
                             required:true,
                         },
@@ -511,12 +505,6 @@
                         },
                         panCard: {
                             required: "Please upload your pan card"
-                        },
-                        ba_deputation_letter: {
-                            required: "Please upload your BA Vendor Deputation Letter "
-                        },
-                        ba_offer_letter: {
-                            required: "Please upload your BA Vendor Offer Letter"
                         },
                         aadhar_proof: {
                             required: "Please upload your Aadhar proof Enrollment"
