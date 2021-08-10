@@ -686,14 +686,14 @@ class Candidates
 
     /** add/update the offer letter pdf generate start */
 
-    public function offerLetter($candidateID,$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$refNo){
+    public function offerLetter($candidateID,$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$refNo,$offerType){
         
 
-        $getData = $this->checkOfferLetterData($candidateID);
+        $getData = $this->checkOfferLetterData($candidateID,$offerType);
         
         if(empty($getData)){
             $sql1 = sprintf(
-                "INSERT INTO offerLetter (
+                "INSERT INTO offerletter (
                     candidate_id,
                     name,
                     doj,
@@ -704,12 +704,14 @@ class Candidates
                     pdfPath,
                     insuranceYN,
                     refNo,
+                    offer_type,
                     date_created,
                     date_modified,
                     entered_by,
                     modified_by
                 )
                 VALUES(
+                    %s,
                     %s,
                     %s,
                     %s,
@@ -735,6 +737,7 @@ class Candidates
                 $this->_db->makeQueryString($pdfPath),
                 $this->_db->makeQueryString($insuranceYN),
                 $this->_db->makeQueryString($refNo),
+                $this->_db->makeQueryString($offerType),
                 $this->_db->makeQueryString(CURRENT_TIME),
                 $this->_db->makeQueryString(CURRENT_TIME),
                 $this->_db->makeQueryString($user_id),
@@ -743,7 +746,7 @@ class Candidates
         }else{
             $sql1 = sprintf(
                 "UPDATE
-                    offerLetter
+                    offerletter
                 SET
                     doj = %s,
                     email = %s,
@@ -755,7 +758,8 @@ class Candidates
                     date_modified = %s,
                     modified_by = %s
                 WHERE
-                    candidate_id = %s
+                    candidate_id = %s AND
+                    offer_type = %s
                 ",
                 $this->_db->makeQueryString($doj),
                 $this->_db->makeQueryString($email),
@@ -766,17 +770,18 @@ class Candidates
                 $this->_db->makeQueryString($insuranceYN),
                 $this->_db->makeQueryString(CURRENT_TIME),
                 $this->_db->makeQueryString($user_id),
-                $this->_db->makeQueryInteger($candidateID)
+                $this->_db->makeQueryInteger($candidateID),
+                $this->_db->makeQueryString($offerType)
             );
         }
 
         $queryResult = $this->_db->query($sql1);
 
-        return $this->checkOfferLetterData($candidateID);
+        return $this->checkOfferLetterData($candidateID,$offerType);
 
     }
 
-    public function checkOfferLetterData($candidateID){
+    public function checkOfferLetterData($candidateID,$offerType){
         $sql = sprintf(
             "SELECT
                 offerletter.candidate_id AS candidateID,
@@ -791,13 +796,16 @@ class Candidates
                 offerletter.validDate, '%%d-%%M-%%y'
                 ) AS validDate,
                 offerletter.pdfPath AS pdfPath,
-                offerletter.insuranceYN AS insuranceYN
+                offerletter.insuranceYN AS insuranceYN,
+                offerletter.offer_type AS offerletter_type
             FROM
-                offerLetter
+                offerletter
             WHERE
-                candidate_id = %s
+                candidate_id = %s AND
+                offer_type = %s
             ",
-            $this->_db->makeQueryInteger($candidateID)
+            $this->_db->makeQueryInteger($candidateID),
+            $this->_db->makeQueryString($offerType)
         );
 
         return $this->_db->getAssoc($sql);

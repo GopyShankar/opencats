@@ -68,10 +68,23 @@
                         <table>
                             <tr>
                                 <td class="tdVertical" style="text-align: right;">
+                                    <label id="offerletter_typeLabel" for="offerletter_type">OfferLetter Type</label>
+                                </td>
+                                <td class="tdData">
+                                    <select tabindex="7" id="offerletter_type" name="offerletter_type" style="width: 400px;" onchange="getOfferTypeData()">
+                                        <option value="">Select</option>
+                                        <option value="interim" <?php echo ($this->selectedOfferType == 'interim')? 'selected': ''; ?> >Interim Offer</option>
+                                        <option value="conditional" <?php echo ($this->selectedOfferType == 'conditional')? 'selected': ''; ?> >Conditional Offer</option>
+                                        <option value="final" <?php echo ($this->selectedOfferType == 'final')? 'selected': ''; ?> >Final Offer</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdVertical" style="text-align: right;">
                                     <label id="candidateLabel" for="type">Candidate:</label>
                                 </td>
                                 <td class="tdData">
-                                    <select tabindex="7" id="candidateID" name="candidateID" class="inputbox" onchange="getCandidatesData()" style="width: 600px;">
+                                    <select tabindex="7" id="candidateID" name="candidateID" class="inputbox" onchange="getCandidatesData()" style="width: 400px;">
                                         <option value="" disabled="" selected="">Selected</option>
                                     <?php foreach($this->candidatesData as $Data): ?>
                                         <option value="<?php echo $Data['candidateID'] ?>" 
@@ -87,13 +100,15 @@
                     <form name="emailForm" id="emailForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=offerLetter" method="post" onsubmit="return checkOfferLetterForm(document.emailForm);" autocomplete="off" enctype="multipart/form-data">
                         <input type="hidden" name="postback" id="postback" value="postback" />
                         <input type="hidden" name="candidateID" value="<?php $this->_($this->selectedData); ?>" />
+                        <input type="hidden" name="offerletter_type" value="<?php $this->_($this->selectedOfferType); ?>" />
                         <table>
+                            
                             <tr>
                                 <td class="tdVertical" style="text-align: right;">
                                     <label id="dojLabel" for="doj">DOJ</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="doj" id="doj" class="inputbox date_picker" style="width: 600px;" value="<?php $this->_($this->offerLetterData['doj']); ?>" >
+                                    <input type="text" name="doj" id="doj" class="inputbox date_picker" style="width: 400px;" value="<?php $this->_($this->offerLetterData['doj']); ?>" >
                                 </td>
                             </tr>
                             <tr>
@@ -101,7 +116,7 @@
                                     <label id="designationLabel" for="designation">Designations</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="designation" id="designation" class="inputbox" style="width: 600px;" value="<?php $this->_($this->offerLetterData['designation']); ?>" >
+                                    <input type="text" name="designation" id="designation" class="inputbox" style="width: 400px;" value="<?php $this->_($this->offerLetterData['designation']); ?>" >
                                 </td>
                             </tr>
                             <tr>
@@ -109,7 +124,7 @@
                                     <label id="annualLabel" for="annual">Annual</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="annual" id="annual" class="inputbox" style="width: 600px;" value="<?php $this->_($this->offerLetterData['annual']); ?>" >
+                                    <input type="text" name="annual" id="annual" class="inputbox" style="width: 400px;" value="<?php $this->_($this->offerLetterData['annual']); ?>" >
                                 </td>
                             </tr>
                             <tr>
@@ -117,7 +132,7 @@
                                     <label id="validDateLabel" for="validDate">Valid Date</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="validDate" id="validDate" class="inputbox date_picker" style="width: 600px;" value="<?php $this->_($this->offerLetterData['validDate']); ?>" >
+                                    <input type="text" name="validDate" id="validDate" class="inputbox date_picker" style="width: 400px;" value="<?php $this->_($this->offerLetterData['validDate']); ?>" >
                                 </td>
                             </tr>
                             <tr>
@@ -138,7 +153,7 @@
                                     <label id="emailSubjectLabel" for="emailSubject">Subject</label>
                                 </td>
                                 <td class="tdData">
-                                    <input id="emailSubject" tabindex="<?php echo($tabIndex++); ?>" type="text" name="emailSubject" class="inputbox" style="width: 600px;" readonly value="<?php $this->_($this->SubjectMsg); ?>"/>
+                                    <input id="emailSubject" tabindex="<?php echo($tabIndex++); ?>" type="text" name="emailSubject" class="inputbox" style="width: 400px;" readonly value="<?php $this->_($this->SubjectMsg); ?>"/>
                                 </td>
                             </tr>
                             <tr>
@@ -146,15 +161,15 @@
                                     <label id="emailBodyLabel" for="emailBody">Body</label>
                                 </td>
                                 <td class="tdData">
-                                    <textarea id="emailBody" tabindex="<?php echo($tabIndex++); ?>" name="emailBody" rows="10" cols="90" style="width: 600px;" class="inputbox"><?php $this->_($this->bodyMsg); ?></textarea>
+                                    <textarea id="emailBody" tabindex="<?php echo($tabIndex++); ?>" name="emailBody" rows="10" cols="90" style="width: 400px;" class="inputbox"><?php $this->_($this->bodyMsg); ?></textarea>
                                 </td>
                             </tr>
                             <?php } ?>
                             <tr>
-                                <td align="right" valign="top" colspan="2">
-                                    <input type="submit" tabindex="<?php echo($tabIndex++); ?>" class="button" value="Generate Offer Letter" />&nbsp;
+                                <td align="center" valign="top" colspan="2">
+                                    <input type="submit" tabindex="<?php echo($tabIndex++); ?>" class="button" value="Generate Offer Letter" style="cursor: pointer;" />&nbsp;
                                     <?php if($this->sendMailFlag == 'Y'){ ?>
-                                    <input type="reset"  tabindex="<?php echo($tabIndex++); ?>" class="button" value="Send Mail" onclick="sendMail()" />&nbsp;
+                                    <input type="reset"  tabindex="<?php echo($tabIndex++); ?>" class="button" value="Send Mail" onclick="sendMail()" style="cursor: pointer;" />&nbsp;
                                     <?php } ?>
                                 </td>
                             </tr>

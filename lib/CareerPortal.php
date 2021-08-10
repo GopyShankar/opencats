@@ -532,7 +532,7 @@ class CareerPortalSettings
         return $this->_db->getAllAssoc($sql);
     }
 
-    public function getOfferLetterDetails($candidate_id){
+    public function getOfferLetterDetails($candidate_id,$offerType){
         $sql = sprintf(
             "SELECT
                 offerletter.candidate_id AS candidateID,
@@ -551,8 +551,10 @@ class CareerPortalSettings
             FROM
                 offerletter
             WHERE
-                offerletter.candidate_id = %s",
+                offerletter.candidate_id = %s AND
+                offerletter.offer_type = %s",
             $this->_db->makeQueryString($candidate_id),
+            $this->_db->makeQueryString($offerType),
             $this->_siteID
         );
 

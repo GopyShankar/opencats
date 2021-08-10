@@ -892,7 +892,7 @@ class SettingsUI extends UserInterface
                 break;
 
             case 'offerLetter':
-                if($_SESSION['CATS']->getUserrole() == 'hr' || $_SESSION['CATS']->getUserrole()=='admin' || $_SESSION['CATS']->getUserrole()=='super_admin'){
+                if($_SESSION['CATS']->getUserrole() == 'hr' || $_SESSION['CATS']->getUserrole()=='super_admin'){
                     $this->offerLetter();
                 }else{
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
@@ -1900,6 +1900,7 @@ class SettingsUI extends UserInterface
         $selectedJob = '';
         $success = false;
         $success_to = '';
+
         if(isset($_POST['postback']) && $_POST['postback'] == 'candidateID'){
             // Store the cipher method
             $ciphering = "AES-128-CTR";
@@ -2011,8 +2012,9 @@ class SettingsUI extends UserInterface
         if(isset($_POST['postback']) && $_POST['postback'] == 'candidateID'){
 
             $selectedData = $_POST['candidateID'];
+            $selectedOfferType = $_POST['offerletter_type'];
             $candidateDetails = $careerPortalSettings->getCandidatesDetails($selectedData);
-            $offerData = $careerPortalSettings->getOfferLetterDetails($selectedData);
+            $offerData = $careerPortalSettings->getOfferLetterDetails($selectedData,$selectedOfferType);
             $offerLetterData = $offerData[0];
             $pdfPath = $offerLetterData['pdfPath'];
 
@@ -2041,6 +2043,8 @@ class SettingsUI extends UserInterface
             $annual       = $_POST['annual'];
             $validDate    = date_format(date_create($_POST['validDate']),'Y-m-d');
 
+            $offerLetterType = $_POST['offerletter_type'];
+
             
 
             $pdfPath =  $this->maillAttach($fullName,$address,$_POST,$fname,$refNo);
@@ -2050,8 +2054,9 @@ class SettingsUI extends UserInterface
             }
 
             
-            $offerLetterData = $candidates->offerLetter($_POST['candidateID'],$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$refNo);
+            $offerLetterData = $candidates->offerLetter($_POST['candidateID'],$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$refNo,$offerLetterType);
             $selectedData = $offerLetterData['candidateID'];
+            $selectedOfferType = $offerLetterData['offerletter_type'];
             $sendMailFlag = 'Y';
             
         }
@@ -2113,6 +2118,7 @@ class SettingsUI extends UserInterface
         $this->_template->assign('SubjectMsg', $sub);
         $this->_template->assign('candidatesData',$candidatesData);
         $this->_template->assign('selectedData',$selectedData);
+        $this->_template->assign('selectedOfferType',$selectedOfferType);
         $this->_template->assign('success',$success);
         $this->_template->assign('success_to',$success_to);
         $this->_template->assign('pdfPath',$pdfPath);
@@ -2134,6 +2140,8 @@ class SettingsUI extends UserInterface
         $annual       = $val['annual'];
         $annualLetter = $this->getIndianCurrency($annual);
         $validDate    = date_format(date_create($val['validDate']),'d/m/Y');
+
+        $offerLetterType = $val['offerletter_type'];
 
         $displayYN = 'display:none';
         if(isset($val['insuranceYN']) && $val['insuranceYN'] == 'Y'){
@@ -2263,8 +2271,12 @@ class SettingsUI extends UserInterface
         $totalPA = round($grossPayPA+$retiralsBenefitsPA+$insurancePA);
 
 
-
-        $str = file_get_contents("./modules/settings/templates/offer.php");
+        if($offerLetterType == 'conditional'){
+            $str = file_get_contents("./modules/settings/templates/offer_conditional.php");
+        }else{
+            $str = file_get_contents("./modules/settings/templates/offer.php");    
+        }
+        
         // $str = file_get_contents("./modules/settings/templates/VHS_Offer_Letter _Template.docx");
         $str=str_replace('XXref_noXX', $refNo,$str);
         $str=str_replace('XXcurr_dateXX', $currDate,$str);
@@ -2316,13 +2328,14 @@ class SettingsUI extends UserInterface
             'orientation' => 'P',
             'setAutoTopMargin' => 'stretch'    
         );
-        $pdfFile = $fname."_OfferLetter.pdf";
+        $pdfFile = $fname."_".$offerLetterType."_"."_OfferLetter.pdf";
         $subDirectory = 'generateOfferLetter';
         $uploadPath = FileUtility::getUploadPath($siteID, $subDirectory);
 
+        date_default_timezone_set('Asia/Kolkata');
         $pdf = new \Mpdf\Mpdf($mpdfConfig);
         // Define the Header/Footer before writing anything so they appear on the first page
-        $pdf->SetHTMLHeader('<div style="text-align: right;height: 63px"><img src="/images/temp/logo.png" border="0" alt="VHS Consulting Applicant Tracking System" height="63" width="210"></div>');
+        $pdf->SetHTMLHeader('<div style="text-align: right;height: 63px"><img src="/images/temp/logo.jpg" border="0" alt="VHS Consulting Applicant Tracking System" height="100" width="210"></div>');
         $pdf->SetHTMLFooter(
             '<hr/><table width="100%">
                 <tr>
@@ -2383,16 +2396,16 @@ class SettingsUI extends UserInterface
         $digits_length = strlen($no);
         $i = 0;
         $str = array();
-        $words = array(0 => '', 1 => 'one', 2 => 'two',
-            3 => 'three', 4 => 'four', 5 => 'five', 6 => 'six',
-            7 => 'seven', 8 => 'eight', 9 => 'nine',
-            10 => 'ten', 11 => 'eleven', 12 => 'twelve',
-            13 => 'thirteen', 14 => 'fourteen', 15 => 'fifteen',
-            16 => 'sixteen', 17 => 'seventeen', 18 => 'eighteen',
-            19 => 'nineteen', 20 => 'twenty', 30 => 'thirty',
-            40 => 'forty', 50 => 'fifty', 60 => 'sixty',
-            70 => 'seventy', 80 => 'eighty', 90 => 'ninety');
-        $digits = array('', 'hundred','thousand','lakh', 'crore');
+        $words = array(0 => '', 1 => 'One', 2 => 'Two',
+            3 => 'Three', 4 => 'Four', 5 => 'Five', 6 => 'Six',
+            7 => 'Seven', 8 => 'Eight', 9 => 'Nine',
+            10 => 'Ten', 11 => 'Eleven', 12 => 'Twelve',
+            13 => 'Thirteen', 14 => 'Fourteen', 15 => 'Fifteen',
+            16 => 'Sixteen', 17 => 'Seventeen', 18 => 'Eighteen',
+            19 => 'Nineteen', 20 => 'Twenty', 30 => 'Thirty',
+            40 => 'Forty', 50 => 'Fifty', 60 => 'Sixty',
+            70 => 'Seventy', 80 => 'Eighty', 90 => 'Ninety');
+        $digits = array('', 'Hundred','Thousand','Lakh', 'Crore');
         while( $i < $digits_length ) {
             $divider = ($i == 2) ? 10 : 100;
             $number = floor($no % $divider);

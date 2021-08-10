@@ -151,6 +151,7 @@ function checkOfferLetterForm(){
     var errorMessage = '';
 
     errorMessage += checkCandidateValid();
+    errorMessage += checkTypeValid();
     errorMessage += checkDOJValid();
     errorMessage += checkDesignationValid();
     errorMessage += checkAnnualValid();
@@ -163,6 +164,26 @@ function checkOfferLetterForm(){
     }
 
     return true;
+}
+
+function checkTypeValid()
+{
+    var errorMessage = '';
+
+    fieldValue = document.getElementById('offerletter_type').value;
+    fieldLabel = document.getElementById('offerletter_typeLabel');
+    if (fieldValue == '')
+    {
+        errorMessage = "    - You must select the offer letter type.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else
+    {
+        fieldLabel.style.color = '#000';
+    }
+
+    return errorMessage;
 }
 
 function checkDOJValid()
@@ -544,6 +565,50 @@ function getJobData(){
     document.jobIDForm.submit();
 }
 
+function checkOfferTypeForm(){
+    var errorMessage = '';
+
+    errorMessage += checkTypeValid();
+
+    if (errorMessage != '')
+    {
+        alert("Form Error:\n" + errorMessage);
+        return false;
+    }
+
+    return true;
+}
+
+function checkCandidateField(){
+    var errorMessage = '';
+
+    errorMessage += checkCandidateValid();
+
+    if (errorMessage != '')
+    {
+        alert("Form Error:\n" + errorMessage);
+        return false;
+    }
+
+    return true;
+}
+
 function getCandidatesData(){
+    if(document.candidateForm.offerletter_type.value ==''){
+        checkOfferTypeForm();
+    }else{
+        document.candidateForm.submit();
+    }
+}
+
+function getOfferTypeData(){
+    if(document.candidateForm.candidateID.value ==''){
+        checkCandidateField();
+    }else{
+        document.candidateForm.submit();
+    }
+}
+
+function getCandidatesMailBox(){
     document.candidateForm.submit();
 }

@@ -4753,9 +4753,15 @@ class CareersUI extends UserInterface
             if (isset($_FILES[$value]) && !empty($_FILES[$value]['name']))
             {
                 $attachmentCreator->createFromUpload(
-                    DATA_ITEM_CANDIDATE, 61, $value, false, true,$value
+                    DATA_ITEM_CANDIDATE, $candidate_id, $value, false, true,$value
                 );
 
+                echo "File-><pre>";
+                print_r($attachmentCreator);
+                echo "</pre>";
+
+                echo 'isError->'.$attachmentCreator->isError().'<br>';
+                echo 'Error->'.$attachmentCreator->getError().'<br>';
 
                 if ($attachmentCreator->isError())
                 {
@@ -4776,8 +4782,12 @@ class CareersUI extends UserInterface
             {
 
                 $attachmentCreator->createFromUpload_multipleFiles(
-                    DATA_ITEM_CANDIDATE, 61, $value, false, true,$value
+                    DATA_ITEM_CANDIDATE, $candidate_id, $value, false, true,$value
                 );
+
+                echo "<pre>";
+                print_r($attachmentCreator);
+                echo "</pre>";
 
                 if ($attachmentCreator->isError())
                 {
