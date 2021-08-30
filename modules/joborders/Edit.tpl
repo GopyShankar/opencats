@@ -214,6 +214,21 @@
 
                     <tr>
                         <td class="tdVertical">
+                            <label id="RGSLabel" for="RGS">RGS ID:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="15" class="inputbox" id="RGS" name="RGS" style="width: 150px;" />
+                        </td>
+                        <td class="tdVertical">
+                            <label id="RGSDescLabel" for="RGSDesc">RGS Description:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="15" class="inputbox" id="RGSDesc" name="RGSDesc" style="width: 150px;" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
                             <label id="ownerLabel" for="owner">Owner:</label>
                         </td>
                         <td class="tdData">

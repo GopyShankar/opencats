@@ -404,11 +404,11 @@ class Pipelines
     public function getStatusesForPicking($role=null)
     {
         if($role == 'internal_employee'){
-            $roleCondition = 'AND candidate_joborder_status_id IN (100,200,250,500)';
+            $roleCondition = 'AND candidate_joborder_status_id IN (100,200,250,500,525,550,555,675,975,940,945,955)';
         }elseif ($role == 'team_lead') {
-            $roleCondition = 'AND candidate_joborder_status_id IN (300,650,400,750)';
+            $roleCondition = 'AND candidate_joborder_status_id NOT IN (100,200,250,500,700,800,750,900)';
         }elseif ($role == 'account_manager') {
-            $roleCondition = 'AND candidate_joborder_status_id IN (700,800,750,900)';
+            $roleCondition = 'AND candidate_joborder_status_id NOT IN (100,200,250,500,300,650,400,750)';
         }else{
             $roleCondition = '';
         }

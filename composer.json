@@ -11,5 +11,10 @@
         "psr-4": {
             "OpenCATS\\": "src/OpenCATS/"
         }
+    },
+    "require": {
+        "mpdf/mpdf": "^8.0",
+        "phpoffice/phpword": "^0.18.1",
+        "phpoffice/phpspreadsheet": "^1.8"
     }
 }

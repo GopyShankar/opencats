@@ -1,4 +1,11 @@
 <?php
+
+/* timezone set */
+date_default_timezone_set('Asia/Kolkata');
+$timestamp = date("Y-m-d H:i:s");
+
+define('CURRENT_TIME',$timestamp);
+
 /*
  * CATS
  * Configuration File
@@ -156,7 +163,7 @@ define('CAREERS_CANDIDATEAPPLY_SUBJECT', 'Thank You for Your Application');
 /* Subject line of e-mails sent to job order owners via the career portal when
  * they apply for a job order.
  */
-define('CAREERS_OWNERAPPLY_SUBJECT', 'CATS - A Candidate Has Applied to Your Job Order');
+define('CAREERS_OWNERAPPLY_SUBJECT', 'VHS Consulting - A Candidate Has Applied to Your Job Order');
 
 /* Subject line of e-mails sent to candidates when their status changes for a
  * job order.
@@ -203,7 +210,7 @@ define('DEMO_PASSWORD',  'john99');
  * 2: Sendmail
  * 3: SMTP
  */
-define('MAIL_MAILER', 1);
+define('MAIL_MAILER', 3);
 
 /* Sendmail Settings. You don't need to worry about this unless MAIL_MAILER
  * is set to 2.
@@ -214,11 +221,19 @@ define('MAIL_SENDMAIL_PATH', "/usr/sbin/sendmail");
  * set to 3. If your server requires authentication, set MAIL_SMTP_AUTH to
  * true and configure MAIL_SMTP_USER and MAIL_SMTP_PASS.
  */
-define('MAIL_SMTP_HOST', "smtpout.secureserver.net");
-define('MAIL_SMTP_PORT', 587);
+
+// define('MAIL_SMTP_HOST', "smtp.gmail.com");
+// define('MAIL_SMTP_PORT', 587);
+// define('MAIL_SMTP_AUTH', true);
+// define('MAIL_SMTP_USER', "vhsats1@gmail.com");
+// define('MAIL_SMTP_PASS', "Web2at$@pp!");
+
+define('MAIL_SMTP_HOST', "localhost");
+define('MAIL_SMTP_PORT', 25);
 define('MAIL_SMTP_AUTH', false);
-define('MAIL_SMTP_USER', "user");
-define('MAIL_SMTP_PASS', "password");
+define('MAIL_SMTP_USER', "ats@vhsconsulting.net");
+define('MAIL_SMTP_PASS', "4A+sb7-9Rr");
+
 //Options: '', 'ssl' or 'tls'
 define('MAIL_SMTP_SECURE', "tls");
 

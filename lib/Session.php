@@ -874,7 +874,8 @@ class CATSSession
                         $this->_siteID,
                         $this->_ip,
                         $this->_userAgent,
-                        true
+                        true,
+                        'Login'
                     );
                 }
                 else

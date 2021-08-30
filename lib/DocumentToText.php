@@ -188,7 +188,7 @@ class DocumentToText
 
             case DOCUMENT_TYPE_UNKNOWN:
             default:
-                $this->_setError('This file format is unknown format and is not yet supported by CATS.');
+                $this->_setError('This file format is unknown format and is not yet supported by VHS Consulting.');
                 return false;
                 break;
         }

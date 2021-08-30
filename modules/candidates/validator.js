@@ -594,6 +594,10 @@ function checkCandidateField(){
 }
 
 function getCandidatesData(){
+    document.candidateForm.submit();
+}
+
+function getCandidatesOfferData(){
     if(document.candidateForm.offerletter_type.value ==''){
         checkOfferTypeForm();
     }else{

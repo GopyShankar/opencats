@@ -38,6 +38,7 @@ $coreModules = array(
     'calendar'   => '8',
     'reports'    => '9',
     'settings'   => '10',
+    'newreports' => '11',
 );
 
 /* CATS Version */

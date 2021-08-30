@@ -965,7 +965,7 @@ class Users
      * @return integer This login's User Login ID.
      */
     public function addLoginHistory($userID, $siteID, $ip, $userAgent,
-            $wasSuccessful)
+            $wasSuccessful,$status=null)
     {
         if (ENABLE_HOSTNAME_LOOKUP)
         {
@@ -985,7 +985,8 @@ class Users
             host,
             date,
             successful,
-            date_refreshed
+            date_refreshed,
+            status
                 )
                 VALUES (
                     %s,
@@ -995,14 +996,16 @@ class Users
                     %s,
                     NOW(),
                     %s,
-                    NOW()
+                    NOW(),
+                    %s
                     )",
             $userID,
             $siteID,
             $this->_db->makeQueryString($ip),
             $this->_db->makeQueryString($userAgent),
             $this->_db->makeQueryString($hostname),
-            ($wasSuccessful ? '1' : '0')
+            ($wasSuccessful ? '1' : '0'),
+            $this->_db->makeQueryString($status)
                 );
 
         $queryResult = $this->_db->query($sql);

@@ -48,7 +48,10 @@ class HomeUI extends UserInterface
     public function handleRequest()
     {
         $action = $this->getAction();
-
+        
+        //@todo get role_slug from session 
+        //super_admin,account_manager,internal_employee,candidate,admin,team_lead,individual_contributor,hr
+        $role_slug=$_SESSION['CATS']->getUserrole();
         if (!eval(Hooks::get('HOME_HANDLE_REQUEST'))) return;
 
         switch ($action)
@@ -82,15 +85,43 @@ class HomeUI extends UserInterface
 
             case 'home':
             default:
-                $this->home();
+                switch ($role_slug)
+                {
+                    // case 'super_admin':
+                    //     $this->superAdminDashboard();
+                    //     break;
+                    // case 'admin':
+                    //     $this->adminDashboard();
+                    //     break;
+                    // case 'hr':
+                    //     $this->hrDashboard();
+                    //     break;
+                    // case 'team_lead':
+                    //     $this->teamLeadDashboard();
+                    //     break;
+                    case 'internal_employee':
+                        $this->recruiterDashboard();
+                        break;
+                    case 'individual_contributor':
+                        $this->salesDashboard();
+                        break;
+                    // case 'candidate':
+                    //     $this->candidateDashboard();
+                    //     break;
+                    case 'account_manager':
+                        $this->salesDashboard();
+                        break;
+                    default:
+                        $this->home();
+                        break;
+                }
                 break;
         }
     }
 
-
     private function home()
-    {        
-         if (!eval(Hooks::get('HOME'))) return;
+    {
+        if (!eval(Hooks::get('HOME'))) return;
         
         NewVersionCheck::getNews();
         
@@ -101,33 +132,33 @@ class HomeUI extends UserInterface
         $upcomingEventsHTML = $calendar->getUpcomingEventsHTML(7, UPCOMING_FOR_DASHBOARD);
         
         $calendar = new Calendar($this->_siteID);
-        $upcomingEventsFupHTML = $calendar->getUpcomingEventsHTML(7, UPCOMING_FOR_DASHBOARD_FUP);        
-
+        $upcomingEventsFupHTML = $calendar->getUpcomingEventsHTML(7, UPCOMING_FOR_DASHBOARD_FUP);
+        
         /* Important cand datagrid */
-
+        
         $dataGridProperties = array(
             'rangeStart'    => 0,
             'maxResults'    => 15,
             'filterVisible' => false
         );
-
+        
         $dataGrid = DataGrid::get("home:ImportantPipelineDashboard", $dataGridProperties);
-
+        
         $this->_template->assign('dataGrid', $dataGrid);
-
+        
         $dataGridProperties = array(
             'rangeStart'    => 0,
             'maxResults'    => 15,
             'filterVisible' => false
         );
-
+        
         /* Only show a month of activities. */
         $dataGridProperties['startDate'] = '';
         $dataGridProperties['endDate'] = '';
         $dataGridProperties['period'] = 'DATE_SUB(CURDATE(), INTERVAL 1 MONTH)';
-
+        
         $dataGrid2 = DataGrid::get("home:CallsDataGrid", $dataGridProperties);
-
+        
         $this->_template->assign('dataGrid2', $dataGrid2);
         
         $this->_template->assign('active', $this);
@@ -137,6 +168,36 @@ class HomeUI extends UserInterface
         $this->_template->assign('wildCardQuickSearch', '');
         $this->_template->display('./modules/home/Home.tpl');
     }
+    private function recruiterDashboard()
+    {        
+         if (!eval(Hooks::get('HOME'))) return;
+        
+        NewVersionCheck::getNews();
+        
+        $dashboard = new Dashboard($this->_siteID);
+        $placedRS = $dashboard->getPlacements();
+        
+        $this->_template->assign('active', $this);
+        $this->_template->assign('placedRS', $placedRS);
+       
+        $this->_template->display('./modules/home/RecruiterDashboard.tpl');
+    }
+    
+    private function salesDashboard()
+    {
+        if (!eval(Hooks::get('HOME'))) return;
+        
+        NewVersionCheck::getNews();
+        
+        $dashboard = new Dashboard($this->_siteID);
+        $placedRS = $dashboard->getPlacements();
+        
+        $this->_template->assign('active', $this);
+        $this->_template->assign('placedRS', $placedRS);
+       
+        $this->_template->display('./modules/home/SalesDashboard.tpl');
+    }
+    
 
     private function deleteSavedSearch()
     {

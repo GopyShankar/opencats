@@ -84,7 +84,7 @@
                                     <label id="candidateLabel" for="type">Candidate:</label>
                                 </td>
                                 <td class="tdData">
-                                    <select tabindex="7" id="candidateID" name="candidateID" class="inputbox" onchange="getCandidatesData()" style="width: 400px;">
+                                    <select tabindex="7" id="candidateID" name="candidateID" class="inputbox" onchange="getCandidatesOfferData()" style="width: 400px;">
                                         <option value="" disabled="" selected="">Selected</option>
                                     <?php foreach($this->candidatesData as $Data): ?>
                                         <option value="<?php echo $Data['candidateID'] ?>" 

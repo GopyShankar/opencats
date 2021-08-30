@@ -221,7 +221,15 @@ else
     {
         /* There isn't really a logout module. It's just a few lines. */
         $unixName = $_SESSION['CATS']->getUnixName();
-
+        $users = new Users($_SESSION['CATS']->getSiteID());
+        $userLoginID = $users->addLoginHistory(
+            $_SESSION['CATS']->getUserID(),
+            $_SESSION['CATS']->getSiteID(),
+            $_SESSION['CATS']->getIP(),
+            $_SESSION['CATS']->getUserAgent(),
+            true,
+            'Logout'
+        );
         $_SESSION['CATS']->logout();
         unset($_SESSION['CATS']);
         unset($_SESSION['modules']);
