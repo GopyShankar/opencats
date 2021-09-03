@@ -554,6 +554,8 @@ class JobOrdersUI extends UserInterface
 
         $jobOrders = new JobOrders($this->_siteID);
 
+        $RGSDetilas = $jobOrders->getRGSDetails(); 
+
         /* Do we have any companies yet? */
         if (empty($companiesRS))
         {
@@ -667,6 +669,7 @@ class JobOrdersUI extends UserInterface
         $this->_template->assign('isHrMode', $_SESSION['CATS']->isHrMode());
         $this->_template->assign('sessionCookie', $_SESSION['CATS']->getCookie());
         $this->_template->assign('jobTypes', (new JobOrderTypes())->getAll());
+        $this->_template->assign('RGSDetilas', $RGSDetilas);
 
         if (!eval(Hooks::get('JO_ADD'))) return;
 
@@ -764,6 +767,8 @@ class JobOrdersUI extends UserInterface
         $salary      = $this->getTrimmedInput('salary', $_POST);
         $description = $this->getTrimmedInput('description', $_POST);
         $notes       = $this->getTrimmedInput('notes', $_POST);
+        $RGS         = $this->getTrimmedInput('RGS', $_POST);
+        $RGSDesc     = $this->getTrimmedInput('RGSDesc', $_POST);
 
         /* Bail out if any of the required fields are empty. */
         if (empty($title) || empty($type) || empty($city) || empty($state))
@@ -778,7 +783,7 @@ class JobOrdersUI extends UserInterface
             $title, $companyID, $contactID, $description, $notes, $duration,
             $maxRate, $type, $isHot, $isPublic, $openings, $companyJobID,
             $salary, $city, $state, $startDate, $this->_userID, $recruiter,
-            $owner, $department, $questionnaireID
+            $owner, $department, $RGS, $RGSDesc, $questionnaireID
         );
 
         if ($jobOrderID <= 0)
@@ -812,6 +817,8 @@ class JobOrdersUI extends UserInterface
 
         $jobOrders = new JobOrders($this->_siteID);
         $data = $jobOrders->getForEditing($jobOrderID);
+
+        $RGSDetilas = $jobOrders->getRGSDetails();
 
         /* Bail out if we got an empty result set. */
         if (empty($data))
@@ -932,6 +939,7 @@ class JobOrdersUI extends UserInterface
         $this->_template->assign('isHrMode', $_SESSION['CATS']->isHrMode());
         $this->_template->assign('sessionCookie', $_SESSION['CATS']->getCookie());
         $this->_template->assign('jobTypes', (new JobOrderTypes())->getAll());
+        $this->_template->assign('RGSDetilas', $RGSDetilas);
 
         if (!eval(Hooks::get('JO_EDIT'))) return;
 
@@ -1107,6 +1115,8 @@ class JobOrdersUI extends UserInterface
         $salary      = $this->getTrimmedInput('salary', $_POST);
         $description = $this->getTrimmedInput('description', $_POST);
         $notes       = $this->getTrimmedInput('notes', $_POST);
+        $RGS         = $this->getTrimmedInput('RGS', $_POST);
+        $RGSDesc     = $this->getTrimmedInput('RGSDesc', $_POST);
 
         /* Bail out if any of the required fields are empty. */
         if (empty($title) || empty($type) || empty($city) || empty($state))
@@ -1119,7 +1129,7 @@ class JobOrdersUI extends UserInterface
         if (!$jobOrders->update($jobOrderID, $title, $companyJobID, $companyID, $contactID,
             $description, $notes, $duration, $maxRate, $type, $isHot,
             $openings, $openingsAvailable, $salary, $city, $state, $startDate, $status, $recruiter,
-            $owner, $public, $email, $emailAddress, $department, $questionnaireID))
+            $owner, $public, $email, $emailAddress, $department, $RGS, $RGSDesc, $questionnaireID))
         {
             CommonErrors::fatal(COMMONERROR_RECORDERROR, $this, 'Failed to update job order.');
         }

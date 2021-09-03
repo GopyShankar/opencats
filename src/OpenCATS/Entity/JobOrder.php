@@ -27,6 +27,8 @@ class JobOrder
     private $departmentId;
     private $questionnaire;
     private $siteId;
+    private $RGS;
+    private $RGSDesc;
     
     function __construct(
         $siteId,
@@ -251,6 +253,26 @@ class JobOrder
     {
         $this->questionnaire = $value;
     }
+
+    function getRGS()
+    {
+        return $this->RGS;
+    }
+    
+    function setRGS($value)
+    {
+        $this->RGS = $value;
+    }
+
+    function getRGSDesc()
+    {
+        return $this->RGSDesc;
+    }
+    
+    function setRGSDesc($value)
+    {
+        $this->RGSDesc = $value;
+    }
     
     static function create(
         $siteId,
@@ -274,6 +296,8 @@ class JobOrder
         $recruiter,
         $owner,
         $departmentId,
+        $RGS,
+        $RGSDesc,
         $questionnaire
     ) {
         $instance = new JobOrder(
@@ -302,6 +326,8 @@ class JobOrder
         $instance->setRecruiter($recruiter);
         $instance->setOwner($owner);
         $instance->setQuestionnaire($questionnaire);
+        $instance->setRGS($RGS);
+        $instance->setRGSDesc($RGSDesc);
         return $instance;
     }
 }

@@ -28,7 +28,7 @@
                     </tr>
                 </table>
             <?php else: ?>
-                <form name="addJobOrderForm" id="addJobOrderForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=add" method="post" onsubmit="return checkAddForm(document.addJobOrderForm);" autocomplete="off">
+                <form name="addJobOrderForm" id="addJobOrderForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=add" method="post" onsubmit="return checkAddForm(document.addJobOrderForm),checkRGSVal();" autocomplete="off">
                     <input type="hidden" name="postback" id="postback" value="postback" />
 
                     <table class="editTable" width="700">
@@ -209,13 +209,13 @@
                                 <label id="RGSLabel" for="RGS">RGS ID:</label>
                             </td>
                             <td class="tdData">
-                                <input type="text" tabindex="15" class="inputbox" id="RGS" name="RGS" style="width: 150px;" />
+                                <input type="text" tabindex="7" class="inputbox" id="RGS" name="RGS" style="width: 150px;" onchange="checkRGSVal()" />
                             </td>
                             <td class="tdVertical">
                                 <label id="RGSDescLabel" for="RGSDesc">RGS Description:</label>
                             </td>
                             <td class="tdData">
-                                <input type="text" tabindex="15" class="inputbox" id="RGSDesc" name="RGSDesc" style="width: 150px;" />
+                                <input type="text" tabindex="16" class="inputbox" id="RGSDesc" name="RGSDesc" style="width: 150px;" />
                             </td>
                         </tr>
 
@@ -224,7 +224,7 @@
                                 <label id="ownerLabel" for="owner">Owner:</label>
                             </td>
                             <td class="tdData">
-                                <select tabindex="6" id="owner" name="owner" class="inputbox" style="width: 150px;">
+                                <select tabindex="8" id="owner" name="owner" class="inputbox" style="width: 150px;">
                                     <option value="">(Select a User)</option>
 
                                     <?php foreach ($this->usersRS as $rowNumber => $usersData): ?>
@@ -241,7 +241,7 @@
                                 <label id="isHotLabel" for="isHot">Hot:</label>
                             </td>
                             <td class="tdData">
-                                <input type="checkbox" tabindex="16" id="isHot" name="isHot" />&nbsp;
+                                <input type="checkbox" tabindex="17" id="isHot" name="isHot" />&nbsp;
                                 <img title="Checking this box indicates that the job order is 'hot', and shows up highlighted throughout the system." src="images/information.gif" alt="" width="16" height="16" />
                             </td>
                         </tr>
@@ -345,6 +345,28 @@
                 <script type="text/javascript">
                     document.addJobOrderForm.title.focus();
                     <?php if (isset($this->jobOrderSourceRS['companyID'])): ?>updateCompanyData('<?php echo($this->sessionCookie); ?>');<?php endif; ?>
+                    var rgsVal = new Array();
+                    <?php foreach($this->RGSDetilas as $key => $val){ ?>
+                        rgsVal.push({'JOBORDER_ID' :'<?php echo $val['JOBORDER_ID']; ?>','RGS_ID':'<?php echo $val['RGS_ID']; ?>','RGS_Desc':'<?php echo $val['RGS_Desc']; ?>'});
+                    <?php } ?>
+                    
+                    function checkRGSVal(){
+                        var currRGS = document.addJobOrderForm.RGS.value;
+                        fieldLabel = document.getElementById('RGSLabel');
+                        if(currRGS != ''){
+                            for (var i = rgsVal.length - 1; i >= 0; i--) {
+                                if(rgsVal[i]['RGS_ID'] == currRGS){
+                                    fieldLabel.style.color = '#ff0000';
+                                    alert('This RGS ID ' +currRGS+ ' values already exist');
+                                    return false;
+                                }else{
+                                    fieldLabel.style.color = '#000';
+                                }
+                            }
+                        }else{
+                            return false;
+                        }
+                    }
                 </script>
 
             <?php endif; ?>

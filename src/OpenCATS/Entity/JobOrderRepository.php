@@ -45,6 +45,8 @@ class JobOrderRepository
                 site_id,
                 date_created,
                 date_modified,
+                RGS_ID,
+                RGS_Desc,
                 questionnaire_id
             )
             VALUES (
@@ -72,6 +74,8 @@ class JobOrderRepository
                 %s,
                 NOW(),
                 NOW(),
+                %s,
+                %s,
                 %s
             )",
             $this->databaseConnection->makeQueryString($jobOrder->getTitle()),
@@ -96,6 +100,8 @@ class JobOrderRepository
             $this->databaseConnection->makeQueryInteger($jobOrder->getRecruiter()),
             $this->databaseConnection->makeQueryInteger($jobOrder->getOwner()),
             $jobOrder->getSiteId(),
+            $this->databaseConnection->makeQueryString($jobOrder->getRGS()),
+            $this->databaseConnection->makeQueryString($jobOrder->getRGSDesc()),
             // Questionnaire ID or NULL if none
             $jobOrder->getQuestionnaire() !== false ? $this->databaseConnection->makeQueryInteger($jobOrder->getQuestionnaire()) : 'NULL'
         );

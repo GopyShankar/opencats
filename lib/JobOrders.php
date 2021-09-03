@@ -56,6 +56,7 @@ include_once('./lib/Pager.php');
 include_once('./lib/History.php');
 include_once('./lib/DataGrid.php');
 include_once('./lib/JobOrderTypes.php');
+include_once('./lib/Contacts.php');
 
 /**
  *	Job Orders Library
@@ -103,15 +104,20 @@ class JobOrders
     public function add($title, $companyId, $contactId, $description, $notes,
         $duration, $maxRate, $type, $isHot, $public, $openings, $companyJobId,
         $salary, $city, $state, $startDate, $enteredBy, $recruiter, $owner,
-        $department, $questionnaire = false)
+        $department, $RGS, $RGSDesc, $questionnaire = false)
     {
         /* Get the department ID of the selected department. */
         // FIXME: Move this up to the UserInterface level. I don't like this
         //        tight coupling, and calling Contacts methods as static is
         //        bad.
-        $departmentId = Contacts::getDepartmentIDByName(
+        // $departmentId = Contacts::getDepartmentIDByName(
+        //     $department, $companyId, $this->_db
+        // );
+        $getContacts = New Contacts($this->_siteID);
+        $departmentId = $getContacts->getDepartmentIDByName(
             $department, $companyId, $this->_db
-        );
+        );  
+        echo 'dep->'.$departmentId;
         $jobOrder = JobOrder::create(
             $this->_siteID,
             $title,
@@ -134,6 +140,8 @@ class JobOrders
             $recruiter,
             $owner,
             $departmentId,
+            $RGS,
+            $RGSDesc,
             $questionnaire
         );
         $JobOrderRepository = new JobOrderRepository($this->_db);
@@ -172,7 +180,7 @@ class JobOrders
     public function update($jobOrderID, $title, $companyJobID, $companyID,
         $contactID, $description, $notes, $duration, $maxRate, $type, $isHot,
         $openings, $openingsAvailable, $salary, $city, $state, $startDate, $status, $recruiter,
-        $owner, $public, $email, $emailAddress, $department, $questionnaire = false)
+        $owner, $public, $email, $emailAddress, $department, $RGS, $RGSDesc,$questionnaire = false)
     {
         /* Get the department ID of the selected department. */
         // FIXME: Move this up to the UserInterface level. I don't like this
@@ -209,6 +217,8 @@ class JobOrders
                 owner              = %s,
                 public             = %s,
                 date_modified      = NOW(),
+                RGS_ID             = %s,
+                RGS_Desc           = %s,
                 questionnaire_id   = %s
             WHERE
                 joborder_id = %s
@@ -235,6 +245,8 @@ class JobOrders
             $this->_db->makeQueryInteger($recruiter),
             $this->_db->makeQueryInteger($owner),
             ($public ? '1' : '0'),
+            $this->_db->makeQueryString($RGS),
+            $this->_db->makeQueryString($RGSDesc),
             // Questionnaire ID or NULL if none
             $questionnaire !== false ? $this->_db->makeQueryInteger($questionnaire) : 'NULL',
             $this->_db->makeQueryInteger($jobOrderID),
@@ -407,6 +419,8 @@ class JobOrders
                 joborder.questionnaire_id as questionnaireID,
                 joborder.is_admin_hidden AS isAdminHidden,
                 company_department.name AS department,
+                joborder.RGS_ID AS RGS,
+                joborder.RGS_Desc AS RGSDesc,
                 CONCAT(
                     contact.first_name, ' ', contact.last_name
                 ) AS contactFullName,
@@ -520,6 +534,8 @@ class JobOrders
                 joborder.public AS public,
                 joborder.questionnaire_id as questionnaireID,
                 joborder.company_department_id AS departmentID,
+                joborder.RGS_ID AS RGS,
+                joborder.RGS_Desc AS RGSDesc,
                 DATE_FORMAT(
                     joborder.start_date, '%%m-%%d-%%y'
                 ) AS startDate
@@ -900,6 +916,21 @@ class JobOrders
         {
             return $rs[0];
         }
+    }
+
+    public function getRGSDetails(){
+        $sql = sprintf(
+            "SELECT 
+                JOBORDER_ID,
+                RGS_ID,
+                RGS_Desc
+            FROM
+                joborder
+            WHERE
+                site_id = %s",
+            $this->_siteID
+        );
+        return $this->_db->getAllAssoc($sql);
     }
 
 }

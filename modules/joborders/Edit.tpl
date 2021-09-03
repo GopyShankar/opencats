@@ -17,7 +17,7 @@
 
             <p class="note">Edit Job Order</p>
 
-            <form name="editJobOrderForm" id="editJobOrderForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=edit" method="post" onsubmit="return checkEditForm(document.editJobOrderForm);" autocomplete="off">
+            <form name="editJobOrderForm" id="editJobOrderForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=edit" method="post" onsubmit="return checkEditForm(document.editJobOrderForm),checkRGSVal();" autocomplete="off">
                 <input type="hidden" name="postback" id="postback" value="postback" />
                 <input type="hidden" id="jobOrderID" name="jobOrderID" value="<?php echo($this->jobOrderID); ?>" />
 
@@ -217,13 +217,13 @@
                             <label id="RGSLabel" for="RGS">RGS ID:</label>
                         </td>
                         <td class="tdData">
-                            <input type="text" tabindex="15" class="inputbox" id="RGS" name="RGS" style="width: 150px;" />
+                            <input type="text" tabindex="15" class="inputbox" id="RGS" name="RGS" style="width: 150px;" value="<?php $this->_($this->data['RGS']); ?>" onchange="checkRGSVal()" />
                         </td>
                         <td class="tdVertical">
                             <label id="RGSDescLabel" for="RGSDesc">RGS Description:</label>
                         </td>
                         <td class="tdData">
-                            <input type="text" tabindex="15" class="inputbox" id="RGSDesc" name="RGSDesc" style="width: 150px;" />
+                            <input type="text" tabindex="15" class="inputbox" id="RGSDesc" name="RGSDesc" style="width: 150px;" value="<?php $this->_($this->data['RGSDesc']); ?>" />
                         </td>
                     </tr>
 
@@ -366,6 +366,32 @@
 
             <script type="text/javascript">
                 document.editJobOrderForm.title.focus();
+                var rgsVal = new Array();
+                <?php foreach($this->RGSDetilas as $key => $val){ ?>
+                    rgsVal.push({'JOBORDER_ID' :'<?php echo $val['JOBORDER_ID']; ?>','RGS_ID':'<?php echo $val['RGS_ID']; ?>','RGS_Desc':'<?php echo $val['RGS_Desc']; ?>'});
+                <?php } ?>
+                console.log(rgsVal,'rgsVal');
+                function checkRGSVal(){
+                    var currRGS = document.editJobOrderForm.RGS.value;
+                    var jobOrderID = document.editJobOrderForm.jobOrderID.value;
+                    console.log(jobOrderID,'jobOrderID');
+                    fieldLabel = document.getElementById('RGSLabel');
+                    if(currRGS != ''){
+                        for (var i = rgsVal.length - 1; i >= 0; i--) {
+                            if(rgsVal[i]['RGS_ID'] == currRGS){
+                                if(rgsVal[i]['JOBORDER_ID'] != jobOrderID){
+                                    fieldLabel.style.color = '#ff0000';
+                                    alert('This RGS ID ' +currRGS+ ' values already exist');
+                                    return false;
+                                }else{
+                                    fieldLabel.style.color = '#000';
+                                }
+                            }
+                        }
+                    }else{
+                        return false;
+                    }
+                }
             </script>
         </div>
     </div>

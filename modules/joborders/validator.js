@@ -18,6 +18,7 @@ function checkAddForm(form)
     errorMessage += checkCity();
     errorMessage += checkState();
     errorMessage += checkOpenings();
+    errorMessage += checkRGS();
 
     if (errorMessage != '')
     {
@@ -40,6 +41,7 @@ function checkEditForm(form)
     errorMessage += checkOpenings();
     errorMessage += checkOpeningsAvailable();
     errorMessage += checkOwner();
+    errorMessage += checkRGS();
 
     if (errorMessage != '')
     {
@@ -230,6 +232,32 @@ function checkOpenings()
     else if (!stringIsNumeric(fieldValue))
     {
         errorMessage = "    - Openings must be a number.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else
+    {
+        fieldLabel.style.color = '#000';
+    }
+
+    return errorMessage;
+}
+
+function checkRGS()
+{
+    var errorMessage = '';
+
+    fieldValue = document.getElementById('RGS').value;
+    fieldLabel = document.getElementById('RGSLabel');
+    if (fieldValue == '')
+    {
+        errorMessage = "    - You must enter RGS ID.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else if (!stringIsNumeric(fieldValue))
+    {
+        errorMessage = "    - RGS ID must be a number.\n";
 
         fieldLabel.style.color = '#ff0000';
     }

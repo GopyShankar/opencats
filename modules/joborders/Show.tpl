@@ -122,8 +122,13 @@ use OpenCATS\UI\QuickActionMenu;
                             </tr>
 
                             <tr>
-                                <td class="vertical">Start Date:</td>
-                                <td class="data"><?php $this->_($this->data['startDate']); ?></td>
+                                <td class="vertical">RGS ID:</td>
+                                <td class="data"><?php $this->_($this->data['RGS']); ?></td>
+                            </tr>
+
+                            <tr>
+                                <td class="vertical">RGS Desc:</td>
+                                <td class="data"><?php $this->_($this->data['RGSDesc']); ?></td>
                             </tr>
 
                             <?php for ($i = 0; $i < intval(count($this->extraFieldRS)/2); $i++): ?>
@@ -142,6 +147,10 @@ use OpenCATS\UI\QuickActionMenu;
 
                     <td width="50%" height="100%" style="vertical-align:top;" >
                         <table class="detailsInside" height="100%">
+                            <tr>
+                                <td class="vertical">Start Date:</td>
+                                <td class="data"><?php $this->_($this->data['startDate']); ?></td>
+                            </tr>
                             <tr>
                                 <td class="vertical">Duration:</td>
                                 <td class="data"><?php $this->_($this->data['duration']); ?></td>
