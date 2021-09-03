@@ -340,7 +340,7 @@ class Candidates
         $city, $state, $zip, $source, $keySkills, $dateAvailable,
         $currentEmployer, $canRelocate, $currentPay, $desiredPay,
         $notes, $webSite, $bestTimeToCall, $owner, $isHot, $email, $emailAddress,
-        $gender = '', $race = '', $veteran = '', $disability = '',$erName1,$erDoj1,$erDor1,$erName2, $erDoj2, $erDor2, $erName3, $erDoj3, $erDor3, $ectcConfirm, $doj, $currentErDoj, $currentErDor, $board10th, $passYr10th, $precent10th, $board12th, $passYr12th, $precent12th, $insName, $degreeCourse, $degreePassYr, $degreePrecent,$panCard,$totalExp,$relevantExp,$currentCity,$preferredCity   )
+        $gender = '', $race = '', $veteran = '', $disability = '',$erName1,$erDoj1,$erDor1,$erName2, $erDoj2, $erDor2, $erName3, $erDoj3, $erDor3, $ectcConfirm, $doj, $currentErDoj, $currentErDor, $board10th, $passYr10th, $precent10th, $board12th, $passYr12th, $precent12th, $insName, $degreeCourse, $degreePassYr, $degreePrecent,$panCard,$totalExp,$relevantExp,$currentCity,$preferredCity, $actualCTC=null,$billRate=null   )
     {
         $sql = sprintf(
             "UPDATE
@@ -403,7 +403,9 @@ class Candidates
                 totalExp              = %s,
                 relevantExp           = %s,
                 currentCity           = %s,
-                preferredCity         = %s
+                preferredCity         = %s,
+                actualCTC             = %s,
+                billRate              =%s
             WHERE
                 candidate_id = %s
             AND
@@ -466,6 +468,8 @@ class Candidates
             $this->_db->makeQueryString($relevantExp),
             $this->_db->makeQueryString($currentCity),
             $this->_db->makeQueryString($preferredCity),
+            $this->_db->makeQueryString($actualCTC),
+            $this->_db->makeQueryString($billRate),
             $this->_db->makeQueryInteger($candidateID),
             $this->_siteID
         );
@@ -1058,6 +1062,8 @@ class Candidates
                      candidate.relevantExp AS relevantExp,
                      candidate.currentCity AS currentCity,
                      candidate.preferredCity AS preferredCity,
+                     candidate.actualCTC AS actualCTC,
+                     candidate.billRate AS billRate,
                      (SELECT email FROM user WHERE user_id = candidate.recruiter_id) AS recruiterEmail
             FROM
                 candidate
@@ -1177,7 +1183,9 @@ class Candidates
                 candidate.totalExp AS totalExp,
                 candidate.relevantExp AS relevantExp,
                 candidate.currentCity AS currentCity,
-                candidate.preferredCity AS preferredCity
+                candidate.preferredCity AS preferredCity,
+                candidate.actualCTC AS actualCTC,
+                candidate.billRate AS billRate
             FROM
                 candidate
             WHERE

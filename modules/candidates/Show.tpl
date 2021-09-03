@@ -165,6 +165,17 @@ use OpenCATS\UI\CandidateQuickActionMenu;
                                 <td class="vertical">Employer3 DOR :</td>
                                 <td class="data"><?php $this->_($this->data['employer3_dor']); ?></td>
                             </tr>
+                            <?php if($_SESSION['CATS']->getUserrole() == 'hr' || $_SESSION['CATS']->getUserrole() == 'super_admin'){ ?>
+                            <tr>
+                                <td class="vertical">Actual CTC :</td>
+                                <td class="data"><?php $this->_($this->data['actualCTC']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="vertical">Bill Rate :</td>
+                                <td class="data"><?php $this->_($this->data['billRate']); ?></td>
+                            </tr>
+                            <?php } ?>
+
                             <!-- Custom field Added -->
 
 

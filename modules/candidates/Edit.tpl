@@ -237,7 +237,7 @@
                     </tr>
                 </table>
 
-                <p class="note<?php if ($this->isModal): ?>Unsized<?php endif; ?>" style="margin-top: 5px;">Current Employer Details</p>
+                <p class="note" style="margin-top: 5px;">Current Employer Details</p>
                 <table class="editTable">
                     <tr>
                         <td class="tdVertical tdVerticalNew"><label id="current_employer_name" for="currentEmployer">Current Employer Name:</label></td>
@@ -259,7 +259,7 @@
                     </tr>
                 </table>
 
-                <p class="note<?php if ($this->isModal): ?>Unsized<?php endif; ?>" style="margin-top: 5px;">Previous Employer Details</p>
+                <p class="note" style="margin-top: 5px;">Previous Employer Details</p>
                 <table class="editTable">
                     <p>Previous Employer 1</p>
                     <tr>
@@ -324,7 +324,7 @@
                     </tr>
                 </table>
 
-                <p class="note<?php if ($this->isModal): ?>Unsized<?php endif; ?>" style="margin-top: 5px;">Education Details</p>
+                <p class="note" style="margin-top: 5px;">Education Details</p>
                 <table class="editTable">
                     <p>Degree Deatils</p>
                     <tr>
@@ -526,7 +526,7 @@
 
                     <tr>
                         <td class="tdVertical">
-                            <label id="currentPayLabel" for="currentEmployer">Current Pay:</label>
+                            <label id="currentPayLabel" for="currentPay">Current Pay:</label>
                         </td>
                         <td class="tdData">
                             <input type="text" name="currentPay" id="currentPay" value="<?php $this->_($this->data['currentPay']); ?>" class="inputbox" style="width: 150px" />
@@ -538,25 +538,48 @@
                             <label id="ectcConfirmLabel" for="ectcConfirm">Expected CTC:</label>
                         </td>
                         <td class="tdData">
-                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="ectcConfirm" id="ectcConfirm" class="inputbox" style="width: 150px" value="<?php $this->_($this->preassignedFields['ectcConfirm']); ?>" />
+                            <input type="text" name="ectcConfirm" id="ectcConfirm" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['ectc_confirmation']); ?>" />
                         </td>
                     </tr>
 
                     <tr>
                         <td class="tdVertical">
-                            <label id="desiredPayLabel" for="currentEmployer">Desired Pay:</label>
+                            <label id="desiredPayLabel" for="desiredPay">Desired Pay:</label>
                         </td>
                         <td class="tdData">
                             <input type="text" name="desiredPay" id="desiredPay" value="<?php $this->_($this->data['desiredPay']); ?>" class="inputbox" style="width: 150px" />
                         </td>
                     </tr>
+                    
+                    <?php if($_SESSION['CATS']->getUserrole() == 'hr' || $_SESSION['CATS']->getUserrole() == 'super_admin'){ ?>
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="actualCTCLabel" for="actualCTC">Actual CTC:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" name="actualCTC" id="actualCTC" value="<?php $this->_($this->data['actualCTC']); ?>" class="inputbox" style="width: 150px" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="billRateLabel" for="billRate">Bill Rate:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" name="billRate" id="billRate" value="<?php $this->_($this->data['billRate']); ?>" class="inputbox" style="width: 150px" />
+                        </td>
+                    </tr>
+                    <?php }else{ ?>
+                        <input type="hidden" name="actualCTC" id="actualCTC" value="<?php $this->_($this->data['actualCTC']); ?>" />
+                        <input type="hidden" name="billRate" id="billRate" value="<?php $this->_($this->data['billRate']); ?>" />
+                    <?php } ?>
 
                     <tr>
                         <td class="tdVertical">
                             <label id="dojLabel" for="doj">Expected DOJ:</label>
                         </td>
                         <td class="tdData">
-                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="doj" id="doj" class="inputbox date_picker" style="width: 150px" value="<?php $this->_($this->data['doj']); ?>" />
+                            <input type="text" name="doj" id="doj" class="inputbox date_picker" style="width: 150px" value="<?php $this->_($this->data['doj']); ?>" />
                         </td>
                     </tr>
 
@@ -565,7 +588,7 @@
                             <label id="totalExpLabel" for="totalExp">Total Experience:</label>
                         </td>
                         <td class="tdData">
-                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="totalExp" id="totalExp" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['totalExp']); ?>" />
+                            <input type="text" name="totalExp" id="totalExp" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['totalExp']); ?>" />
                         </td>
                     </tr>
 
@@ -574,7 +597,7 @@
                             <label id="relevantExpLabel" for="relevantExp">Relevant Experience:</label>
                         </td>
                         <td class="tdData">
-                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="relevantExp" id="relevantExp" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['relevantExp']); ?>" />
+                            <input type="text" name="relevantExp" id="relevantExp" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['relevantExp']); ?>" />
                         </td>
                     </tr>
 
@@ -583,7 +606,7 @@
                             <label id="currentCityLabel" for="currentCity">Current City:</label>
                         </td>
                         <td class="tdData">
-                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="currentCity" id="currentCity" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['currentCity']); ?>" />
+                            <input type="text" name="currentCity" id="currentCity" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['currentCity']); ?>" />
                         </td>
                     </tr>
 
@@ -592,7 +615,7 @@
                             <label id="preferredCityLabel" for="preferredCity">Preferred City:</label>
                         </td>
                         <td class="tdData">
-                            <input type="text" tabindex="<?php echo($tabIndex++); ?>" name="preferredCity" id="preferredCity" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['preferredCity']); ?>" />
+                            <input type="text" name="preferredCity" id="preferredCity" class="inputbox" style="width: 150px" value="<?php $this->_($this->data['preferredCity']); ?>" />
                         </td>
                     </tr>
 

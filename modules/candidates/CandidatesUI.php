@@ -1076,7 +1076,7 @@ class CandidatesUI extends UserInterface
 
         if ($data['isAdminHidden'] == 1 && $this->getUserAccessLevel('candidates.hidden') < ACCESS_LEVEL_MULTI_SA)
         {
-            $this->listByView('This candidate is hidden - only a CATS Administrator can unlock the candidate.');
+            $this->listByView('This candidate is hidden - only a ATS Administrator can unlock the candidate.');
             return;
         }
 
@@ -1357,6 +1357,9 @@ class CandidatesUI extends UserInterface
         $currentCity    = $this->getTrimmedInput('currentCity', $_POST);
         $preferredCity  = $this->getTrimmedInput('preferredCity', $_POST);
 
+        $actualCTC      = $this->getTrimmedInput('actualCTC', $_POST);
+        $billRate       = $this->getTrimmedInput('billRate', $_POST);
+
 
         if(!empty($erDoj1)){
             $erDoj1 = date_format(date_create($erDoj1),"Y-m-d");
@@ -1458,7 +1461,9 @@ class CandidatesUI extends UserInterface
             $totalExp,
             $relevantExp,
             $currentCity,
-            $preferredCity
+            $preferredCity,
+            $actualCTC,
+            $billRate
         );
         if (!$updateSuccess)
         {
