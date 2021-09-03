@@ -117,7 +117,7 @@ class JobOrders
         $departmentId = $getContacts->getDepartmentIDByName(
             $department, $companyId, $this->_db
         );  
-        echo 'dep->'.$departmentId;
+        
         $jobOrder = JobOrder::create(
             $this->_siteID,
             $title,
