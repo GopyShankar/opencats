@@ -19,5 +19,14 @@ class NewReports
 
     	return $this->_db->getAllAssoc($sql);
     }
+
+    public function getNewCandidateDetails(){
+        $sql = sprintf(
+            "SELECT concat (c.first_name,' ',c.last_name) candidate_name,c.phone_home,c.key_skills,c.totalExp,c.current_employer,c.currentCity,c.preferredCity FROM candidate c where CAST(date_created AS DATE) = CAST( curdate() AS DATE)",
+            $this->_db->makeQueryInteger($status)
+        );
+
+        return $this->_db->getAllAssoc($sql);
+    }
 }
 ?>

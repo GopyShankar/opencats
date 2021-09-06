@@ -350,7 +350,7 @@ class NewReportUI extends UserInterface
             ->setCellValue('M1', 'Preferred Location');
 
         $data = new NewReports($this->_siteID);
-        $getProfile = $data->getCandidateDetails();
+        $getProfile = $data->getNewCandidateDetails();
         $sno=1;
         $rowNumber = 2;
         foreach ($getProfile as $key => $value) {
