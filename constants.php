@@ -42,7 +42,7 @@ $coreModules = array(
 );
 
 /* CATS Version */
-define('CATS_VERSION', '');
+define('CATS_VERSION', '1.0.0');
 
 /* Copyright information at bottom of pages. */
 define('COPYRIGHT_HTML', '&copy; 2021 VHS Consulting');
