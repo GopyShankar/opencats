@@ -547,7 +547,9 @@ class CareerPortalSettings
                 offerletter.validDate, '%%d-%%M-%%y'
                 ) AS validDate,
                 offerletter.pdfPath AS pdfPath,
-                offerletter.insuranceYN AS insuranceYN
+                offerletter.insuranceYN AS insuranceYN,
+                offerletter.offer_type AS offerletter_type,
+                offerletter.refNo AS refNo
             FROM
                 offerletter
             WHERE
