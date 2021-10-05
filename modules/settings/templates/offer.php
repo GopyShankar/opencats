@@ -52,10 +52,10 @@
 		</table><br><br>
 		<table width="100%"  border="0" cellspacing="0" cellpadding="0"  border="0">
 			<tr>
-				<td><strong>Dear</strong> XXnameXX,</td>
+				<td><strong>Dear XXnameXX,</strong></td>
 			</tr>
 			<tr>
-				<td>Welcome to<strong>VHS Consulting India Pvt. Ltd.,</strong></td>
+				<td>Welcome to<strong> VHS Consulting India Pvt. Ltd.,</strong></td>
 			</tr>
 			<tr>
 				<td>
@@ -106,7 +106,7 @@
 				<td>
 					Health Insurance coverage is of Rs 200,000/- and Accidental Insurance for Individual Employee is covered within one month of onboarding with client. You shall provide the basic details within 10 days of your date of joining. Premium amount shall be recovered from your salary on monthly basis. If employee resigns, Medical and Accidental Insurance will be cancelled from the day of relieving.
 				</td>
-			</tr>
+			</tr><br><br><br>
 			<tr>
 				<td><strong>6. Background Check</strong></td>
 			</tr>
@@ -203,7 +203,7 @@
 			</tr>
 			<tr>
 				<td>
-					<strong>This offer is valid till XXvalidDateXX.</strong>Kindly confirm and mail the acceptance of the offer along with date of joining in writing on or before the above-mentioned date at roshitha@vhsconsulting.net . The offer stands automatically withdrawn thereafter, unless the offer validity date is extended and communicated to you in writing or via email. In the event you confirm your acceptance as aforementioned, you understand and agree that you have read and understood the terms of this Offer of Appointment and made the confirmation with your full conscience, free will and consent. This Offer of Appointment supersedes all prior communications ‐ written and oral with you, if any in this regard.
+					<strong>This offer is valid till XXvalidDateXX.</strong>Kindly confirm and mail the acceptance of the offer along with date of joining in writing on or before the above-mentioned date at <a style="text-decoration: underline;color: blue;font-weight: bold;">roshitha@vhsconsulting.net</a> . The offer stands automatically withdrawn thereafter, unless the offer validity date is extended and communicated to you in writing or via email. In the event you confirm your acceptance as aforementioned, you understand and agree that you have read and understood the terms of this Offer of Appointment and made the confirmation with your full conscience, free will and consent. This Offer of Appointment supersedes all prior communications ‐ written and oral with you, if any in this regard.
 				</td>
 			</tr>
 			<tr>
@@ -221,87 +221,83 @@
 					<p><img src="/images/temp/hr_sign.jpg" width="150px"></p>
 					<p style="padding-left: 25px">Roshitha P Pinto<br>Senior HR Executive</p>
 				</td>
-				<td align="right"><p style="padding-left: 25px">Signature</p></td>
+				<td align="right"><p style="padding-left: 25px">Signature:</p></td>
 			</tr>
 		</table>
 		<br></br><br><br></br><br><br></br><br><br></br><br><br></br><br><br></br><br><br></br><br><br></br><br>
         <table width="100%"   align="center"  cellspacing="0" cellpadding="5">
             <tr>
-                <td style="font-size:15px;" align="center" width="100%" class="bolder">ANNEXURE A</td>
+                <td style="font-size:15px;text-align:center;" width="100%" class="bolder">ANNEXURE A</td>
             </tr>
         </table>
         <br><br>
         <table width="100%" cellspacing="0" cellpadding="5" border="1">
         	<tbody>
         		<tr>
-        			<td align="center" class="bolder">Salary Heads</td>
-        			<td align="center" class="bolder">Per Month</td>
-        			<td align="center" class="bolder">Per Annum</td>
+        			<td bgcolor="#f2f2f2" class="bolder" >Salary Heads</td>
+        			<td bgcolor="#f2f2f2" style="text-align:center;" class="bolder">Per Month</td>
+        			<td bgcolor="#f2f2f2" style="text-align:center;" class="bolder">Per Annum</td>
         		</tr>
         		<tr>
-        			<td align="center" class="bolder">"A" FIXED</td>
-        			<td align="center" class="bolder"></td>
-        			<td align="center" class="bolder"></td>
+        			<td style="text-align:center;" colspan="3" class="bolder">"A" FIXED</td>
         		</tr>
         		<tr>
         			<td>Basic</td>
-        			<td>XXbasicPerMonthXX</td>
-        			<td>XXbasicPerYearXX</td>
+        			<td style="text-align:center;">XXbasicPerMonthXX</td>
+        			<td style="text-align:center;">XXbasicPerYearXX</td>
         		</tr>
         		<tr>
         			<td>House Rent Allowance</td>
-        			<td>XXhraPerMonthXX</td>
-        			<td>XXhraPerYearXX</td>
+        			<td style="text-align:center;">XXhraPerMonthXX</td>
+        			<td style="text-align:center;">XXhraPerYearXX</td>
         		</tr>
         		<tr>
         			<td>Statutory Bonus</td>
-        			<td>XXstatutoryPerMonthXX</td>
-        			<td>XXstatutoryPerYearXX</td>
+        			<td style="text-align:center;">XXstatutoryPerMonthXX</td>
+        			<td style="text-align:center;">XXstatutoryPerYearXX</td>
         		</tr>
         		<tr>
         			<td>Special Allowance</td>
-        			<td>XXspecialPerMonthXX</td>
-        			<td>XXspecialPerYearXX</td>
+        			<td style="text-align:center;">XXspecialPerMonthXX</td>
+        			<td style="text-align:center;">XXspecialPerYearXX</td>
         		</tr>
         		<tr>
-        			<td class="bolder">"A" Sub Total - FIXED Gross Pay</td>
-        			<td class="bolder">XXgrossPayPMxx</td>
-        			<td class="bolder">XXgrossPayPAxx</td>
+        			<td bgcolor="#f2f2f2" class="bolder">"A" Sub Total - FIXED Gross Pay</td>
+        			<td bgcolor="#f2f2f2" style="text-align:center;" class="bolder">XXgrossPayPMxx</td>
+        			<td bgcolor="#f2f2f2" style="text-align:center;" class="bolder">XXgrossPayPAxx</td>
         		</tr>
         		<tr>
-        			<td align="center" class="bolder">"B" RETIRALS BENEFITS (EMPLOYER CONTRIBUTION)</td>
-        			<td align="center" class="bolder"></td>
-        			<td align="center" class="bolder"></td>
+        			<td style="text-align:center;" class="bolder" colspan="3">"B" RETIRALS BENEFITS (EMPLOYER CONTRIBUTION)</td>
         		</tr>
         		<tr>
         			<td>Employer Provident Fund Contribution</td>
-        			<td>XXempPFPerMonthXX</td>
-        			<td>XXempPFPerYearXX</td>
+        			<td style="text-align:center;">XXempPFPerMonthXX</td>
+        			<td style="text-align:center;">XXempPFPerYearXX</td>
         		</tr>
         		<tr>
         			<td>Employer ESIC Contribution</td>
-        			<td>XXempESICPerMonthXX</td>
-        			<td>XXempESICPerYearXX</td>
+        			<td style="text-align:center;">XXempESICPerMonthXX</td>
+        			<td style="text-align:center;">XXempESICPerYearXX</td>
         		</tr>
         		<tr>
         			<td>Gratuity</td>
-        			<td>XXempGratuityPerMonthXX</td>
-        			<td>XXempGratuityPerYearXX</td>
+        			<td style="text-align:center;">XXempGratuityPerMonthXX</td>
+        			<td style="text-align:center;">XXempGratuityPerYearXX</td>
         		</tr>
         		<tr>
-        			<td class="bolder">"B" Sub Total - Retirals Benefits</td>
-        			<td class="bolder">XXretiralsBenefitsPMXX</td>
-        			<td class="bolder">XXretiralsBenefitsPAXX</td>
+        			<td bgcolor="#f2f2f2" class="bolder">"B" Sub Total - Retirals Benefits</td>
+        			<td bgcolor="#f2f2f2" style="text-align:center;" class="bolder">XXretiralsBenefitsPMXX</td>
+        			<td bgcolor="#f2f2f2" style="text-align:center;" class="bolder">XXretiralsBenefitsPAXX</td>
         		</tr>
         		<tr style="XXdisplayYNXX">
         			<td class="bolder">"C" INSURANCE /OTHER BENEFITS (Indicative Cost per annum)</td>
-        			<td>XXinsurancePMXX</td>
-        			<td>XXinsurancePAXX</td>
+        			<td style="text-align:center;">XXinsurancePMXX</td>
+        			<td style="text-align:center;">XXinsurancePAXX</td>
         		</tr>
         		<tr>
-        			<td class="bolder">XXtotalLabelXX</td>
-        			<td class="bolder">XXgrandTotalPMXX</td>
-        			<td class="bolder">XXgrandTotalPAXX</td>
+        			<td bgcolor="#f2f2f2" class="bolder">XXtotalLabelXX</td>
+        			<td bgcolor="#f2f2f2" style="text-align:center;" class="bolder">XXgrandTotalPMXX</td>
+        			<td bgcolor="#f2f2f2" style="text-align:center;" class="bolder">XXgrandTotalPAXX</td>
         		</tr>
         	</tbody>
         </table>
@@ -320,7 +316,7 @@
         		</td>
         	</tr>
         	<tr>
-        		<td align="center"><strong><u>Pay Date Process:</u></strong></td>
+        		<td style="text-align:center;text-decoration: underline;"><strong><u>Pay Date Process:</u></strong></td>
         	</tr>
         	<tr>
         		<td>

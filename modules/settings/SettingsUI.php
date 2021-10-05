@@ -2007,7 +2007,10 @@ class SettingsUI extends UserInterface
         $pdfPath = '';
         $offerLetterData = array();
         $candidates = new Candidates($this->_siteID);
-        $refNo        = ATS_REF_NO_PRE;
+        $refNo        = ATS_REF_NO_PRE; 
+        $selectedData = '';
+        $selectedOfferType = ''; 
+
         $sendMailFlag = 'N';
         if(isset($_POST['postback']) && $_POST['postback'] == 'candidateID'){
 
@@ -2029,11 +2032,13 @@ class SettingsUI extends UserInterface
             
             $refNoData = $candidates->offerLetterRefNo($_POST['candidateID']);
             $refNo        = ATS_REF_NO_PRE.$refNoData['refNo'];
-
+            
             $candidateDetails = $careerPortalSettings->getCandidatesDetails($_POST['candidateID']);
+            $offerData = $careerPortalSettings->getOfferLetterDetails($_POST['candidateID']);
             $fname = $candidateDetails[0]['firstName'];
-            $fullName = $candidateDetails[0]['firstName'].' '.$candidateDetails[0]['lastName'];
-            $address = $candidateDetails[0]['address'].',<br>';
+            $fullName = ($_POST['cname'])? $_POST['cname'] : $candidateDetails[0]['firstName'].' '.$candidateDetails[0]['lastName'];
+            $address = $fullName.',<br>';
+            $address .= $candidateDetails[0]['address'].',<br>';
             $address .= $candidateDetails[0]['city'].',<br>';
             $address .= $candidateDetails[0]['state'].'-'.$candidateDetails[0]['zip'];
             $email = $candidateDetails[0]['email'];
@@ -2042,19 +2047,25 @@ class SettingsUI extends UserInterface
             $designation  = $_POST['designation'];
             $annual       = $_POST['annual'];
             $validDate    = date_format(date_create($_POST['validDate']),'Y-m-d');
+            $name         = $_POST['name'];
+            $email        = $_POST['email'];
+            $offerDate    = $_POST['offerDate'];
 
             $offerLetterType = $_POST['offerletter_type'];
 
-            
-
             $pdfPath =  $this->maillAttach($fullName,$address,$_POST,$fname,$refNo);
+
             $insuranceYN = 'N';
             if(isset($_POST['insuranceYN'])){
                 $insuranceYN = 'Y';    
             }
+            $gratuityYN = 'N';
+            if(isset($_POST['gratuityYN'])){
+                $gratuityYN = 'Y';    
+            }
 
             
-            $offerLetterData = $candidates->offerLetter($_POST['candidateID'],$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$refNo,$offerLetterType);
+            $offerLetterData = $candidates->offerLetter($_POST['candidateID'],$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$gratuityYN,$refNo,$offerLetterType);
             $selectedData = $offerLetterData['candidateID'];
             $selectedOfferType = $offerLetterData['offerletter_type'];
             $sendMailFlag = 'Y';
@@ -2134,12 +2145,13 @@ class SettingsUI extends UserInterface
         // $mpdf->WriteHTML('<h1>Hello world!</h1>');
         // $mpdf->Output();
         
-        $currDate     = date('d/m/Y');
-        $doj          = date_format(date_create($val['doj']),'d/m/Y');
+        $currDate     = date('d-F-y');
+        $doj          = date_format(date_create($val['doj']),"jS F Y");
         $designation  = $val['designation'];
-        $annual       = $val['annual'];
-        $annualLetter = $this->getIndianCurrency($annual);
-        $validDate    = date_format(date_create($val['validDate']),'d/m/Y');
+        $fullName     = $fullName;
+        $annual       = preg_replace("/(\d+?)(?=(\d\d)+(\d)(?!\d))(\.\d+)?/i", "$1,", $val['annual']);
+        $annualLetter = $this->getIndianCurrency($val['annual']);
+        $validDate    = date_format(date_create($val['validDate']),"jS F Y");
 
         $offerLetterType = $val['offerletter_type'];
 
@@ -2153,7 +2165,7 @@ class SettingsUI extends UserInterface
 
         // salary calculation
 
-        $ctcPM = $annual/12;
+        $ctcPM = $val['annual']/12;
         $basicPM = round($this->percentageCalcu(50,$ctcPM),0); 
         $basicPA = $basicPM*12;
         $hraPM = round($this->percentageCalcu(20,$ctcPM),0);
@@ -2331,11 +2343,14 @@ class SettingsUI extends UserInterface
         $pdfFile = $fname."_".$offerLetterType."_"."_OfferLetter.pdf";
         $subDirectory = 'generateOfferLetter';
         $uploadPath = FileUtility::getUploadPath($siteID, $subDirectory);
-
+        
+        if(file_exists($uploadPath."/".$pdfFile)){
+            unlink($uploadPath."/".$pdfFile);
+        }
         date_default_timezone_set('Asia/Kolkata');
         $pdf = new \Mpdf\Mpdf($mpdfConfig);
         // Define the Header/Footer before writing anything so they appear on the first page
-        $pdf->SetHTMLHeader('<div style="text-align: right;height: 63px"><img src="/images/temp/logo.jpg" border="0" alt="VHS Consulting Applicant Tracking System" height="100" width="210"></div>');
+        $pdf->SetHTMLHeader('<div style="text-align: right;height: 63px"><img src="/images/temp/header_logo.jpg" border="0" alt="VHS Consulting Applicant Tracking System" height="100" width="210"></div>');
         $pdf->SetHTMLFooter(
             '<hr/><table width="100%">
                 <tr>
@@ -2347,9 +2362,20 @@ class SettingsUI extends UserInterface
                 </tr>
             </table>'
         );
-
-        $pdf->AddPage();
-        $pdf->useActiveForms = true;
+        // echo $str;
+        // exit();
+        $pdf->AddPage('', // L - landscape, P - portrait 
+            '', // O - ODD, E - EVEN, NEXT-ODD, NEXT-EVEN 
+            '', // resetpagenum
+            '', // pagenumstyle
+            '',// suppress
+            5, // margin_left
+            5, // margin right
+           60, // margin top
+           30, // margin bottom
+            0, // margin header
+            0); // margin footer
+        // $pdf->useActiveForms = true;
         $pdf->WriteHTML($str);
         $pagenumber = $pdf->PageNo();
         sys_get_temp_dir();

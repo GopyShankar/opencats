@@ -84,7 +84,7 @@
                                     <label id="candidateLabel" for="type">Candidate:</label>
                                 </td>
                                 <td class="tdData">
-                                    <select tabindex="7" id="candidateID" name="candidateID" class="inputbox" onchange="getCandidatesOfferData()" style="width: 400px;">
+                                    <select tabindex="7" id="candidateID" name="candidateID" class="inputbox" onchange="getCandidatesData()" style="width: 400px;">
                                         <option value="" disabled="" selected="">Selected</option>
                                     <?php foreach($this->candidatesData as $Data): ?>
                                         <option value="<?php echo $Data['candidateID'] ?>" 
@@ -137,6 +137,38 @@
                             </tr>
                             <tr>
                                 <td class="tdVertical" style="text-align: right;">
+                                    <label id="referenceLabel" for="refNo">Letter Reference No</label>
+                                </td>
+                                <td class="tdData">
+                                    <input type="text" name="refNo" id="refNo" class="inputbox" style="width: 400px;" value="<?php $this->_($this->offerLetterData['refNo']); ?>" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdVertical" style="text-align: right;">
+                                    <label id="offerDateLabel" for="offerDate">Offer Date</label>
+                                </td>
+                                <td class="tdData">
+                                    <input type="text" name="offerDate" id="offerDate" class="inputbox date_picker" style="width: 400px;" value='<?php echo date("d-F-y"); ?>' >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdVertical" style="text-align: right;">
+                                    <label id="validNameLabel" for="cname"> Candidate Name</label>
+                                </td>
+                                <td class="tdData">
+                                    <input type="text" name="cname" id="cname" class="inputbox" style="width: 400px;" value="<?php $this->_($this->offerLetterData['name']); ?>" >
+                                </td>
+                            </tr>
+                             <tr>
+                                <td class="tdVertical" style="text-align: right;">
+                                    <label id="validEmailLabel" for="email">Email</label>
+                                </td>
+                                <td class="tdData">
+                                    <input type="text" name="email" id="email" class="inputbox" style="width: 400px;" value="<?php $this->_($this->offerLetterData['email']); ?>" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdVertical" style="text-align: right;">
                                     <label id="insuranceYNLabel" for="insuranceYN">Insurance</label>
                                 </td>
                                 <td class="tdData">
@@ -144,6 +176,18 @@
                                     <input type="checkbox" name="insuranceYN" id="insuranceYN" class="inputbox" value="Y" checked >
                                     <?php }else{ ?>
                                     <input type="checkbox" name="insuranceYN" id="insuranceYN" class="inputbox" value="Y" >
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td class="tdVertical" style="text-align: right;">
+                                    <label id="gratuityYNLabel" for="gratuityYN">Gratuity</label>
+                                </td>
+                                <td class="tdData">
+                                    <?php if($this->offerLetterData['gratuityYN'] == 'Y'){ ?>
+                                    <input type="checkbox" name="gratuityYN" id="gratuityYN" class="inputbox" value="Y" checked >
+                                    <?php }else{ ?>
+                                    <input type="checkbox" name="gratuityYN" id="gratuityYN" class="inputbox" value="Y" >
                                     <?php } ?>
                                 </td>
                             </tr>

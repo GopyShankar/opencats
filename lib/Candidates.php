@@ -690,7 +690,7 @@ class Candidates
 
     /** add/update the offer letter pdf generate start */
 
-    public function offerLetter($candidateID,$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$refNo,$offerType){
+    public function offerLetter($candidateID,$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$gratuityYN,$refNo,$offerType){
         
 
         $getData = $this->checkOfferLetterData($candidateID,$offerType);
@@ -707,6 +707,7 @@ class Candidates
                     validDate,
                     pdfPath,
                     insuranceYN,
+                    gratuityYN,
                     refNo,
                     offer_type,
                     date_created,
@@ -715,6 +716,7 @@ class Candidates
                     modified_by
                 )
                 VALUES(
+                    %s,
                     %s,
                     %s,
                     %s,
@@ -740,6 +742,7 @@ class Candidates
                 $this->_db->makeQueryString($validDate),
                 $this->_db->makeQueryString($pdfPath),
                 $this->_db->makeQueryString($insuranceYN),
+                $this->_db->makeQueryString($gratuityYN),
                 $this->_db->makeQueryString($refNo),
                 $this->_db->makeQueryString($offerType),
                 $this->_db->makeQueryString(CURRENT_TIME),
@@ -752,6 +755,7 @@ class Candidates
                 "UPDATE
                     offerletter
                 SET
+                    name = %s,
                     doj = %s,
                     email = %s,
                     designation = %s,
@@ -759,12 +763,14 @@ class Candidates
                     validDate = %s,
                     pdfPath = %s,
                     insuranceYN = %s,
+                    gratuityYN = %s,
                     date_modified = %s,
                     modified_by = %s
                 WHERE
                     candidate_id = %s AND
                     offer_type = %s
                 ",
+                $this->_db->makeQueryString($fullName),
                 $this->_db->makeQueryString($doj),
                 $this->_db->makeQueryString($email),
                 $this->_db->makeQueryString($designation),
@@ -772,6 +778,7 @@ class Candidates
                 $this->_db->makeQueryString($validDate),
                 $this->_db->makeQueryString($pdfPath),
                 $this->_db->makeQueryString($insuranceYN),
+                $this->_db->makeQueryString($gratuityYN),
                 $this->_db->makeQueryString(CURRENT_TIME),
                 $this->_db->makeQueryString($user_id),
                 $this->_db->makeQueryInteger($candidateID),

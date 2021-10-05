@@ -41,7 +41,7 @@
 					<strong>Date   : XXcurr_dateXX</strong>
 				</td>
 			</tr>
-		</table><br><br><br>
+		</table><br><br>
 		<table width="100%"  border="0" cellspacing="0" cellpadding="0"  border="0">
 			<tr>
 				<td>To,</td>
@@ -49,10 +49,10 @@
 			<tr>
 				<td>XXaddressXX</td>
 			</tr>
-		</table><br><br>
+		</table><br><br><br>
 		<table width="100%"  border="0" cellspacing="0" cellpadding="0"  border="0">
 			<tr>
-				<td><strong>Dear</strong> XXnameXX,</td>
+				<td><strong>Dear XXnameXX,</strong></td>
 			</tr>
 			<tr>
 				<td></td>
@@ -93,84 +93,83 @@
 				<td>You will need to submit copies of all documents which will be communicated to you.</td>
 			</tr>
 		</table>
-		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <table width="100%"   align="center"  cellspacing="0" cellpadding="5">
             <tr>
-                <td style="font-size:15px;" align="center" width="100%" class="bolder">Salary Structure</td>
+                <td style="font-size:15px;text-align:center;text-decoration: underline;" width="100%" class="bolder">Salary Structure</td>
             </tr>
         </table>
         <br><br>
         <table width="100%" cellspacing="0" cellpadding="5" border="1">
         	<tbody>
         		<tr>
-        			<td align="center" class="bolder">Salary Heads</td>
-        			<td align="center" class="bolder">Per Month</td>
-        			<td align="center" class="bolder">Per Annum</td>
+        			<td style= "text-align:center;" class="bolder">Salary Heads</td>
+        			<td style= "text-align:center;" class="bolder">Per Month</td>
+        			<td style= "text-align:center;" class="bolder">Per Annum</td>
         		</tr>
         		<tr>
-        			<td align="center" class="bolder">"A" FIXED</td>
+        			<td style= "text-align:center;" class="bolder">"A" FIXED</td>
         			<td align="center" class="bolder"></td>
         			<td align="center" class="bolder"></td>
         		</tr>
         		<tr>
         			<td>Basic</td>
-        			<td>XXbasicPerMonthXX</td>
-        			<td>XXbasicPerYearXX</td>
+        			<td style= "text-align:center;">XXbasicPerMonthXX</td>
+        			<td style= "text-align:center;">XXbasicPerYearXX</td>
         		</tr>
         		<tr>
         			<td>House Rent Allowance</td>
-        			<td>XXhraPerMonthXX</td>
-        			<td>XXhraPerYearXX</td>
+        			<td style= "text-align:center;">XXhraPerMonthXX</td>
+        			<td style= "text-align:center;">XXhraPerYearXX</td>
         		</tr>
         		<tr>
         			<td>Statutory Bonus</td>
-        			<td>XXstatutoryPerMonthXX</td>
-        			<td>XXstatutoryPerYearXX</td>
+        			<td style= "text-align:center;">XXstatutoryPerMonthXX</td>
+        			<td style= "text-align:center;">XXstatutoryPerYearXX</td>
         		</tr>
         		<tr>
         			<td>Special Allowance</td>
-        			<td>XXspecialPerMonthXX</td>
-        			<td>XXspecialPerYearXX</td>
+        			<td style= "text-align:center;">XXspecialPerMonthXX</td>
+        			<td style= "text-align:center;">XXspecialPerYearXX</td>
         		</tr>
         		<tr>
         			<td class="bolder">"A" Sub Total - FIXED Gross Pay</td>
-        			<td class="bolder">XXgrossPayPMxx</td>
-        			<td class="bolder">XXgrossPayPAxx</td>
+        			<td style= "text-align:center;" class="bolder">XXgrossPayPMxx</td>
+        			<td style= "text-align:center;" class="bolder">XXgrossPayPAxx</td>
         		</tr>
         		<tr>
         			<td align="center" class="bolder">"B" RETIRALS BENEFITS (EMPLOYER CONTRIBUTION)</td>
-        			<td align="center" class="bolder"></td>
-        			<td align="center" class="bolder"></td>
+        			<td style= "text-align:center;" class="bolder"></td>
+        			<td style= "text-align:center;" class="bolder"></td>
         		</tr>
         		<tr>
         			<td>Employer Provident Fund Contribution</td>
-        			<td>XXempPFPerMonthXX</td>
-        			<td>XXempPFPerYearXX</td>
+        			<td style= "text-align:center;">XXempPFPerMonthXX</td>
+        			<td style= "text-align:center;">XXempPFPerYearXX</td>
         		</tr>
         		<tr>
         			<td>Employer ESIC Contribution</td>
-        			<td>XXempESICPerMonthXX</td>
-        			<td>XXempESICPerYearXX</td>
+        			<td style= "text-align:center;">XXempESICPerMonthXX</td>
+        			<td style= "text-align:center;">XXempESICPerYearXX</td>
         		</tr>
         		<tr>
         			<td>Gratuity</td>
-        			<td>XXempGratuityPerMonthXX</td>
-        			<td>XXempGratuityPerYearXX</td>
+        			<td style= "text-align:center;">XXempGratuityPerMonthXX</td>
+        			<td style= "text-align:center;">XXempGratuityPerYearXX</td>
         		</tr>
         		<tr>
         			<td class="bolder">"B" Sub Total - Retirals Benefits</td>
-        			<td class="bolder">XXretiralsBenefitsPMXX</td>
-        			<td class="bolder">XXretiralsBenefitsPAXX</td>
+        			<td style= "text-align:center;" class="bolder">XXretiralsBenefitsPMXX</td>
+        			<td style= "text-align:center;" class="bolder">XXretiralsBenefitsPAXX</td>
         		</tr>
         		<tr style="XXdisplayYNXX">
         			<td class="bolder">"C" INSURANCE /OTHER BENEFITS (Indicative Cost per annum)</td>
-        			<td>XXinsurancePMXX</td>
-        			<td>XXinsurancePAXX</td>
+        			<td style= "text-align:center;">XXinsurancePMXX</td>
+        			<td style= "text-align:center;">XXinsurancePAXX</td>
         		</tr>
         		<tr>
-        			<td class="bolder">XXtotalLabelXX</td>
-        			<td class="bolder">XXgrandTotalPMXX</td>
-        			<td class="bolder">XXgrandTotalPAXX</td>
+        			<td style= "text-align:center;" class="bolder">XXtotalLabelXX</td>
+        			<td style= "text-align:center;" class="bolder">XXgrandTotalPMXX</td>
+        			<td style= "text-align:center;" class="bolder">XXgrandTotalPAXX</td>
         		</tr>
         	</tbody>
         </table>
@@ -191,6 +190,12 @@
         </table>
         <br><br>
 		<table width="100%"  border="0" cellspacing="0" cellpadding="0"  border="0">
+            <tr>
+                <td>Feel free to call us for further clarifications.</td>
+            </tr>
+            <tr>
+                <td>Yours sincerely,</td>
+            </tr>
 			<tr>
 				<td align="left"><strong>For VHS Consulting India Pvt Ltd</strong></td>
 				<td align="right">I accept the above terms and conditions</td>
@@ -200,7 +205,7 @@
 					<p><img src="/images/temp/hr_sign.jpg" width="150px"></p>
 					<p style="padding-left: 25px">Roshitha P Pinto<br>Senior HR Executive</p>
 				</td>
-				<td align="right"><p style="padding-left: 25px">Signature</p></td>
+				<td align="right"><p style="padding-left: 25px">Signature:</p></td>
 			</tr>
 		</table>
 	</body>

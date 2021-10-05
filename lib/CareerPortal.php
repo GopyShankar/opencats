@@ -548,6 +548,7 @@ class CareerPortalSettings
                 ) AS validDate,
                 offerletter.pdfPath AS pdfPath,
                 offerletter.insuranceYN AS insuranceYN,
+                offerletter.gratuityYN AS gratuityYN,
                 offerletter.offer_type AS offerletter_type,
                 offerletter.refNo AS refNo
             FROM
