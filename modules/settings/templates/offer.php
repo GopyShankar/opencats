@@ -41,7 +41,7 @@
 					<strong>Date   : XXcurr_dateXX</strong>
 				</td>
 			</tr>
-		</table><br><br><br>
+		</table><br><br>
 		<table width="100%"  border="0" cellspacing="0" cellpadding="0"  border="0">
 			<tr>
 				<td>To,</td>
@@ -55,7 +55,10 @@
 				<td><strong>Dear XXnameXX,</strong></td>
 			</tr>
 			<tr>
-				<td>Welcome to<strong> VHS Consulting India Pvt. Ltd.,</strong></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Welcome to<strong>VHS Consulting India Pvt. Ltd.,</strong></td>
 			</tr>
 			<tr>
 				<td>
@@ -106,7 +109,7 @@
 				<td>
 					Health Insurance coverage is of Rs 200,000/- and Accidental Insurance for Individual Employee is covered within one month of onboarding with client. You shall provide the basic details within 10 days of your date of joining. Premium amount shall be recovered from your salary on monthly basis. If employee resigns, Medical and Accidental Insurance will be cancelled from the day of relieving.
 				</td>
-			</tr><br><br><br>
+			</tr>
 			<tr>
 				<td><strong>6. Background Check</strong></td>
 			</tr>
@@ -224,7 +227,6 @@
 				<td align="right"><p style="padding-left: 25px">Signature:</p></td>
 			</tr>
 		</table>
-		<br></br><br><br></br><br><br></br><br><br></br><br><br></br><br><br></br><br><br></br><br><br></br><br>
         <table width="100%"   align="center"  cellspacing="0" cellpadding="5">
             <tr>
                 <td style="font-size:15px;text-align:center;" width="100%" class="bolder">ANNEXURE A</td>
