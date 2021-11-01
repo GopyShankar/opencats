@@ -280,13 +280,13 @@ class Mailer
 
 
     public function sendAttach($from, $recipients, $subject, $body, $isHTML = false,
-        $logMessage = true, $attachFiles)
+        $logMessage = true, $attachFiles,$recruiterEmail)
     {
 
         $this->_mailer->From     = $from[0];
         $this->_mailer->FromName = $from[1];
 
-        $this->_mailer->WordWrap = $wrapLinesAt;
+        // $this->_mailer->WordWrap = $wrapLinesAt;
 
         $this->_mailer->Subject = $subject;
         // $this->_mailer->SMTPDebug = 2;
@@ -295,11 +295,11 @@ class Mailer
         {
             $this->_mailer->isHTML(true);
 
-            if ($signature)
-            {
-                // $body .= "\n<br />\n<br /><span style=\"font-size: 10pt;\">Powered by <a href=\"http://www.catsone.com\" alt=\"CATS "
-                //     . "Applicant Tracking System\">CATS</a> (Free ATS)</span>";
-            }
+            // if ($signature)
+            // {
+            //     // $body .= "\n<br />\n<br /><span style=\"font-size: 10pt;\">Powered by <a href=\"http://www.catsone.com\" alt=\"CATS "
+            //     //     . "Applicant Tracking System\">CATS</a> (Free ATS)</span>";
+            // }
 
             $this->_mailer->Body = '<div style="font: normal normal 12px Arial, Tahoma, sans-serif">'
                 . str_replace('<br>', "<br />\n", str_replace('<br />', '<br>', str_replace("\n", "<br>", $body))) . '</div>';
@@ -308,15 +308,30 @@ class Mailer
         }
         else
         {
-            if ($signature)
-            {
-                // $body .= "\n\nPowered by CATS (http://www.catsone.com) Free ATS";
-            }
+            // if ($signature)
+            // {
+            //     // $body .= "\n\nPowered by CATS (http://www.catsone.com) Free ATS";
+            // }
 
             $this->_mailer->isHTML(false);
             $this->_mailer->Body = $body;
             
         }
+
+        $OfferLetterCC = array(
+            array('email'=>'roshitha@vhsconsulting.net'),
+            array('email'=>'ramesh@vhsconsulting.net'),
+            array('email'=>'arpana@vhsconsulting.net'),
+            array('email'=>'kirankumar.t@vhsconsulting.net'),
+            array('email'=>'lakshmi.prasanna@vhsconsulting.net'),
+            array('email'=>'ramya.sampath@vhsconsulting.net')
+        );
+        
+        array_push($OfferLetterCC,array('email'=>$recruiterEmail));
+        foreach($OfferLetterCC as $ccMails){
+           $this->_mailer->addCC($ccMails['email']);
+        }
+
 
         $this->_mailer->addAttachment($attachFiles);
 

@@ -55,7 +55,8 @@ class ActivityUI extends UserInterface
 
         $mp = array(
             'Activity' => CATSUtility::getIndexName() . '?m=activity',
-            'Mail Activity' => CATSUtility::getIndexName() . '?m=activity&amp;a=mailActivity'
+            'Mail Activity' => CATSUtility::getIndexName() . '?m=activity&amp;a=mailActivity',
+            'Offer Mail Activity' => CATSUtility::getIndexName() . '?m=activity&amp;a=offerMailActivity'
         );
 
         $this->_subTabs = $mp;
@@ -89,10 +90,35 @@ class ActivityUI extends UserInterface
                 }
                 else
                 {
-                    $this->SearchMail();
+                    $this->Search();
                 }
 
                 break;
+
+            case 'offerMailActivity':
+                if($_SESSION['CATS']->getUserrole() == 'hr' || $_SESSION['CATS']->getUserrole()=='super_admin'){
+                    $this->offerMailActivity();
+                }else{
+                    CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                }
+                break;
+            case 'offerMailViewByDate':
+                if ($this->isGetBack())
+                {
+                    if($_SESSION['CATS']->getUserrole() == 'hr' || $_SESSION['CATS']->getUserrole()=='super_admin'){
+                        $this->onSearchOfferMail();
+                    }else{
+                        CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                    }
+                    break;
+                }
+                else
+                {
+                    $this->Search();
+                }
+
+                break;
+
             case 'listByViewDataGrid':
             default:
                 $this->listByViewDataGrid();
@@ -224,10 +250,11 @@ class ActivityUI extends UserInterface
             }
 
             /* formats start and end date for searching */
-            $startDate = DateUtility::formatSearchDate(
+            $dataUtility = new DateUtility($this->_siteID);
+            $startDate = $dataUtility->formatSearchDate(
                 $_GET['startMonth'], $_GET['startDay'], $_GET['startYear']
             );
-            $endDate = DateUtility::formatSearchDate(
+            $endDate = $dataUtility->formatSearchDate(
                 $_GET['endMonth'], $_GET['endDay']+1, $_GET['endYear']
             );
 
@@ -464,10 +491,11 @@ class ActivityUI extends UserInterface
             }
 
             /* formats start and end date for searching */
-            $startDate = DateUtility::formatSearchDate(
+            $dataUtility = new DateUtility($this->_siteID);
+            $startDate = $dataUtility->formatSearchDate(
                 $_GET['startMonth'], $_GET['startDay'], $_GET['startYear']
             );
-            $endDate = DateUtility::formatSearchDate(
+            $endDate = $dataUtility->formatSearchDate(
                 $_GET['endMonth'], $_GET['endDay']+1, $_GET['endYear']
             );
 
@@ -545,6 +573,247 @@ class ActivityUI extends UserInterface
 
         $baseURL = sprintf(
             '%s?m=activity&amp;a=mailViewByDate&amp;getback=getback',
+            CATSUtility::getIndexName()
+        );
+
+        $quickLinks[0] = sprintf(
+            '<a href="%s&amp;startMonth=%s&amp;startDay=%s&amp;startYear=%s&amp;endMonth=%s&amp;endDay=%s&amp;endYear=%s">Today</a>',
+            $baseURL,
+            $today['month'],
+            $today['day'],
+            $today['year'],
+            $today['month'],
+            $today['day'],
+            $today['year']
+        );
+
+        $quickLinks[1] = sprintf(
+            '<a href="%s&amp;startMonth=%s&amp;startDay=%s&amp;startYear=%s&amp;endMonth=%s&amp;endDay=%s&amp;endYear=%s">Yesterday</a>',
+            $baseURL,
+            $yesterday['month'],
+            $yesterday['day'],
+            $yesterday['year'],
+            $yesterday['month'],
+            $yesterday['day'],
+            $yesterday['year']
+        );
+
+        $quickLinks[2] = sprintf(
+            '<a href="%s&amp;period=lastweek">Last Week</a>',
+            $baseURL
+        );
+
+        $quickLinks[3] = sprintf(
+            '<a href="%s&amp;period=lastmonth">Last Month</a>',
+            $baseURL
+        );
+
+        $quickLinks[4] = sprintf(
+            '<a href="%s&amp;period=lastsixmonths">Last 6 Months</a>',
+            $baseURL
+        );
+
+        $quickLinks[5] = sprintf(
+            '<a href="%s&amp;period=all">All</a>',
+            $baseURL
+        );
+
+        return implode(' | ', $quickLinks);
+    }
+
+
+    /* offer letter mail sent activity logs */
+
+    private function offerMailActivity()
+    {
+        $dataGridProperties = DataGrid::getRecentParamaters("activity:ActivityDataGridOfferMail");
+
+        /* If this is the first time we visited the datagrid this session, the recent paramaters will
+         * be empty.  Fill in some default values. */
+        if ($dataGridProperties == array())
+        {
+            $dataGridProperties = array(
+                'rangeStart'    => 0,
+                'maxResults'    => 15,
+                'filterVisible' => false
+            );
+        }
+
+        /* Only show a month of activities. */
+        $dataGridProperties['startDate'] = '';
+        $dataGridProperties['endDate'] = '';
+        $dataGridProperties['period'] = 'DATE_SUB(CURDATE(), INTERVAL 1 MONTH)';
+
+        $dataGrid = DataGrid::get("activity:ActivityDataGridOfferMail", $dataGridProperties,0,'OfferLetter');
+
+        $mailQuickLinks = $this->getOfferMailQuickLinks();
+
+        if (!eval(Hooks::get('ACTIVITY_LIST_BY_VIEW_DG'))) return;
+
+        $this->_template->assign('quickLinks', $mailQuickLinks);
+        $this->_template->assign('active', $this);
+        $this->_template->assign('subActive', 'Offer Mail Activity');
+        $this->_template->assign('dataGrid', $dataGrid);
+        $this->_template->assign('userID', $_SESSION['CATS']->getUserID());
+
+        $activityEntries = new ActivityEntries($this->_siteID);
+        $this->_template->assign('numActivities', $activityEntries->getOfferMailCount());
+
+        $this->_template->display('./modules/activity/ActivityDataGridOfferMail.tpl');
+
+    }
+
+    private function onSearchOfferMail()
+    {
+        $periodString = $this->getTrimmedInput('period', $_GET);
+        if (!empty($periodString) &&
+            in_array($periodString, array('lastweek', 'lastmonth', 'lastsixmonths', 'lastyear', 'all')))
+        {
+            /* formats start and end date for searching */
+            switch ($periodString)
+            {
+                case 'lastweek':
+                    $period = 'DATE_SUB(CURDATE(), INTERVAL 1 WEEK)';
+                    break;
+
+                case 'lastmonth':
+                    $period = 'DATE_SUB(CURDATE(), INTERVAL 1 MONTH)';
+                    break;
+
+                case 'lastsixmonths':
+                    $period = 'DATE_SUB(CURDATE(), INTERVAL 6 MONTH)';
+                    break;
+
+                case 'lastyear':
+                    $period = 'DATE_SUB(CURDATE(), INTERVAL 1 YEAR)';
+                    break;
+
+                case 'all':
+                default:
+                    $period = '';
+                    break;
+            }
+
+            $startDate = '';
+            $endDate = '';
+
+            $startDateURLString = '';
+            $endDateURLString   = '';
+        }
+        else
+        {
+            /* Do we have a valid starting date? */
+            if (!$this->isRequiredIDValid('startDay', $_GET) ||
+                !$this->isRequiredIDValid('startMonth', $_GET) ||
+                !$this->isRequiredIDValid('startYear', $_GET))
+            {
+                CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid starting date.');
+            }
+
+            /* Do we have a valid ending date? */
+            if (!$this->isRequiredIDValid('endDay', $_GET) ||
+                !$this->isRequiredIDValid('endMonth', $_GET) ||
+                !$this->isRequiredIDValid('endYear', $_GET))
+            {
+                CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid ending date.');
+            }
+
+            if (!checkdate($_GET['startMonth'], $_GET['startDay'], $_GET['startYear']))
+            {
+                CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid starting date.');
+            }
+
+            if (!checkdate($_GET['endMonth'], $_GET['endDay'], $_GET['endYear']))
+            {
+                CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid ending date.');
+            }
+
+            /* formats start and end date for searching */
+            $dataUtility = new DateUtility($this->_siteID);
+            $startDate = $dataUtility->formatSearchDate(
+                $_GET['startMonth'], $_GET['startDay'], $_GET['startYear']
+            );
+            // $startDate = DateUtility::formatSearchDate(
+            //     $_GET['startMonth'], $_GET['startDay'], $_GET['startYear']
+            // );
+            $endDate = $dataUtility->formatSearchDate(
+                $_GET['endMonth'], $_GET['endDay']+1, $_GET['endYear']
+            );
+
+            $startDateURLString = sprintf(
+                '&amp;startMonth=%s&amp;startDay=%s&amp;startYear=%s',
+                $_GET['startMonth'],
+                $_GET['startDay'],
+                $_GET['startYear']
+            );
+
+            $endDateURLString = sprintf(
+                '&amp;endMonth=%s&amp;endDay=%s&amp;endYear=%s',
+                $_GET['endMonth'],
+                $_GET['endDay'],
+                $_GET['endYear']
+            );
+
+            $period = '';
+        }
+
+        $baseURL = sprintf(
+            'm=activity&amp;a=offerMailViewByDate&amp;getback=getback%s%s',
+            $startDateURLString, $endDateURLString
+        );
+
+        $dataGridProperties = DataGrid::getRecentParamaters("activity:ActivityDataGridOfferMail");
+
+        /* If this is the first time we visited the datagrid this session, the recent paramaters will
+         * be empty.  Fill in some default values. */
+        if ($dataGridProperties == array())
+        {
+            $dataGridProperties = array(
+                'rangeStart'    => 0,
+                'maxResults'    => 15,
+                'filterVisible' => false
+            );
+        }
+
+        $dataGridProperties['startDate'] = $startDate;
+        $dataGridProperties['endDate']   = $endDate;
+        $dataGridProperties['period']    = $period;
+
+        $dataGrid = DataGrid::get("activity:ActivityDataGridOfferMail", $dataGridProperties,0,'OfferLetter');
+
+        $mailQuickLinks = $this->getOfferMailQuickLinks();
+
+        if (!eval(Hooks::get('ACTIVITY_LIST_BY_VIEW_DG'))) return;
+
+        $this->_template->assign('quickLinks', $mailQuickLinks);
+        $this->_template->assign('active', $this);
+        $this->_template->assign('subActive', 'Mail Activity');
+        $this->_template->assign('dataGrid', $dataGrid);
+        $this->_template->assign('userID', $_SESSION['CATS']->getUserID());
+        
+        $activityEntries = new ActivityEntries($this->_siteID);
+        $this->_template->assign('numActivities', $activityEntries->getCount());
+
+        $this->_template->display('./modules/activity/ActivityDataGridOfferMail.tpl');
+    }
+
+    private function getOfferMailQuickLinks()
+    {
+        $today = array(
+            'month' => date('n'),
+            'day'   => date('j'),
+            'year'  => date('Y')
+        );
+
+        $yesterdayTimeStamp = DateUtility::subtractDaysFromDate(time(), 1);
+        $yesterday = array(
+            'month' => date('n', $yesterdayTimeStamp),
+            'day'   => date('j', $yesterdayTimeStamp),
+            'year'  => date('Y', $yesterdayTimeStamp)
+        );
+
+        $baseURL = sprintf(
+            '%s?m=activity&amp;a=offerMailViewByDate&amp;getback=getback',
             CATSUtility::getIndexName()
         );
 

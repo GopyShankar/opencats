@@ -1,5 +1,5 @@
 <?php /* $Id: SendEmail.tpl 3078 2007-09-21 20:25:28Z will $ */ ?>
-<?php TemplateUtility::printHeader('Settings', array('ckeditor/ckeditor.js', 'modules/candidates/validator.js', 'js/searchSaved.js', 'js/sweetTitles.js', 'js/searchAdvanced.js', 'js/highlightrows.js', 'js/export.js')); ?>
+<?php TemplateUtility::printHeader('Settings', array('ckeditor/ckeditor.js', 'modules/candidates/validator.js', 'js/searchSaved.js', 'js/sweetTitles.js', 'js/searchAdvanced.js', 'js/highlightrows.js', 'js/export.js', 'js/suggest.js')); ?>
 <?php TemplateUtility::printHeaderBlock(); ?>
 <?php TemplateUtility::printTabs($this->active, $this->subActive); ?>
 <link href='js/datepicker/jquery-ui.css' rel='stylesheet'>
@@ -32,29 +32,6 @@
             <?php echo $this->success_to; ?>
             </blockquote>
         <?php } else {
-            $emailTo = '';
-            foreach($this->recipients as $recipient){
-                if(strlen($recipient['email1']) > 0)
-                {
-                    $eml = $recipient['email1'];
-                }
-                else if(strlen($recipient['email2']) > 0)
-                {
-                    $eml = $recipient['email2'];
-                }
-                else
-                {
-                    $eml = '';
-                }
-                if($eml != '')
-                {
-                    if($emailTo != '')
-                    {
-                        $emailTo .= ', ';
-                    }
-                    $emailTo .= $eml;
-                }
-            }
             $tabIndex = 1;
         ?>
         </span>
@@ -83,16 +60,23 @@
                                 <td class="tdVertical" style="text-align: right;">
                                     <label id="candidateLabel" for="type">Candidate:</label>
                                 </td>
-                                <td class="tdData">
-                                    <select tabindex="7" id="candidateID" name="candidateID" class="inputbox" onchange="getCandidatesData()" style="width: 400px;">
+                                <!-- <td class="tdData">
+                                    <select tabindex="7" id="candidateID1" name="candidateID1" class="inputbox" onchange="getCandidatesData()" style="width: 400px;">
                                         <option value="" disabled="" selected="">Selected</option>
-                                    <?php foreach($this->candidatesData as $Data): ?>
-                                        <option value="<?php echo $Data['candidateID'] ?>" 
-                                                <?php if(isset($this->selectedData) && $this->selectedData == $Data['candidateID']) echo('selected'); ?> >
-                                                <?php echo $Data['firstName'] .' '.$Data['lastName'];?>
+                                    <?php //foreach($this->candidatesData as $Data): ?>
+                                        <option value="<?php //echo $Data['candidateID'] ?>" 
+                                                <?php //if(isset($this->selectedData) && $this->selectedData == $Data['candidateID']) echo('selected'); ?> >
+                                                <?php //echo $Data['firstName'] .' '.$Data['lastName'];?>
                                         </option>
-                                    <?php endforeach; ?>
+                                    <?php //endforeach; ?>
                                     </select>&nbsp;
+                                </td> -->
+                                <td>
+                                    <input type="hidden" name="candidateID" id="candidateID" value="<?php (isset($this->offerLetterData['candidateID']))? $this->_($this->offerLetterData['candidateID']) : ''; ?>" />
+                                    <input type="text" name="candidateName" id="candidateName" tabindex="7" class="inputbox" style="width: 400px" onFocus="suggestListActivate('getCandidateNames', 'candidateName', 'CompanyResults', 'candidateID', 'ajaxTextEntryHover', 0, '<?php echo($this->sessionCookie); ?>', 'helpShim');" onchange="setTimeout(function(){ getCandidatesData(); }, 1000);" value="<?php (isset($this->offerLetterData['name']))?$this->_($this->offerLetterData['name']) : ''; ?>" />
+                                    <br />
+                                    <iframe id="helpShim" src="javascript:void(0);" scrolling="no" frameborder="0" style="position:absolute; display:none;"></iframe>
+                                    <div id="CompanyResults" class="ajaxSearchResults"></div>
                                 </td>
                             </tr>
                         </table>
@@ -108,7 +92,7 @@
                                     <label id="dojLabel" for="doj">DOJ</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="doj" id="doj" class="inputbox date_picker" style="width: 400px;" value="<?php $this->_($this->offerLetterData['doj']); ?>" >
+                                    <input type="text" name="doj" id="doj" class="inputbox date_picker" style="width: 400px;" value="<?php (isset($this->offerLetterData['doj']))?$this->_($this->offerLetterData['doj']):''; ?>" >
                                 </td>
                             </tr>
                             <tr>
@@ -116,7 +100,7 @@
                                     <label id="designationLabel" for="designation">Designations</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="designation" id="designation" class="inputbox" style="width: 400px;" value="<?php $this->_($this->offerLetterData['designation']); ?>" >
+                                    <input type="text" name="designation" id="designation" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['designation']))?$this->_($this->offerLetterData['designation']):''; ?>" >
                                 </td>
                             </tr>
                             <tr>
@@ -124,7 +108,7 @@
                                     <label id="annualLabel" for="annual">Annual</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="annual" id="annual" class="inputbox" style="width: 400px;" value="<?php $this->_($this->offerLetterData['annual']); ?>" >
+                                    <input type="text" name="annual" id="annual" class="inputbox" style="width: 400px;" value="<?php isset($this->offerLetterData['annual'])?$this->_($this->offerLetterData['annual']):''; ?>" >
                                 </td>
                             </tr>
                             <tr>
@@ -132,7 +116,7 @@
                                     <label id="validDateLabel" for="validDate">Valid Date</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="validDate" id="validDate" class="inputbox date_picker" style="width: 400px;" value="<?php $this->_($this->offerLetterData['validDate']); ?>" >
+                                    <input type="text" name="validDate" id="validDate" class="inputbox date_picker" style="width: 400px;" value="<?php (isset($this->offerLetterData['validDate']))?$this->_($this->offerLetterData['validDate']):''; ?>" >
                                 </td>
                             </tr>
                             <tr>
@@ -140,7 +124,7 @@
                                     <label id="referenceLabel" for="refNo">Letter Reference No</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="refNo" id="refNo" class="inputbox" style="width: 400px;" value="<?php $this->_($this->offerLetterData['refNo']); ?>" >
+                                    <input type="text" name="refNo" id="refNo" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['refNo']))?$this->_($this->offerLetterData['refNo']):''; ?>" >
                                 </td>
                             </tr>
                             <tr>
@@ -148,7 +132,7 @@
                                     <label id="offerDateLabel" for="offerDate">Offer Date</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="offerDate" id="offerDate" class="inputbox date_picker" style="width: 400px;" value='<?php echo date("d-F-y"); ?>' >
+                                    <input type="text" name="offerDate" id="offerDate" class="inputbox date_picker" style="width: 400px;" value='<?php echo date("d-M-y"); ?>' >
                                 </td>
                             </tr>
                             <tr>
@@ -156,7 +140,7 @@
                                     <label id="validNameLabel" for="cname"> Candidate Name</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="cname" id="cname" class="inputbox" style="width: 400px;" value="<?php $this->_($this->offerLetterData['name']); ?>" >
+                                    <input type="text" name="cname" id="cname" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['name']))?$this->_($this->offerLetterData['name']):''; ?>" >
                                 </td>
                             </tr>
                              <tr>
@@ -164,7 +148,39 @@
                                     <label id="validEmailLabel" for="email">Email</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="email" id="email" class="inputbox" style="width: 400px;" value="<?php $this->_($this->offerLetterData['email']); ?>" >
+                                    <input type="text" name="email" id="email" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['email']))?$this->_($this->offerLetterData['email']):''; ?>" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdVertical" style="text-align: right;">
+                                    <label id="validNameLabel" for="address"> Address</label>
+                                </td>
+                                <td class="tdData">
+                                    <input type="text" name="address" id="address" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['address']))?$this->_($this->offerLetterData['address']):''; ?>" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdVertical" style="text-align: right;">
+                                    <label id="validNameLabel" for="city"> City</label>
+                                </td>
+                                <td class="tdData">
+                                    <input type="text" name="city" id="city" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['city']))?$this->_($this->offerLetterData['city']):''; ?>" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdVertical" style="text-align: right;">
+                                    <label id="validNameLabel" for="state"> State</label>
+                                </td>
+                                <td class="tdData">
+                                    <input type="text" name="state" id="state" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['state']))?$this->_($this->offerLetterData['state']):''; ?>" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdVertical" style="text-align: right;">
+                                    <label id="validNameLabel" for="zip"> Zip</label>
+                                </td>
+                                <td class="tdData">
+                                    <input type="text" name="zip" id="zip" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['zip']))?$this->_($this->offerLetterData['zip']):''; ?>" >
                                 </td>
                             </tr>
                             <tr>
@@ -172,7 +188,7 @@
                                     <label id="insuranceYNLabel" for="insuranceYN">Insurance</label>
                                 </td>
                                 <td class="tdData">
-                                    <?php if($this->offerLetterData['insuranceYN'] == 'Y'){ ?>
+                                    <?php if(isset($this->offerLetterData['insuranceYN']) && $this->offerLetterData['insuranceYN'] == 'Y'){ ?>
                                     <input type="checkbox" name="insuranceYN" id="insuranceYN" class="inputbox" value="Y" checked >
                                     <?php }else{ ?>
                                     <input type="checkbox" name="insuranceYN" id="insuranceYN" class="inputbox" value="Y" >
@@ -184,7 +200,7 @@
                                     <label id="gratuityYNLabel" for="gratuityYN">Gratuity</label>
                                 </td>
                                 <td class="tdData">
-                                    <?php if($this->offerLetterData['gratuityYN'] == 'Y'){ ?>
+                                    <?php if(isset($this->offerLetterData['gratuityYN']) && $this->offerLetterData['gratuityYN'] == 'Y'){ ?>
                                     <input type="checkbox" name="gratuityYN" id="gratuityYN" class="inputbox" value="Y" checked >
                                     <?php }else{ ?>
                                     <input type="checkbox" name="gratuityYN" id="gratuityYN" class="inputbox" value="Y" >
@@ -221,7 +237,7 @@
                     </form>
                     </div>
                     <div style="float: right;width: 55%;">
-                        <iframe src="<?php $this->_($this->pdfPath); ?>" width="100%" height="500"></iframe>
+                        <iframe id="pdfView" src="<?php $this->_($this->pdfPath); ?>" width="100%" height="500"></iframe>
                     </div>
 
 			        <script type="text/javascript">
@@ -246,8 +262,21 @@
                             $( ".date_picker" ).datepicker({
                                 dateFormat: 'dd-M-yy',
                             });
+                            
+                            <?php if($this->messageAlert != ''){ ?>
+                            alert('<?php echo $this->messageAlert; ?>');
+                            <?php } ?>
+
+
                             <?php if($this->sendMailFlag == 'Y'){ ?>
                             CKEDITOR.config.readOnly = true;
+                            <?php } ?>
+                            <?php if(isset($this->pdfPath) && $this->pdfPath != ''){ ?>
+                                setTimeout(function(){
+                                    var $frame = document.getElementById('pdfView');
+                                    $frame.contentWindow.location.href = $frame.src;    
+                                }, 1000)
+                                
                             <?php } ?>
                         });
                         function sendMail(){

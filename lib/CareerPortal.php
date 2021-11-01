@@ -520,7 +520,10 @@ class CareerPortalSettings
                 candidate.city AS city,
                 candidate.state AS state,
                 candidate.zip AS zip,
-                candidate.email1 AS email
+                candidate.email1 AS email,
+                candidate.recruiter_id AS recruiterId,
+                candidate.panCard AS panCard,
+                (select email from user where user_id = candidate.recruiter_id) AS recruiterEmail
             FROM
                 candidate
             WHERE
@@ -532,25 +535,39 @@ class CareerPortalSettings
         return $this->_db->getAllAssoc($sql);
     }
 
+    public function checkPanCardExist($panCard){
+        $sql = sprintf(
+            "SELECT 
+                candidate.candidate_id as candidateID,
+                candidate.email1 AS email
+            FROM
+                candidate
+            WHERE
+                candidate.panCard = %s",
+            $this->_db->makeQueryString($panCard)
+        );
+        return $this->_db->getAllAssoc($sql);
+    }
+
     public function getOfferLetterDetails($candidate_id,$offerType){
         $sql = sprintf(
             "SELECT
                 offerletter.candidate_id AS candidateID,
                 offerletter.name AS name,
-                DATE_FORMAT(
-                offerletter.doj, '%%d-%%M-%%y'
-                ) AS doj,
+                offerletter.doj AS doj,
                 offerletter.email AS email,
                 offerletter.designation AS designation,
                 offerletter.annual AS annual,
-                DATE_FORMAT(
-                offerletter.validDate, '%%d-%%M-%%y'
-                ) AS validDate,
+                offerletter.validDate AS validDate,
                 offerletter.pdfPath AS pdfPath,
                 offerletter.insuranceYN AS insuranceYN,
                 offerletter.gratuityYN AS gratuityYN,
                 offerletter.offer_type AS offerletter_type,
-                offerletter.refNo AS refNo
+                offerletter.refNo AS refNo,
+                offerletter.address AS address,
+                offerletter.city AS city,
+                offerletter.state AS state,
+                offerletter.zip AS zip
             FROM
                 offerletter
             WHERE

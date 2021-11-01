@@ -78,13 +78,13 @@
 					<ul>
 						<li>Your appointment is subject to submission all required documents to complete client onboarding process.</li>
 						<li>Your payroll and BGV will start after selection and onboarding with the client.</li>
-						<li>Your Tentative Date of Joining is XXjoinDateXX.</li>
+						<li>Your Tentative Date of Joining is <strong>XXjoinDateXX</strong>.</li>
 					</ul>
 						
 				</td>
 			</tr>
 			<tr>
-				<td>Offer stands cancelled in case of any deviations in information or if you fail to submit the required documents/not attending client interviews on or before pre-decided date. We will have to assume that you have not accepted this job offer if I do not hear from you before XXvalidDateXX.</td>
+				<td>Offer stands cancelled in case of any deviations in information or if you fail to submit the required documents/not attending client interviews on or before pre-decided date. We will have to assume that you have not accepted this job offer if I do not hear from you before <strong>XXvalidDateXX</strong>.</td>
 			</tr>
 			<tr>
 				<td>Once all our documentary checks have been satisfactorily completed and confirmed selection by client, we will confirm the date of commencement and to issue an appointment letter confirming our offer.</td>
@@ -93,6 +93,7 @@
 				<td>You will need to submit copies of all documents which will be communicated to you.</td>
 			</tr>
 		</table>
+		<pagebreak />
         <table width="100%"   align="center"  cellspacing="0" cellpadding="5">
             <tr>
                 <td style="font-size:15px;text-align:center;text-decoration: underline;" width="100%" class="bolder">Salary Structure</td>

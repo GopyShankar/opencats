@@ -690,9 +690,8 @@ class Candidates
 
     /** add/update the offer letter pdf generate start */
 
-    public function offerLetter($candidateID,$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$gratuityYN,$refNo,$offerType){
+    public function offerLetter($candidateID,$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$gratuityYN,$refNo,$offerType,$addressNew,$city,$state,$zip){
         
-
         $getData = $this->checkOfferLetterData($candidateID,$offerType);
         
         if(empty($getData)){
@@ -713,9 +712,17 @@ class Candidates
                     date_created,
                     date_modified,
                     entered_by,
-                    modified_by
+                    modified_by,
+                    address,
+                    city,
+                    state,
+                    zip
                 )
                 VALUES(
+                    %s,
+                    %s,
+                    %s,
+                    %s,
                     %s,
                     %s,
                     %s,
@@ -748,7 +755,11 @@ class Candidates
                 $this->_db->makeQueryString(CURRENT_TIME),
                 $this->_db->makeQueryString(CURRENT_TIME),
                 $this->_db->makeQueryString($user_id),
-                $this->_db->makeQueryString($user_id)
+                $this->_db->makeQueryString($user_id),
+                $this->_db->makeQueryString($addressNew),
+                $this->_db->makeQueryString($city),
+                $this->_db->makeQueryString($state),
+                $this->_db->makeQueryString($zip)
             );
         }else{
             $sql1 = sprintf(
@@ -765,7 +776,11 @@ class Candidates
                     insuranceYN = %s,
                     gratuityYN = %s,
                     date_modified = %s,
-                    modified_by = %s
+                    modified_by = %s,
+                    address = %s,
+                    city = %s,
+                    state = %s,
+                    zip = %s
                 WHERE
                     candidate_id = %s AND
                     offer_type = %s
@@ -781,6 +796,10 @@ class Candidates
                 $this->_db->makeQueryString($gratuityYN),
                 $this->_db->makeQueryString(CURRENT_TIME),
                 $this->_db->makeQueryString($user_id),
+                $this->_db->makeQueryString($addressNew),
+                $this->_db->makeQueryString($city),
+                $this->_db->makeQueryString($state),
+                $this->_db->makeQueryString($zip),
                 $this->_db->makeQueryInteger($candidateID),
                 $this->_db->makeQueryString($offerType)
             );
@@ -797,19 +816,20 @@ class Candidates
             "SELECT
                 offerletter.candidate_id AS candidateID,
                 offerletter.name AS name,
-                DATE_FORMAT(
-                offerletter.doj, '%%d-%%M-%%y'
-                ) AS doj,
+                offerletter.doj AS doj,
                 offerletter.email AS email,
                 offerletter.designation AS designation,
                 offerletter.annual AS annual,
-                DATE_FORMAT(
-                offerletter.validDate, '%%d-%%M-%%y'
-                ) AS validDate,
+                offerletter.validDate AS validDate,
                 offerletter.pdfPath AS pdfPath,
                 offerletter.insuranceYN AS insuranceYN,
+                offerletter.gratuityYN AS gratuityYN,
                 offerletter.offer_type AS offerletter_type,
-                offerletter.refNo AS refNo
+                offerletter.refNo AS refNo,
+                offerletter.address AS address,
+                offerletter.city AS city,
+                offerletter.state AS state,
+                offerletter.zip AS zip
             FROM
                 offerletter
             WHERE
@@ -1312,6 +1332,38 @@ class Candidates
         }
          
         return $rs['candidateID'];
+    }
+
+    public function getCandidateNames($wildCardString, $sortBy, $sortDirection){
+        $wildCardString = str_replace('*', '%', $wildCardString) . '%';
+        $wildCardString = $this->_db->makeQueryString($wildCardString);
+        $sql = sprintf(
+            "SELECT
+                candidate.candidate_id AS candidateID,
+                CONCAT(
+                    candidate.first_name, ' ', candidate.last_name
+                ) AS name
+            FROM
+                candidate
+            WHERE
+            (
+                candidate.first_name LIKE %s
+                OR candidate.last_name LIKE %s
+                OR candidate.middle_name LIKE %s
+            )
+            AND
+                candidate.site_id = %s
+            ORDER BY
+                %s %s",
+            $wildCardString,
+            $wildCardString,
+            $wildCardString,
+            $this->_siteID,
+            $sortBy,
+            $sortDirection
+        );
+        
+        return $this->_db->getAllAssoc($sql);
     }
      
 

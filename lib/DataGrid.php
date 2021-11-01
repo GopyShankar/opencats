@@ -279,6 +279,13 @@ class DataGrid
             }
 
             include_once (sprintf('modules/%s/dataGridMails.php', $module));
+        }else if($page == 'OfferLetter'){
+            if (!file_exists(sprintf('modules/%s/dataGridOfferMails.php', $module)))
+            {
+                trigger_error('No datagrid named: '.$indentifier);
+            }
+
+            include_once (sprintf('modules/%s/dataGridOfferMails.php', $module));
         }else{
             if (!file_exists(sprintf('modules/%s/dataGrids.php', $module)))
             {
