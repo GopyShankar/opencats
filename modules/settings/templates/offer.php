@@ -133,7 +133,7 @@
 				</tr>
 				<tr>
 					<td>
-						Health Insurance coverage is of Rs 200,000/- and Accidental Insurance for Individual Employee is covered within one month of onboarding with client. You shall provide the basic details within 10 days of your date of joining. Premium amount shall be recovered from your salary on monthly basis. If employee resigns, Medical and Accidental Insurance will be cancelled from the day of relieving.
+						Health Insurance coverage is of Rs 200,000/- and Accidental Insurance for Individual Employee is covered within two months of onboarding with client. Premium amount shall be recovered from your salary on monthly basis as and when applicable. If employee resigns, Medical and Accidental Insurance will be cancelled from the day of relieving.
 					</td>
 				</tr>
 				<tr>
@@ -232,7 +232,7 @@
 				</tr>
 				<tr>
 					<td>
-						<p>You can terminate your employment without assigning any reason whatsoever, by giving one month notice or one month pay in lieu of notice to the company. You will be relieved subject to client’s approvals only.</p>
+						<p>You can terminate your employment without assigning any reason whatsoever, by giving two months’ notice or two month’s pays in lieu of notice to the company. You will be relieved subject to client’s approvals only.</p>
 						<p>You are bound to send an email to HR on your resignation, acceptance of the same will be communicated after confirmation with the concerned project / reporting Manager.  The final settlement would be processed by VHS upon time sheet approval and NOC from client.</p>
 						<p>You may be relieved from the service of the Company at any time pursuant to serving appropriate notice, at the discretion of the management and such Employee shall not be entitled to payment of any kind of compensation for the unexpired period of notice.</p>
 					</td>
