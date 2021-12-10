@@ -167,7 +167,7 @@
                                         <tr>
                                             <th scope="row">3</th>
                                             <td>
-                                                <label class="control-label">Address Proof</label>
+                                                <label class="control-label">Address Proof1</label>
                                             </td>
                                             <td>
                                                 <input type="file" name="address_proof" id="address_proof" class="address_proof">
@@ -176,6 +176,15 @@
                                         <tr>
                                             <th scope="row">4</th>
                                             <td>
+                                                <label class="control-label">Address Proof2</label>
+                                            </td>
+                                            <td>
+                                                <input type="file" name="address_proof2" id="address_proof2" class="address_proof2">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">5</th>
+                                            <td>
                                                 <label class="control-label">PAN Card</label>
                                             </td>
                                             <td>
@@ -183,27 +192,9 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th scope="row">5</th>
-                                            <td>
-                                                <label>BA Vendor Deputation Letter</label>
-                                            </td>
-                                            <td>
-                                                <input type="file" name="ba_deputation_letter" id="ba_deputation_letter" class="ba_deputation_letter">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">6</th>
-                                            <td>
-                                                <label>BA Vendor Offer Letter</label>
-                                            </td>
-                                            <td>
-                                                <input type="file" name="ba_offer_letter" id="ba_offer_letter" class="ba_offer_letter">
-                                            </td>
-                                        </tr>
-                                        <tr>
                                             <th scope="row">7</th>
                                             <td>
-                                                <label class="control-label">Aadhar proof</label>
+                                                <label class="control-label">Aadhar Card</label>
                                             </td>
                                             <td>
                                                 <input type="file" name="aadhar_proof" id="aadhar_proof" class="aadhar_proof">
@@ -228,7 +219,7 @@
                                         <tr>
                                             <th scope="row">1</th>
                                             <td>
-                                                <label class="control-label">Graduation - All Sem Marksheet </label>
+                                                <label>Graduation - All Sem Marksheet </label>
                                             </td>
                                             <td>
                                                 <input type="file" name="gAllSem[]" id="gAllSem" class="gAllSem" multiple>
@@ -280,7 +271,7 @@
                                         <tr>
                                             <th scope="row">1</th>
                                             <td>
-                                                <label class="control-label">Previous Employeer payslip </label>
+                                                <label class="control-label">Resignation Acceptance letter</label>
                                             </td>
                                             <td>
                                                 <input type="file" name="preEmpPayslip[]" id="preEmpPayslip" class="preEmpPayslip" multiple>
@@ -289,7 +280,7 @@
                                         <tr>
                                             <th scope="row">2</th>
                                             <td>
-                                                <label class="control-label">Previous Employeer Offer Letter </label>
+                                                <label class="control-label">Offer Letter </label>
                                             </td>
                                             <td>
                                                 <input type="file" name="preEmpOL[]" id="preEmpOL" class="preEmpOL">
@@ -298,7 +289,7 @@
                                         <tr>
                                             <th scope="row">3</th>
                                             <td>
-                                                <label class="control-label">Previous Employeer Experience Letter </label>
+                                                <label class="control-label">Experience Certificate</label>
                                             </td>
                                             <td>
                                                 <input type="file" name="preEmpEL[]" id="preEmpEL" class="preEmpEL">
@@ -307,13 +298,13 @@
                                         <tr>
                                             <th scope="row">4</th>
                                             <td>
-                                                <label class="control-label">Previous Employeer Relieving Letter </label>
+                                                <label class="control-label">Relieving Letter </label>
                                             </td>
                                             <td>
                                                 <input type="file" name="preEmpRL[]" id="preEmpRL" class="preEmpRL">
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <!-- <tr>
                                             <th scope="row">5</th>
                                             <td>
                                                 <label class="control-label">Previous Employeer Bank Statement </label>
@@ -321,14 +312,14 @@
                                             <td>
                                                 <input type="file" name="preEmpBankState[]" id="preEmpBankState" class="preEmpBankState">
                                             </td>
-                                        </tr>
-                                        <tr>
+                                        </tr> -->
+                                        <!-- <tr>
                                             <td colspan="3" class="text-right">
                                                 <input class="addBtn btn btn-primary" type="button" name="add" value="Add" data-add-class='preEmpViewAdd'>
                                             </td>
-                                        </tr>
+                                        </tr> -->
                                     </tbody>
-                                    <tbody class="preEmpView preEmpViewAdd" style="display: none">
+                                    <!-- <tbody class="preEmpView preEmpViewAdd" style="display: none">
                                         <tr>
                                             <th scope="row">1</th>
                                             <td>
@@ -379,7 +370,7 @@
                                                 <input type="button" value="Remove" name="remove" class="btn btn-danger remove">
                                             </td>
                                         </tr>
-                                    </tbody>
+                                    </tbody> -->
                                 </table>
                             </div>
 
@@ -454,6 +445,9 @@
                         address_proof: {
                             required:true,
                         },
+                        address_proof2: {
+                            required:true,
+                        },
                         panCard: {
                             required:true,
                         },
@@ -463,9 +457,9 @@
                         photo: {
                             required:true,
                         },
-                        'gAllSem[]': {
-                            required:true,
-                        },
+                        // 'gAllSem[]': {
+                        //     required:true,
+                        // },
                         gPC: {
                             required:true,
                         },
@@ -488,10 +482,10 @@
                         },
                         'preEmpRL[]': {
                             required:true
-                        },
-                        'preEmpBankState[]': {
-                            required:true
                         }
+                        // 'preEmpBankState[]': {
+                        //     required:true
+                        // }
                     },
                     messages: {
                         doj: {
@@ -503,6 +497,9 @@
                         address_proof: {
                             required: "Please upload your address proof"
                         },
+                        address_proof2: {
+                            required: "Please upload your address proof"
+                        },
                         panCard: {
                             required: "Please upload your pan card"
                         },
@@ -512,27 +509,27 @@
                         photo: {
                             required: "Please upload your recent passport size photo",
                         },
-                        'gAllSem[]': {
-                            required: "Please upload your all sem marksheet",
-                        },
+                        // 'gAllSem[]': {
+                        //     required: "Please upload your all sem marksheet",
+                        // },
                         gPC: {
                             required: "Please upload your provisional certificate",
                         },
                         'preEmpPayslip[]': {
-                            required: "Please upload your previous employeer (last 3 to 6 months) payslip"
+                            required: "Please upload your resignation acceptance letter"
                         },
                         'preEmpOL[]': {
-                            required: "Please upload your previous employeer offer letter"
+                            required: "Please upload your offer letter"
                         },
                         'preEmpEL[]': {
-                            required: "Please upload your previous employeer experience letter"
+                            required: "Please upload your experience letter"
                         },
                         'preEmpRL[]': {
-                            required: "Please upload your previous employeer relieving letter"
-                        },
-                        'preEmpBankState[]': {
-                            required: "Please upload your previous employeer bank statement"
+                            required: "Please upload your relieving letter"
                         }
+                        // 'preEmpBankState[]': {
+                        //     required: "Please upload your previous employeer bank statement"
+                        // }
 
                     },
                     onfocusout: false,

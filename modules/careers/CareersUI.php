@@ -575,7 +575,7 @@ class CareersUI extends UserInterface
              */
             if (isset($_POST[$id='applyToJobSubAction']) && strlen($subAction = $_POST[$id]))
             {
-                $jobID = $_GET['ID'];
+                $jobID = (isset($_GET['ID']))? $_GET['ID'] : $_POST['ID'];
                 if(strcmp($subAction, 'processLogin')){}else{
                     $checkData = $this->checkCandidatesData($siteID,$_POST);
                     
@@ -2131,18 +2131,18 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-relievingProofUploadPreview>') !== false || strpos($template['Content'], '<input-relievingProofUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if (document.getElementById(\'relievingProof_file\').value == \'\')
-                    {
-                        alert(\'Please Upload Relieving Letter/Resignation Proof\');
-                        document.getElementById(\'relievingProofFile\').focus();
-                        return false;
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-relievingProofUploadPreview>') !== false || strpos($template['Content'], '<input-relievingProofUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if (document.getElementById(\'relievingProof_file\').value == \'\')
+        //             {
+        //                 alert(\'Please Upload Relieving Letter/Resignation Proof\');
+        //                 document.getElementById(\'relievingProofFile\').focus();
+        //                 return false;
+        //             }
+        //         }';
+        // }
 
         if (strpos($template['Content'], '<input-erName1>') !== false || strpos($template['Content'], '<input-erName1 req>') !== false)
         {
@@ -2177,20 +2177,20 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-previousEmpUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if(document.getElementById(\'erName1\').value != \'\'){
-                        if (document.getElementById(\'previousEmp_file\').value == \'\')
-                        {
-                            alert(\'Please Upload Your Previous Employer1 Payslip\');
-                            document.getElementById(\'previousEmpFile\').focus();
-                            return false;
-                        }  
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-previousEmpUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if(document.getElementById(\'erName1\').value != \'\'){
+        //                 if (document.getElementById(\'previousEmp_file\').value == \'\')
+        //                 {
+        //                     alert(\'Please Upload Your Previous Employer1 Payslip\');
+        //                     document.getElementById(\'previousEmpFile\').focus();
+        //                     return false;
+        //                 }  
+        //             }
+        //         }';
+        // }
 
         // if (strpos($template['Content'], '<input-previousEmpOLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmpOLUploadPreview req>') !== false)
         // {
@@ -2237,20 +2237,20 @@ class CareersUI extends UserInterface
         //         }';
         // }
 
-        if (strpos($template['Content'], '<input-previousEmp2UploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp2UploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if(document.getElementById(\'erName2\').value != \'\'){
-                        if (document.getElementById(\'previousEmp2_file\').value == \'\')
-                        {
-                            alert(\'Please Upload Your Previous Employer2 Payslip\');
-                            document.getElementById(\'previousEmp2File\').focus();
-                            return false;
-                        }  
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-previousEmp2UploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp2UploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if(document.getElementById(\'erName2\').value != \'\'){
+        //                 if (document.getElementById(\'previousEmp2_file\').value == \'\')
+        //                 {
+        //                     alert(\'Please Upload Your Previous Employer2 Payslip\');
+        //                     document.getElementById(\'previousEmp2File\').focus();
+        //                     return false;
+        //                 }  
+        //             }
+        //         }';
+        // }
 
         // if (strpos($template['Content'], '<input-previousEmp2OLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp2OLUploadPreview req>') !== false)
         // {
@@ -2297,20 +2297,20 @@ class CareersUI extends UserInterface
         //         }';
         // }
 
-        if (strpos($template['Content'], '<input-previousEmp3UploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp3UploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if(document.getElementById(\'erName3\').value != \'\'){
-                        if (document.getElementById(\'previousEmp3_file\').value == \'\')
-                        {
-                            alert(\'Please Upload Your Previous Employer3 Payslip\');
-                            document.getElementById(\'previousEmp3File\').focus();
-                            return false;
-                        }  
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-previousEmp3UploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp3UploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if(document.getElementById(\'erName3\').value != \'\'){
+        //                 if (document.getElementById(\'previousEmp3_file\').value == \'\')
+        //                 {
+        //                     alert(\'Please Upload Your Previous Employer3 Payslip\');
+        //                     document.getElementById(\'previousEmp3File\').focus();
+        //                     return false;
+        //                 }  
+        //             }
+        //         }';
+        // }
 
         // if (strpos($template['Content'], '<input-previousEmp3OLUploadPreview>') !== false || strpos($template['Content'], '<input-previousEmp3OLUploadPreview req>') !== false)
         // {
@@ -2402,57 +2402,57 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-eduDocUploadPreview>') !== false || strpos($template['Content'], '<input-eduDocUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if (document.getElementById(\'eduDoc_file\').value == \'\')
-                    {
-                        alert(\'Please Upload Your Degree Certificate\');
-                        document.getElementById(\'eduDocFile\').focus();
-                        return false;
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-eduDocUploadPreview>') !== false || strpos($template['Content'], '<input-eduDocUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if (document.getElementById(\'eduDoc_file\').value == \'\')
+        //             {
+        //                 alert(\'Please Upload Your Degree Certificate\');
+        //                 document.getElementById(\'eduDocFile\').focus();
+        //                 return false;
+        //             }
+        //         }';
+        // }
 
-        if (strpos($template['Content'], '<input-eduDocCMUploadPreview>') !== false || strpos($template['Content'], '<input-eduDocCMUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if (document.getElementById(\'eduDocCM_file\').value == \'\')
-                    {
-                        alert(\'Please upload your Consolidated marksheet\');
-                        document.getElementById(\'eduDocCMFile\').focus();
-                        return false;
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-eduDocCMUploadPreview>') !== false || strpos($template['Content'], '<input-eduDocCMUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if (document.getElementById(\'eduDocCM_file\').value == \'\')
+        //             {
+        //                 alert(\'Please upload your Consolidated marksheet\');
+        //                 document.getElementById(\'eduDocCMFile\').focus();
+        //                 return false;
+        //             }
+        //         }';
+        // }
 
-        if (strpos($template['Content'], '<input-eduDocPCUploadPreview>') !== false || strpos($template['Content'], '<input-eduDocPCUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if (document.getElementById(\'eduDocPC_file\').value == \'\')
-                    {
-                        alert(\'Please upload your provisional certificate\');
-                        document.getElementById(\'eduDocPCFile\').focus();
-                        return false;
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-eduDocPCUploadPreview>') !== false || strpos($template['Content'], '<input-eduDocPCUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if (document.getElementById(\'eduDocPC_file\').value == \'\')
+        //             {
+        //                 alert(\'Please upload your provisional certificate\');
+        //                 document.getElementById(\'eduDocPCFile\').focus();
+        //                 return false;
+        //             }
+        //         }';
+        // }
 
-        if (strpos($template['Content'], '<input-eduDocCCUploadPreview>') !== false || strpos($template['Content'], '<input-eduDocCCUploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if (document.getElementById(\'eduDocCC_file\').value == \'\')
-                    {
-                        alert(\'Please upload your convocation certificate\');
-                        document.getElementById(\'eduDocCCFile\').focus();
-                        return false;
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-eduDocCCUploadPreview>') !== false || strpos($template['Content'], '<input-eduDocCCUploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if (document.getElementById(\'eduDocCC_file\').value == \'\')
+        //             {
+        //                 alert(\'Please upload your convocation certificate\');
+        //                 document.getElementById(\'eduDocCCFile\').focus();
+        //                 return false;
+        //             }
+        //         }';
+        // }
 
         if (strpos($template['Content'], '<input-board12th>') !== false || strpos($template['Content'], '<input-board12th req>') !== false)
         {
@@ -2487,18 +2487,18 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-eduDoc12UploadPreview>') !== false || strpos($template['Content'], '<input-eduDoc12UploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if (document.getElementById(\'eduDoc12_file\').value == \'\')
-                    {
-                        alert(\'Please Upload Your 12th Marksheet\');
-                        document.getElementById(\'eduDoc12File\').focus();
-                        return false;
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-eduDoc12UploadPreview>') !== false || strpos($template['Content'], '<input-eduDoc12UploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if (document.getElementById(\'eduDoc12_file\').value == \'\')
+        //             {
+        //                 alert(\'Please Upload Your 12th Marksheet\');
+        //                 document.getElementById(\'eduDoc12File\').focus();
+        //                 return false;
+        //             }
+        //         }';
+        // }
 
         if (strpos($template['Content'], '<input-board10th>') !== false || strpos($template['Content'], '<input-board10th req>') !== false)
         {
@@ -2533,18 +2533,18 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-eduDoc10UploadPreview>') !== false || strpos($template['Content'], '<input-eduDoc10UploadPreview req>') !== false)
-        {
-            $validator .= '
-                if(document.getElementById(\'candidateID\').value == -1){
-                    if (document.getElementById(\'eduDoc10_file\').value == \'\')
-                    {
-                        alert(\'Please Upload Your 10th Marksheet\');
-                        document.getElementById(\'eduDoc10File\').focus();
-                        return false;
-                    }
-                }';
-        }
+        // if (strpos($template['Content'], '<input-eduDoc10UploadPreview>') !== false || strpos($template['Content'], '<input-eduDoc10UploadPreview req>') !== false)
+        // {
+        //     $validator .= '
+        //         if(document.getElementById(\'candidateID\').value == -1){
+        //             if (document.getElementById(\'eduDoc10_file\').value == \'\')
+        //             {
+        //                 alert(\'Please Upload Your 10th Marksheet\');
+        //                 document.getElementById(\'eduDoc10File\').focus();
+        //                 return false;
+        //             }
+        //         }';
+        // }
 
         if (strpos($template['Content'], '<input-phone>') !== false || strpos($template['Content'], '<input-phone req>') !== false)
         {
@@ -4743,7 +4743,7 @@ class CareersUI extends UserInterface
 
         $returnVal = true;
         
-        $listFiles = array('bgc','address_proof','panCard','ba_deputation_letter','ba_offer_letter','aadhar_proof','photo','gPC','pgPC','pgCert','gap_affidavit','acc_verify');
+        $listFiles = array('bgc','address_proof','address_proof2','panCard','aadhar_proof','photo','gPC','pgPC','pgCert','gap_affidavit','acc_verify');
         $arrayListFiles = array('gAllSem','pgAllSem','preEmpPayslip','preEmpOL','preEmpEL','preEmpRL','preEmpBankState');
         foreach ($listFiles as $key => $value) {
             // echo 'value->'.$value.'<br>';
@@ -4756,12 +4756,12 @@ class CareersUI extends UserInterface
                     DATA_ITEM_CANDIDATE, $candidate_id, $value, false, true,$value
                 );
 
-                echo "File-><pre>";
-                print_r($attachmentCreator);
-                echo "</pre>";
+                // echo "File-><pre>";
+                // print_r($attachmentCreator);
+                // echo "</pre>";
 
-                echo 'isError->'.$attachmentCreator->isError().'<br>';
-                echo 'Error->'.$attachmentCreator->getError().'<br>';
+                // echo 'isError->'.$attachmentCreator->isError().'<br>';
+                // echo 'Error->'.$attachmentCreator->getError().'<br>';
 
                 if ($attachmentCreator->isError())
                 {
@@ -4785,9 +4785,9 @@ class CareersUI extends UserInterface
                     DATA_ITEM_CANDIDATE, $candidate_id, $value, false, true,$value
                 );
 
-                echo "<pre>";
-                print_r($attachmentCreator);
-                echo "</pre>";
+                // echo "<pre>";
+                // print_r($attachmentCreator);
+                // echo "</pre>";
 
                 if ($attachmentCreator->isError())
                 {
