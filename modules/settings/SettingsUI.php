@@ -2013,6 +2013,7 @@ class SettingsUI extends UserInterface
 
         $sendMailFlag = 'N';
         $messageAlert = '';
+        $sub  = 'Offer Letter';
 
         if(isset($_POST['postback']) && $_POST['postback'] == 'candidateID'){
 
@@ -2034,6 +2035,7 @@ class SettingsUI extends UserInterface
 
             if(!empty($pdfPath)){
                 $sendMailFlag = 'Y';
+                $sub  = $_POST['offerletter_type'].' Offer Letter';
             }
             
             $fullName = $candidateDetails[0]['firstName'].' '.$candidateDetails[0]['lastName'];
@@ -2049,9 +2051,6 @@ class SettingsUI extends UserInterface
 
         }
         if(isset($_POST['postback']) && $_POST['postback'] == 'postback'){
-            
-            $refNoData = $candidates->offerLetterRefNo($_POST['candidateID']);
-            $refNo        = ATS_REF_NO_PRE.$refNoData['refNo'];
 
             $offerLetterType = $_POST['offerletter_type'];
             
@@ -2064,11 +2063,6 @@ class SettingsUI extends UserInterface
             $city = ($_POST['city'])? $_POST['city'] : $candidateDetails[0]['city'];
             $state = ($_POST['state'])? $_POST['state'] : $candidateDetails[0]['state'];
             $zip = ($_POST['zip'])? $_POST['zip'] : $candidateDetails[0]['zip'];
-            
-            $address = '<strong>'.$fullName.'</strong>'.',<br>';
-            $address .= $addressNew.',<br>';
-            $address .= $city.',<br>';
-            $address .= $state.'-'.$zip;
 
             $doj          = $_POST['doj'];
             $designation  = $_POST['designation'];
@@ -2076,7 +2070,27 @@ class SettingsUI extends UserInterface
             $validDate    = $_POST['validDate'];
             $offerDate    = $_POST['offerDate'];
 
+            $salutation = $_POST['salutation'];
+            $fatherName = $_POST['fatherName'];
+            $gender = $_POST['gender'];
+            $maritalStatus = $_POST['maritalStatus'];
+
+            $address = '<strong>'.$fullName.'</strong>'.',<br>';
+            if($gender == 'M'){
+                $address = '<strong>Mr. '.$fullName.'</strong>'.',<br>';
+                $address .= 'S/O: '.$fatherName.',<br>';
+            }elseif($gender == 'F'){
+                $address = '<strong>Ms. '.$fullName.'</strong>'.',<br>';
+                $address .= 'D/O: '.$fatherName.',<br>';
+            }
+            $address .= $addressNew.',<br>';
+            $address .= $city.',<br>';
+            $address .= $state.'-'.$zip;
+
+            $refNo = $_POST['refNo'];
+            $refNoId = explode('/',$refNo)[4];
             
+            $refNoData = $candidates->offerLetterRefNo($_POST['candidateID'],$refNoId);
 
             $pdfPath =  $this->maillAttach($fullName,$address,$_POST,$fname,$refNo);
 
@@ -2090,11 +2104,19 @@ class SettingsUI extends UserInterface
             }
 
             
-            $offerLetterData = $candidates->offerLetter($_POST['candidateID'],$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$gratuityYN,$refNo,$offerLetterType,$addressNew,$city,$state,$zip);
+            $offerLetterData = $candidates->offerLetter($_POST['candidateID'],$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$gratuityYN,$refNo,$offerLetterType,$addressNew,$city,$state,$zip,$offerDate,$salutation,$fatherName,$gender,$maritalStatus);
             $selectedData = $offerLetterData['candidateID'];
             $selectedOfferType = $offerLetterData['offerletter_type'];
             $sendMailFlag = 'Y';
             $offerLetterData['doj'] = date_format(date_create($offerLetterData['doj']),"d-M-Y");
+
+            $sub  = $_POST['offerletter_type'].' Offer Letter';
+
+            if($refNoData['status'] == 'E'){
+                $messageAlert = $refNoData['error_message'];
+                $pdfPath='';
+                $sendMailFlag = 'N';   
+            }
             
         }
 
@@ -2144,7 +2166,7 @@ class SettingsUI extends UserInterface
             );
         }
 
-        $sub  = 'Offer Letter';
+        
         $msg  = '<p>Hi '.$fullName.',</p>';
         $msg .= '<p>Greetings from VHS Consulting India Private Limited!!!</p>';
         $msg .= '<p>Please find the attachment.</p>';
@@ -2180,16 +2202,22 @@ class SettingsUI extends UserInterface
     private function maillAttach($fullName,$address,$val,$fname,$refNo){
 
         
-        $currDate     = date_format(date_create(date('d-F-y')),"j\<\s\u\p\>S\<\/\s\u\p\> M Y");
+        $currDate     = date_format(date_create($val['offerDate']),"j\<\s\u\p\>S\<\/\s\u\p\> M Y");
         $doj          = date_format(date_create($val['doj']),"j\<\s\u\p\>S\<\/\s\u\p\> M Y");
 
         $designation  = $val['designation'];
-        $fullName     = $fullName;
         $annual       = preg_replace("/(\d+?)(?=(\d\d)+(\d)(?!\d))(\.\d+)?/i", "$1,", $val['annual']);
         $annualLetter = $this->getIndianCurrency($val['annual']);
         $validDate    = date_format(date_create($val['validDate']),"j\<\s\u\p\>S\<\/\s\u\p\> M Y");
 
         $offerLetterType = $val['offerletter_type'];
+
+        $nameSign = $fullName;
+        if($val['gender'] == 'M'){
+            $nameSign = 'Mr. '.$fullName;
+        }elseif ($val['gender'] == 'F') {
+            $nameSign = 'Ms. '.$fullName;
+        }
 
         $displayYN = 'display:none';
         if(isset($val['insuranceYN']) && $val['insuranceYN'] == 'Y'){
@@ -2337,6 +2365,7 @@ class SettingsUI extends UserInterface
         $str=str_replace('XXcurr_dateXX', $currDate,$str);
         $str=str_replace('XXjoinDateXX', $doj,$str);
         $str=str_replace('XXnameXX', $fullName,$str);
+        $str=str_replace('XXnameSignXX', $nameSign,$str);
         $str=str_replace('XXaddressXX', $address,$str);
         $str=str_replace('XXdesignationXX', $designation,$str);
         $str=str_replace('XXannualIntXX', $annual,$str);

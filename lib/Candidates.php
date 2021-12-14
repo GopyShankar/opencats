@@ -690,7 +690,7 @@ class Candidates
 
     /** add/update the offer letter pdf generate start */
 
-    public function offerLetter($candidateID,$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$gratuityYN,$refNo,$offerType,$addressNew,$city,$state,$zip){
+    public function offerLetter($candidateID,$fullName,$doj,$email,$designation,$annual,$validDate,$pdfPath,$user_id,$insuranceYN,$gratuityYN,$refNo,$offerType,$addressNew,$city,$state,$zip,$offerDate,$salutation,$fatherName,$gender,$maritalStatus){
         
         $getData = $this->checkOfferLetterData($candidateID,$offerType);
         
@@ -716,9 +716,19 @@ class Candidates
                     address,
                     city,
                     state,
-                    zip
+                    zip,
+                    offer_date,
+                    salutation,
+                    fatherName,
+                    gender,
+                    maritalStatus
                 )
                 VALUES(
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
                     %s,
                     %s,
                     %s,
@@ -759,7 +769,12 @@ class Candidates
                 $this->_db->makeQueryString($addressNew),
                 $this->_db->makeQueryString($city),
                 $this->_db->makeQueryString($state),
-                $this->_db->makeQueryString($zip)
+                $this->_db->makeQueryString($zip),
+                $this->_db->makeQueryString($offerDate),
+                $this->_db->makeQueryString($salutation),
+                $this->_db->makeQueryString($fatherName),
+                $this->_db->makeQueryString($gender),
+                $this->_db->makeQueryString($maritalStatus)
             );
         }else{
             $sql1 = sprintf(
@@ -775,12 +790,18 @@ class Candidates
                     pdfPath = %s,
                     insuranceYN = %s,
                     gratuityYN = %s,
+                    refNo = %s,
                     date_modified = %s,
                     modified_by = %s,
                     address = %s,
                     city = %s,
                     state = %s,
-                    zip = %s
+                    zip = %s,
+                    offer_date = %s,
+                    salutation = %s,
+                    fatherName = %s,
+                    gender = %s,
+                    maritalStatus= %s
                 WHERE
                     candidate_id = %s AND
                     offer_type = %s
@@ -794,12 +815,18 @@ class Candidates
                 $this->_db->makeQueryString($pdfPath),
                 $this->_db->makeQueryString($insuranceYN),
                 $this->_db->makeQueryString($gratuityYN),
+                $this->_db->makeQueryString($refNo),
                 $this->_db->makeQueryString(CURRENT_TIME),
                 $this->_db->makeQueryString($user_id),
                 $this->_db->makeQueryString($addressNew),
                 $this->_db->makeQueryString($city),
                 $this->_db->makeQueryString($state),
                 $this->_db->makeQueryString($zip),
+                $this->_db->makeQueryString($offerDate),
+                $this->_db->makeQueryString($salutation),
+                $this->_db->makeQueryString($fatherName),
+                $this->_db->makeQueryString($gender),
+                $this->_db->makeQueryString($maritalStatus),
                 $this->_db->makeQueryInteger($candidateID),
                 $this->_db->makeQueryString($offerType)
             );
@@ -829,7 +856,12 @@ class Candidates
                 offerletter.address AS address,
                 offerletter.city AS city,
                 offerletter.state AS state,
-                offerletter.zip AS zip
+                offerletter.zip AS zip,
+                offerletter.offer_date AS offer_date,
+                offerletter.salutation AS salutation,
+                offerletter.fatherName AS fatherName,
+                offerletter.gender AS gender,
+                offerletter.maritalStatus AS maritalStatus
             FROM
                 offerletter
             WHERE
@@ -843,29 +875,49 @@ class Candidates
         return $this->_db->getAssoc($sql);
     }
 
-    public function offerLetterRefNo($candidateID){
-        $getData = $this->checkOfferLetterRefNo($candidateID);
-
-        if(empty($getData)){
+    public function offerLetterRefNo($candidateID,$refNoId){
+        $getData = $this->checkOfferLetterRefNo($candidateID,$refNoId);
+        
+        $checkMatch = $this->matchRefValues($getData,$candidateID,$refNoId);
+        
+        if(!$checkMatch){
             $sql1 = sprintf(
                 "INSERT INTO offerletter_refno (
+                    id,
                     candidate_id,
                     created_date
                 )VALUES(
                     %s,
+                    %s,
                     %s
                 )
                 ",
+                $this->_db->makeQueryInteger($refNoId),
                 $this->_db->makeQueryInteger($candidateID),
                 $this->_db->makeQueryString(CURRENT_TIME)
             );
-            $queryResult = $this->_db->query($sql1);
+            $queryResult = $this->_db->query($sql1,true);
+            if(mysql_error($this->_db->getConnection())){
+                return array('error_message'=>'reference no already exists', 'status'=>'E');    
+            }
+            return array('error_message'=>'data inserted successfully', 'status'=>'S');   
         }
+        
 
-        return $this->checkOfferLetterRefNo($candidateID);
+        // return $this->checkOfferLetterRefNo($candidateID,$refNoId);
     }
 
-    public function checkOfferLetterRefNo($candidateID){
+    public function matchRefValues($getData,$candidateID,$refNoId){
+        foreach ($getData as $key => $value) {
+            if($value['refNo'] == $refNoId && $value['candidateID'] == $candidateID){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function checkOfferLetterRefNo($candidateID,$refNoId){
         $sql = sprintf(
             "SELECT
                 offerletter_refno.id AS refNo,
@@ -874,10 +926,31 @@ class Candidates
                 offerletter_refno
             WHERE
                 offerletter_refno.candidate_id = %s
+                OR
+                offerletter_refno.id = %s
             ",
-            $this->_db->makeQueryInteger($candidateID)
+            $this->_db->makeQueryInteger($candidateID),
+            $this->_db->makeQueryInteger($refNoId )
         );
-        return $this->_db->getAssoc($sql);
+        return $this->_db->getAllAssoc($sql);
+    }
+
+    public function getOfferLetterRefNo($candidateID,$refNoId){
+        $sql = sprintf(
+            "SELECT
+                offerletter_refno.id AS refNo,
+                offerletter_refno.candidate_id AS candidateID
+            FROM
+                offerletter_refno
+            WHERE
+                offerletter_refno.candidate_id = %s
+                AND
+                offerletter_refno.id = %s
+            ",
+            $this->_db->makeQueryInteger($candidateID),
+            $this->_db->makeQueryInteger($refNoId )
+        );
+        return $this->_db->getAllAssoc($sql);
     }
 
     /** add/update the offer letter pdf generate end */ 

@@ -76,7 +76,7 @@
                                     <input type="text" name="candidateName" id="candidateName" tabindex="7" class="inputbox" style="width: 400px" onFocus="suggestListActivate('getCandidateNames', 'candidateName', 'CompanyResults', 'candidateID', 'ajaxTextEntryHover', 0, '<?php echo($this->sessionCookie); ?>', 'helpShim');" onchange="setTimeout(function(){ getCandidatesData(); }, 1000);" value="<?php (isset($this->offerLetterData['name']))?$this->_($this->offerLetterData['name']) : ''; ?>" />
                                     <br />
                                     <iframe id="helpShim" src="javascript:void(0);" scrolling="no" frameborder="0" style="position:absolute; display:none;"></iframe>
-                                    <div id="CompanyResults" class="ajaxSearchResults"></div>
+                                    <div id="CompanyResults" class="ajaxSearchResults" onclick="getCandidatesData()" ></div>
                                 </td>
                             </tr>
                         </table>
@@ -124,7 +124,7 @@
                                     <label id="referenceLabel" for="refNo">Letter Reference No</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="refNo" id="refNo" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['refNo']))?$this->_($this->offerLetterData['refNo']):''; ?>" >
+                                    <input type="text" name="refNo" id="refNo" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['refNo']))?$this->_($this->offerLetterData['refNo']):$this->_(ATS_REF_NO_PRE); ?>" maxlength=19 >
                                 </td>
                             </tr>
                             <tr>
@@ -132,7 +132,7 @@
                                     <label id="offerDateLabel" for="offerDate">Offer Date</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="offerDate" id="offerDate" class="inputbox date_picker" style="width: 400px;" value='<?php echo date("d-M-y"); ?>' >
+                                    <input type="text" name="offerDate" id="offerDate" class="inputbox date_picker" style="width: 400px;" value='<?php (isset($this->offerLetterData['offer_date']))?$this->_($this->offerLetterData['offer_date']): $this->_(date("d-M-y")); ?>' >
                                 </td>
                             </tr>
                             <tr>
@@ -143,7 +143,47 @@
                                     <input type="text" name="cname" id="cname" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['name']))?$this->_($this->offerLetterData['name']):''; ?>" >
                                 </td>
                             </tr>
-                             <tr>
+
+                            <tr>
+                                <td class="tdVertical" style="text-align: right;">
+                                    <label id="salutationLabel" for="salutation">Salutation</label>
+                                </td>
+                                <td class="tdData">
+                                    <input type="radio" name="salutation" id="salutationMr" class="inputbox" value="Mr" <?php echo (isset($this->offerLetterData['salutation']) && $this->offerLetterData['salutation'] == 'Mr')? 'checked':''; ?> > Mr
+                                    <input type="radio" name="salutation" id="salutationMs" class="inputbox" value="Ms" <?php echo (isset($this->offerLetterData['salutation']) && $this->offerLetterData['salutation'] == 'Ms')? 'checked':''; ?> > Ms
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="tdVertical" style="text-align: right;">
+                                    <label id="fatherNameLabel" for="fatherName">Father Name</label>
+                                </td>
+                                <td class="tdData">
+                                    <input type="text" name="fatherName" id="fatherName" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['fatherName']))?$this->_($this->offerLetterData['fatherName']):''; ?>">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="tdVertical" style="text-align: right;">
+                                    <label id="genderLabel" for="gender">Gender</label>
+                                </td>
+                                <td class="tdData">
+                                    <input type="radio" name="gender" id="genderM" class="inputbox" value="M" <?php echo (isset($this->offerLetterData['gender']) && $this->offerLetterData['gender'] == 'M')? 'checked':''; ?> > Male
+                                    <input type="radio" name="gender" id="genderF" class="inputbox" value="F" <?php echo (isset($this->offerLetterData['gender']) && $this->offerLetterData['gender'] == 'F')? 'checked':''; ?> > Female
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="tdVertical" style="text-align: right;">
+                                    <label id="maritalStatusLabel" for="maritalStatus">Marital Status</label>
+                                </td>
+                                <td class="tdData">
+                                    <input type="radio" name="maritalStatus" id="maritalStatusS" class="inputbox" value="S" <?php echo (isset($this->offerLetterData['maritalStatus']) && $this->offerLetterData['maritalStatus'] == 'S')? 'checked':''; ?> > Single
+                                    <input type="radio" name="maritalStatus" id="maritalStatusM" class="inputbox" value="M" <?php echo (isset($this->offerLetterData['maritalStatus']) && $this->offerLetterData['maritalStatus'] == 'M')? 'checked':''; ?> > Married
+                                </td>
+                            </tr>
+                            
+                            <tr>
                                 <td class="tdVertical" style="text-align: right;">
                                     <label id="validEmailLabel" for="email">Email</label>
                                 </td>
@@ -180,7 +220,7 @@
                                     <label id="validNameLabel" for="zip"> Zip</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="zip" id="zip" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['zip']))?$this->_($this->offerLetterData['zip']):''; ?>" >
+                                    <input type="text" name="zip" id="zip" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['zip']))?$this->_($this->offerLetterData['zip']):''; ?>" maxlength=6 >
                                 </td>
                             </tr>
                             <tr>
@@ -237,7 +277,7 @@
                     </form>
                     </div>
                     <div style="float: right;width: 55%;">
-                        <iframe id="pdfView" src="<?php $this->_($this->pdfPath); ?>" width="100%" height="500"></iframe>
+                        <iframe id="pdfView" src="<?php $this->_($this->pdfPath); ?>" width="100%" height="700"></iframe>
                     </div>
 
 			        <script type="text/javascript">
@@ -275,7 +315,7 @@
                                 setTimeout(function(){
                                     var $frame = document.getElementById('pdfView');
                                     $frame.contentWindow.location.href = $frame.src;    
-                                }, 1000)
+                                }, 2000)
                                 
                             <?php } ?>
                         });

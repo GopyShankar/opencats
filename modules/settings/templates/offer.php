@@ -58,18 +58,18 @@
 						<strong>Date   : XXcurr_dateXX</strong>
 					</td>
 				</tr>
-			</table><br><br>
+			</table><br>
 			<table width="100%"  border="0" cellspacing="0" cellpadding="0"  border="0">
 				<tr>
-					<td>To,</td>
-				</tr>
-				<tr>
-					<td>XXaddressXX</td>
+					<td>
+						<strong>To,</strong><br>
+						XXaddressXX
+					</td>
 				</tr>
 				<tr>
 					<td><u><center><strong>SUB: LETTER OF OFFER FOR EMPLOYMENT</strong></center></u></td>
 				</tr>
-			</table><br>
+			</table>
 			<table width="100%"  border="0" cellspacing="0" cellpadding="0"  border="0">
 				<tr>
 					<td><strong>Dear XXnameXX,</strong></td>
@@ -258,11 +258,11 @@
 				<tr>
 					<td align="left">
 						<p><img src="/images/temp/hr_sign.jpg" width="150px"></p>
-						<p style="padding-left: 25px">Roshitha P Pinto<br>Senior HR Executive</p>
+						<p style="padding-left: 25px">Roshitha P Pinto<br>HR Manager</p>
 					</td>
 					<td align="right">
 						<p style="padding-left: 25px">Signature:.................</p>
-						<p style="padding-left: 25px"><strong>XXnameXX</strong></p>
+						<p style="padding-left: 25px"><strong>XXnameSignXX</strong></p>
 					</td>
 				</tr>
 			</table>

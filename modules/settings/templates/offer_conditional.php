@@ -43,11 +43,12 @@
 			</tr>
 		</table><br><br>
 		<table width="100%"  border="0" cellspacing="0" cellpadding="0"  border="0">
+			
 			<tr>
-				<td>To,</td>
-			</tr>
-			<tr>
-				<td>XXaddressXX</td>
+				<td>
+					<strong>To,</strong><br>
+					XXaddressXX
+				</td>
 			</tr>
 		</table><br><br><br>
 		<table width="100%"  border="0" cellspacing="0" cellpadding="0"  border="0">
@@ -99,7 +100,7 @@
                 <td style="font-size:15px;text-align:center;text-decoration: underline;" width="100%" class="bolder">Salary Structure</td>
             </tr>
         </table>
-        <br><br>
+        <br>
         <table width="100%" cellspacing="0" cellpadding="5" border="1">
         	<tbody>
         		<tr>
@@ -174,7 +175,7 @@
         		</tr>
         	</tbody>
         </table>
-        <br><br><br>
+        <br>
         <table  width="100%" cellspacing="0" cellpadding="5">
         	<tr>
         		<td><strong>Note:</strong></td>
@@ -189,7 +190,7 @@
         		</td>
         	</tr>
         </table>
-        <br><br>
+        <br>
 		<table width="100%"  border="0" cellspacing="0" cellpadding="0"  border="0">
             <tr>
                 <td>Feel free to call us for further clarifications.</td>
@@ -204,9 +205,12 @@
 			<tr>
 				<td align="left">
 					<p><img src="/images/temp/hr_sign.jpg" width="150px"></p>
-					<p style="padding-left: 25px">Roshitha P Pinto<br>Senior HR Executive</p>
+					<p style="padding-left: 25px">Roshitha P Pinto<br>HR Manager</p>
 				</td>
-				<td align="right"><p style="padding-left: 25px">Signature:</p></td>
+				<td align="right">
+					<p style="padding-left: 25px">Signature:.................</p>
+					<p style="padding-left: 25px"><strong>XXnameSignXX</strong></p>
+				</td>
 			</tr>
 		</table>
 	</body>

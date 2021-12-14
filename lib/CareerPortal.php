@@ -567,7 +567,12 @@ class CareerPortalSettings
                 offerletter.address AS address,
                 offerletter.city AS city,
                 offerletter.state AS state,
-                offerletter.zip AS zip
+                offerletter.zip AS zip,
+                offerletter.offer_date AS offer_date,
+                offerletter.salutation AS salutation,
+                offerletter.fatherName AS fatherName,
+                offerletter.gender AS gender,
+                offerletter.maritalStatus AS maritalStatus
             FROM
                 offerletter
             WHERE

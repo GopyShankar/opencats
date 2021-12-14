@@ -156,6 +156,12 @@ function checkOfferLetterForm(){
     errorMessage += checkDesignationValid();
     errorMessage += checkAnnualValid();
     errorMessage += checkvalidDateValid();
+    errorMessage += checkvalidRefno();
+
+    errorMessage += checkSalutationValid();
+    errorMessage += checkFatherNameValid();
+    errorMessage += checkGenderValid();
+    errorMessage += checkMaritalStatusValid();
 
     if (errorMessage != '')
     {
@@ -255,6 +261,105 @@ function checkvalidDateValid()
     if (fieldValue == '')
     {
         errorMessage = "    - You must enter the validDate.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else
+    {
+        fieldLabel.style.color = '#000';
+    }
+
+    return errorMessage;
+}
+
+function checkvalidRefno(){
+    var errorMessage = '';
+
+    fieldValue = document.getElementById('refNo').value;
+    fieldLabel = document.getElementById('referenceLabel');
+    if (fieldValue.split('/')[4] == '')
+    {
+        errorMessage = "    - You must enter the Letter Reference No.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else
+    {
+        fieldLabel.style.color = '#000';
+    }
+
+    return errorMessage;    
+}
+
+function checkSalutationValid()
+{
+    var errorMessage = '';
+
+    
+    fieldLabel = document.getElementById('salutationLabel');
+    if (!$('[name="salutation"]').is(":checked"))
+    {
+        errorMessage = "    - You must select the salutation.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else
+    {
+        fieldLabel.style.color = '#000';
+    }
+
+    return errorMessage;
+}
+
+function checkFatherNameValid()
+{
+    var errorMessage = '';
+
+    fieldValue = document.getElementById('fatherName').value;
+    fieldLabel = document.getElementById('fatherNameLabel');
+    if (fieldValue == '')
+    {
+        errorMessage = "    - You must enter the father name.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else
+    {
+        fieldLabel.style.color = '#000';
+    }
+
+    return errorMessage;
+}
+
+function checkGenderValid()
+{
+    var errorMessage = '';
+
+    
+    fieldLabel = document.getElementById('genderLabel');
+    if (!$('[name="gender"]').is(":checked"))
+    {
+        errorMessage = "    - You must select the gender.\n";
+
+        fieldLabel.style.color = '#ff0000';
+    }
+    else
+    {
+        fieldLabel.style.color = '#000';
+    }
+
+    return errorMessage;
+}
+
+function checkMaritalStatusValid()
+{
+    var errorMessage = '';
+
+    
+    fieldLabel = document.getElementById('maritalStatusLabel');
+    if (!$('[name="maritalStatus"]').is(":checked"))
+    {
+        errorMessage = "    - You must select the marital status.\n";
 
         fieldLabel.style.color = '#ff0000';
     }
@@ -594,7 +699,10 @@ function checkCandidateField(){
 }
 
 function getCandidatesData(){
-    document.candidateForm.submit();
+    console.log($('.ajaxSearchResults').is(':visible'));
+    if(!$('.ajaxSearchResults').is(':visible')){
+        document.candidateForm.submit();
+    }
 }
 
 function getCandidatesOfferData(){
