@@ -2007,7 +2007,7 @@ class SettingsUI extends UserInterface
         $pdfPath = '';
         $offerLetterData = array();
         $candidates = new Candidates($this->_siteID);
-        $refNo        = ATS_REF_NO_PRE; 
+        $refNo        = ''; 
         $selectedData = '';
         $selectedOfferType = ''; 
 

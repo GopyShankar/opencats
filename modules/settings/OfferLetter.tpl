@@ -124,7 +124,7 @@
                                     <label id="referenceLabel" for="refNo">Letter Reference No</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="refNo" id="refNo" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['refNo']))?$this->_($this->offerLetterData['refNo']):$this->_(ATS_REF_NO_PRE); ?>" maxlength=19 >
+                                    <input type="text" name="refNo" id="refNo" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['refNo']))?$this->_($this->offerLetterData['refNo']): ($this->selectedOfferType == 'conditional') ? $this->_(ATS_REF_NO_PRE_COL) : $this->_(ATS_REF_NO_PRE_OL); ?>" <?php echo (isset($this->selectedOfferType) && $this->selectedOfferType == 'conditional') ? 'maxlength=22' : 'maxlength=21'; ?>  >
                                 </td>
                             </tr>
                             <tr>

@@ -293,6 +293,7 @@ $badFileExtensions = array(
 );
 
 /* Offer letter ref no prefix */
-define('ATS_REF_NO_PRE', 'VHS/HR/OL/21-22/');
+define('ATS_REF_NO_PRE_OL', 'VHS/HR/OL/21-22/');
+define('ATS_REF_NO_PRE_COL', 'VHS/HR/COL/21-22/');
 
 ?>
