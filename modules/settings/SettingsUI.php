@@ -2353,6 +2353,11 @@ class SettingsUI extends UserInterface
         $totalPM = round($grossPayPM+$retiralsBenefitsPM+$insurancePM);
         $totalPA = round($grossPayPA+$retiralsBenefitsPA+$insurancePA);
 
+        $FTEConditions = '';
+        if($offerLetterType == 'conditional' && $val['gender'] == 'F'){
+            $FTEConditions = '<li>The employment with VHS Consulting India Pvt Ltd., will be a Fixed Term Employment for a period of one year from the payroll date of joining.</li>';    
+        }
+
 
         if($offerLetterType == 'conditional'){
             $str = file_get_contents("./modules/settings/templates/offer_conditional.php");
@@ -2396,6 +2401,7 @@ class SettingsUI extends UserInterface
         $str=str_replace('XXgrandTotalPAXX', $totalPA,$str);
         $str=str_replace('XXdisplayYNXX', $displayYN, $str);
         $str=str_replace('XXtotalLabelXX', $totalLabel, $str);
+        $str=str_replace('XXFTEConditionsXX', $FTEConditions, $str);
         // echo $str;exit();
         // file_put_contents('./modules/settings/templates/offer.php', $str);
         // $conthtml = file_get_contents("./modules/settings/templates/offer.php");
@@ -2412,7 +2418,11 @@ class SettingsUI extends UserInterface
             'orientation' => 'P',
             'setAutoTopMargin' => 'pad'    
         );
-        $pdfFile = $fname."_".$offerLetterType."_"."_OfferLetter.pdf";
+        if($offerLetterType == 'conditional' && $val['gender'] == 'F'){
+            $pdfFile = $fname."_".$offerLetterType."_FTE_OfferLetter.pdf";
+        }else{
+            $pdfFile = $fname."_".$offerLetterType."_"."OfferLetter.pdf";
+        }
         $subDirectory = 'generateOfferLetter';
         $uploadPath = FileUtility::getUploadPath($this->_siteID, $subDirectory);
         

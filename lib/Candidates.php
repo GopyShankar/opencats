@@ -1415,7 +1415,8 @@ class Candidates
                 candidate.candidate_id AS candidateID,
                 CONCAT(
                     candidate.first_name, ' ', candidate.last_name
-                ) AS name
+                ) AS name,
+                candidate.email1 AS email
             FROM
                 candidate
             WHERE

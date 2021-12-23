@@ -80,6 +80,7 @@
 						<li>Your appointment is subject to submission all required documents to complete client onboarding process.</li>
 						<li>Your payroll and BGV will start after selection and onboarding with the client.</li>
 						<li>Your Tentative Date of Joining is <strong>XXjoinDateXX</strong>.</li>
+						XXFTEConditionsXX
 					</ul>
 						
 				</td>

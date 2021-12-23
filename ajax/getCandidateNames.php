@@ -81,7 +81,7 @@ foreach ($candidatesArray as $rowIndex => $row)
     $output .=
         "    <result>\n" .
         "        <id>"   . $candidatesArray[$rowIndex]['candidateID'] . "</id>\n" .
-        "        <name>" . rawurlencode($candidatesArray[$rowIndex]['name']) . "</name>\n" .
+        "        <name>" . rawurlencode($candidatesArray[$rowIndex]['name']) .'('. $candidatesArray[$rowIndex]['email']. ") </name>\n" .
         "    </result>\n";
 }
 
