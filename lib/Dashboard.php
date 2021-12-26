@@ -268,6 +268,301 @@ class Dashboard
         
         return $data;
     }
+
+
+    public function getNewProfile(){
+        $sql = sprintf(
+            "SELECT CAST(date_created as DATE) AS date_list,COUNT(*) AS counts FROM candidate c WHERE c.date_created >= date_add(curdate(), interval -10 day) group by CAST(date_created as DATE)",
+            $this->_siteID
+        );
+
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;    
+    }
+
+    public function getDataList($status){
+        $sql = sprintf(
+            "SELECT CAST(date_modified AS DATE) AS date_list, COUNT(*) AS dataCount FROM candidate_joborder c WHERE c.date_modified >= DATE_ADD(CURDATE(), INTERVAL -10 DAY) AND status = %s GROUP BY CAST(date_modified AS DATE)",
+            $this->_db->makeQueryString($status),
+            $this->_siteID
+        );
+
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;    
+    }
+
+    public function getShortList(){
+        $sql = sprintf(
+            "SELECT CAST(date_modified AS DATE) AS date_list, COUNT(*) AS dataCount FROM candidate_joborder c WHERE c.date_modified >= DATE_ADD(CURDATE(), INTERVAL -10 DAY) AND status IN (525,550,600) GROUP BY CAST(date_modified AS DATE)",
+            $this->_siteID
+        );
+
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;    
+    }
+
+    public function statusPercentage(){
+        
+        $sql = sprintf(
+            "SELECT STATUS, COUNT(*) AS PERCENTAGE FROM candidate_joborder WHERE STATUS IN (525,550,560,930,975) GROUP BY STATUS",
+            $this->_siteID
+        );        
+
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;    
+    }
+
+    public function progressStatus(){
+        
+        $sql = sprintf(
+            "SELECT STATUS, COUNT(*) AS PERCENTAGE FROM candidate_joborder WHERE STATUS IN (940,955,990,980,675) GROUP BY STATUS",
+            $this->_siteID
+        );        
+
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;    
+    }
+
+    public function invitedList(){
+        
+        $sql = sprintf(
+            "SELECT month(date_created) AS displayMonth,COUNT(*) AS COUNT FROM activity_mail GROUP BY month(date_created)",
+            $this->_siteID
+        );        
+
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;    
+    }
+
+    public function selectedList(){
+        
+        $sql = sprintf(
+            "SELECT month(date_created) AS displayMonth,COUNT(*) AS COUNT FROM candidate GROUP BY month(date_created)",
+            $this->_siteID
+        );        
+
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;    
+    }
+
+    public function getCandidatesSelection($dateVal){
+        $sql = sprintf(
+            "SELECT CAST(date_created as DATE) AS date_list,COUNT(*) AS counts FROM candidate c WHERE CAST(date_created as DATE) = %s GROUP BY CAST(date_created as DATE)",
+            $this->_db->makeQueryString($dateVal),
+            $this->_siteID
+        );
+
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;
+    }
+
+    public function getTotalProfileSent($dateVal,$status){
+        $sql = sprintf(
+            "SELECT CAST(date_modified AS DATE) AS date_list, COUNT(*) AS dataCount FROM candidate_joborder WHERE CAST(date_modified as DATE) = %s AND status = %s GROUP BY CAST(date_modified as DATE)",
+            $this->_db->makeQueryString($dateVal),
+            $this->_db->makeQueryString($status),
+            $this->_siteID
+        );
+
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;
+
+    }
+
+    public function getShortListData($dateVal){
+        $sql = sprintf(
+            "SELECT CAST(date_modified AS DATE) AS date_list, COUNT(*) AS dataCount FROM candidate_joborder WHERE CAST(date_modified as DATE) = %s AND status IN (525,550,600) GROUP BY CAST(date_modified as DATE)",
+            $this->_db->makeQueryString($dateVal),
+            $this->_siteID
+        );
+
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;
+
+    }
+
+    public function getStatusCount($dateVal,$type){
+
+        $conditions = '';
+        if($type == 'chart2'){
+            $conditions = 'AND STATUS IN (525,550,560,570,580,590)';
+        }elseif ($type == 'chart3') {
+            $conditions = 'AND STATUS IN (555,975,675,940,945,955)';
+        }elseif ($type == 'chart4') {
+            $conditions = 'AND STATUS IN (910,920,930,980,990)';
+        }
+        
+        $sql = sprintf(
+            "SELECT STATUS, COUNT(*) AS PERCENTAGE FROM candidate_joborder WHERE CAST(date_modified as DATE) = %s %s GROUP BY STATUS",
+            $this->_db->makeQueryString($dateVal),
+            $conditions,
+            $this->_siteID
+        );        
+        
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;    
+    }
+
+    public function getCandidatesSelectionBulk($type){
+
+        if($type =='lastweek'){
+            $list = 'CAST(date_created as DATE) AS date_list';
+            $conditions = 'WHERE CAST(date_created as DATE) > DATE_SUB(CURDATE(), INTERVAL 1 WEEK)';
+            $groupby = 'CAST(date_created as DATE)';
+        }elseif($type =='lastmonth'){
+            $list = 'CAST(date_created as DATE) AS date_list';
+            $conditions = 'WHERE CAST(date_created as DATE) > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)';
+            $groupby = 'CAST(date_created as DATE)';
+        }elseif($type =='lastsixmonths'){
+            $list = 'month(date_created) AS date_list';
+            $conditions = 'WHERE CAST(date_created as DATE) > DATE_SUB(CURDATE(), INTERVAL 6 MONTH)';
+            $groupby = 'month(date_created)';
+        }elseif($type =='lastyear'){
+            $list = 'month(date_created) AS date_list';
+            $conditions = 'WHERE CAST(date_created as DATE) > DATE_SUB(CURDATE(), INTERVAL 1 YEAR)';
+            $groupby = 'month(date_created)';
+        }else{
+            $list = 'month(date_created) AS date_list';
+            $conditions = '';
+            $groupby = 'month(date_created)';
+        }
+        $sql = sprintf(
+            "SELECT %s,COUNT(*) AS counts FROM candidate c %s GROUP BY %s",
+            $list,
+            $conditions,
+            $groupby,
+            $this->_siteID
+        );
+
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;
+    }
+
+    public function getTotalProfileSentBulk($type,$status){
+        if($type =='lastweek'){
+            $list = 'CAST(date_modified as DATE) AS date_list';
+            $conditions = 'WHERE CAST(date_modified as DATE) > DATE_SUB(CURDATE(), INTERVAL 1 WEEK) AND STATUS ='.$status;
+            $groupby = 'CAST(date_modified as DATE)';
+        }elseif($type =='lastmonth'){
+            $list = 'CAST(date_modified as DATE) AS date_list';
+            $conditions = 'WHERE CAST(date_modified as DATE) > DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND STATUS ='.$status;
+            $groupby = 'CAST(date_modified as DATE)';
+        }elseif($type =='lastsixmonths'){
+            $list = 'month(date_modified) AS date_list';
+            $conditions = 'WHERE CAST(date_modified as DATE) > DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND STATUS ='.$status;
+            $groupby = 'month(date_modified)';
+        }elseif($type =='lastyear'){
+            $list = 'month(date_modified) AS date_list';
+            $conditions = 'WHERE CAST(date_modified as DATE) > DATE_SUB(CURDATE(), INTERVAL 1 YEAR) AND STATUS ='.$status;
+            $groupby = 'month(date_modified)';
+        }else{
+            $list = 'month(date_modified) AS date_list';
+            $conditions = '';
+            $groupby = 'month(date_modified)';
+        }
+        
+        $sql = sprintf(
+            "SELECT %s, COUNT(*) AS dataCount FROM candidate_joborder %s GROUP BY %s",
+            $list,
+            $conditions,
+            $groupby,
+            $this->_siteID
+        );      
+
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;
+
+    }
+
+    public function getShortListDataBulk($type){
+
+        if($type =='lastweek'){
+            $list = 'CAST(date_modified as DATE) AS date_list';
+            $conditions = 'WHERE CAST(date_modified as DATE) > DATE_SUB(CURDATE(), INTERVAL 1 WEEK) AND STATUS IN (525,550,600)';
+            $groupby = 'CAST(date_modified as DATE)';
+        }elseif($type =='lastmonth'){
+            $list = 'CAST(date_modified as DATE) AS date_list';
+            $conditions = 'WHERE CAST(date_modified as DATE) > DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND STATUS IN (525,550,600)';
+            $groupby = 'CAST(date_modified as DATE)';
+        }elseif($type =='lastsixmonths'){
+            $list = 'month(date_modified) AS date_list';
+            $conditions = 'WHERE CAST(date_modified as DATE) > DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND STATUS IN (525,550,600)';
+            $groupby = 'month(date_modified)';
+        }elseif($type =='lastyear'){
+            $list = 'month(date_modified) AS date_list';
+            $conditions = 'WHERE CAST(date_modified as DATE) > DATE_SUB(CURDATE(), INTERVAL 1 YEAR) AND STATUS IN (525,550,600)';
+            $groupby = 'month(date_modified)';
+        }else{
+            $list = 'month(date_modified) AS date_list';
+            $conditions = '';
+            $groupby = 'month(date_modified)';
+        }
+        
+        $sql = sprintf(
+            "SELECT %s, COUNT(*) AS statusCount FROM candidate_joborder %s GROUP BY %s",
+            $list,
+            $conditions,
+            $groupby,
+            $this->_siteID
+        );      
+
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;
+
+    }
+
+    public function getStatusCountBulk($type,$status){
+
+        if($type =='lastweek'){
+            $list = 'CAST(date_modified as DATE) AS date_list';
+            $conditions = 'CAST(date_modified as DATE) > DATE_SUB(CURDATE(), INTERVAL 1 WEEK) AND';
+            $groupby = 'CAST(date_modified as DATE)';
+        }elseif($type =='lastmonth'){
+            $list = 'CAST(date_modified as DATE) AS date_list';
+            $conditions = 'CAST(date_modified as DATE) > DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND';
+            $groupby = 'CAST(date_modified as DATE)';
+        }elseif($type =='lastsixmonths'){
+            $list = 'month(date_modified) AS date_list';
+            $conditions = 'CAST(date_modified as DATE) > DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND';
+            $groupby = 'month(date_modified)';
+        }elseif($type =='lastyear'){
+            $list = 'month(date_modified) AS date_list';
+            $conditions = 'CAST(date_modified as DATE) > DATE_SUB(CURDATE(), INTERVAL 1 YEAR) AND';
+            $groupby = 'month(date_modified)';
+        }else{
+            $list = 'month(date_modified) AS date_list';
+            $conditions = '';
+            $groupby = 'month(date_modified)';
+        }
+        
+        $sql = sprintf(
+            "SELECT %s, COUNT(*) AS PERCENTAGE FROM candidate_joborder WHERE %s STATUS = %s GROUP BY %s",
+            $list,
+            $conditions,
+            $this->_db->makeQueryString($status),
+            $groupby,
+            $this->_siteID
+        );        
+        
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $rs;    
+    }
+
 }
     
 ?>
