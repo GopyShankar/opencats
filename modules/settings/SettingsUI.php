@@ -2361,6 +2361,8 @@ class SettingsUI extends UserInterface
 
         if($offerLetterType == 'conditional'){
             $str = file_get_contents("./modules/settings/templates/offer_conditional.php");
+        }else if($offerLetterType == 'fixed_term'){
+            $str = file_get_contents("./modules/settings/templates/fixed_term.php");
         }else{
             $str = file_get_contents("./modules/settings/templates/offer.php");    
         }

@@ -2,6 +2,15 @@
 <?php TemplateUtility::printHeader('Settings', array('ckeditor/ckeditor.js', 'modules/candidates/validator.js', 'js/searchSaved.js', 'js/sweetTitles.js', 'js/searchAdvanced.js', 'js/highlightrows.js', 'js/export.js', 'js/suggest.js')); ?>
 <?php TemplateUtility::printHeaderBlock(); ?>
 <?php TemplateUtility::printTabs($this->active, $this->subActive); ?>
+<?php 
+$refNo = '';
+if(isset($this->offerLetterData['refNo'])){
+    $refNo = $this->offerLetterData['refNo'];
+}else{
+    $refNo = ($this->selectedOfferType == 'conditional') ? ATS_REF_NO_PRE_COL : ATS_REF_NO_PRE_OL;
+}
+
+?>
 <link href='js/datepicker/jquery-ui.css' rel='stylesheet'>
 <script src="js/datepicker/jquery.min.js"></script>
 <script src="js/datepicker/jquery-ui.min.js"></script>
@@ -53,6 +62,7 @@
                                         <option value="interim" <?php echo ($this->selectedOfferType == 'interim')? 'selected': ''; ?> >Interim Offer</option>
                                         <option value="conditional" <?php echo ($this->selectedOfferType == 'conditional')? 'selected': ''; ?> >Conditional Offer</option>
                                         <option value="final" <?php echo ($this->selectedOfferType == 'final')? 'selected': ''; ?> >Final Offer</option>
+                                        <option value="fixed_term" <?php echo ($this->selectedOfferType == 'fixed_term')? 'selected': ''; ?> >fixed_term Offer</option>
                                     </select>
                                 </td>
                             </tr>
@@ -124,7 +134,7 @@
                                     <label id="referenceLabel" for="refNo">Letter Reference No</label>
                                 </td>
                                 <td class="tdData">
-                                    <input type="text" name="refNo" id="refNo" class="inputbox" style="width: 400px;" value="<?php (isset($this->offerLetterData['refNo']))?$this->_($this->offerLetterData['refNo']): ($this->selectedOfferType == 'conditional') ? $this->_(ATS_REF_NO_PRE_COL) : $this->_(ATS_REF_NO_PRE_OL); ?>" <?php echo (isset($this->selectedOfferType) && $this->selectedOfferType == 'conditional') ? 'maxlength=22' : 'maxlength=21'; ?>  >
+                                    <input type="text" name="refNo" id="refNo" class="inputbox" style="width: 400px;" value="<?php $this->_($refNo); ?>" <?php echo (isset($this->selectedOfferType) && $this->selectedOfferType == 'conditional') ? 'maxlength=22' : 'maxlength=21'; ?>  >
                                 </td>
                             </tr>
                             <tr>
